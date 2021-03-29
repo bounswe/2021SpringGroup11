@@ -9,7 +9,7 @@ For further information please have a look at our [wiki page](https://github.com
 
 # Group Members
 
-- [Fikri Cem Yılmaz (Communicator)]()
+- [Fikri Cem Yılmaz (Communicator)](https://github.com/fihlie)
 - [Eren Altunoğlu]()
 - [Bekir Tatar]()
 - [Alper Canberk Balcı]()
