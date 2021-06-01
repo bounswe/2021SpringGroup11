@@ -1,0 +1,47 @@
+version: "3.7"
+
+services:
+  backend:
+    container_name: backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./backend/:/usr/src/backend/
+    ports:
+      - 8000:8000
+    environment:
+      - DATABASE_NAME=dev
+      - DATABASE_PORT=5432
+      - DATABASE_HOST=db
+      - DATABASE_PASSWORD=dev_password
+      - DATABASE_USER=dev_user
+    # env_file:
+    #   - ./.env.dev
+    # stdin_open: true
+    depends_on:
+      - db
+
+  db:
+    container_name: db
+    image: postgres:12.0-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=dev_user
+      - POSTGRES_PASSWORD=dev_password
+      - POSTGRES_DB=dev
+    ports:
+      - 5432:5432
+  frontend:
+    build: ./frontend
+    command: ["npm", "start"]
+    # volumes:
+    #   - ./frontend:/app/frontend
+    #   - node-modules:/app/frontend/node_modules
+    ports:
+      - "3000:3000"
+
+volumes:
+  postgres_data:
