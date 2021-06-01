@@ -3,7 +3,7 @@
 ## Start
 `docker-compose up` to start all services
 
-`docker-compose -d db` to start database
+`docker-compose up -d db` to start database
 
 
 ### Resources
