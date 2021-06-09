@@ -3,10 +3,10 @@ from . import views
 from rest_framework.urlpatterns import format_suffix_patterns
 
 urlpatterns = [
-    path('stocks/', views.StockList.as_view()),
-    path('stocks/<str:symbol>/<str:res>/<str:fromm>/<str:to>', views.StockDetail.as_view()),
+    path('', views.StockList.as_view()),
+    path('<str:symbol>/<str:res>/<str:fromm>/<str:to>', views.StockDetail.as_view()),
     path('comments/<str:symbol>', views.StockComment.as_view()),
-    path('stocks/home', views.home),
+    path('home', views.home),
 
 ]
 
