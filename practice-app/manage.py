@@ -3,8 +3,12 @@
 import os
 import sys
 
+import dotenv
 
 def main():
+    # load .env
+    dotenv.read_dotenv()
+
     """Run administrative tasks."""
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'mysite.settings')
     try:
