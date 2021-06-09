@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spam</title>
+</head>
+
+<body style="max-width: 1000px; margin:auto;">
+
+
+    <link rel="stylesheet" href="https://unpkg.com/blocks.css/dist/blocks.min.css" />
+
+    <h1 class="block accent">Spam List</h1>
+
+    <table id="table">
+        <tr>
+            <th>email</th>
+            <th>is Spam?</th>
+            <th>Delete</th>
+        </tr>
+    </table>
+    <h3>check email, if it is spam, we will add to list</h3>
+
+    <form id="add">
+        <input class="block fixed inline" type="text" name="email" />
+        <input class="block inline" type="submit" value="Add" />
+    </form>
+
+    <script>
+        const addItem = async (event) => {
+            event.preventDefault()
+            let input = event.target[0].value
+            console.log(input);
+            const result = await (await fetch(window.location.href + "addItem/", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+
+                },
+                body: JSON.stringify({
+                    email: input
+                })
+            })).json()
+
+            console.log(result);
+            if (result.status === "success") {
+                location.reload();
+            }
+        }
+        document.getElementById("add").addEventListener("submit", addItem, false)
+
+        let appendNewItem = (name, spam, id) => {
+            let t = document.getElementById("table")
+            let a = document.createElement("tr")
+            a.innerHTML = `  	<td > ${name}
+          </td>
+          <td > ${spam}
+          </td>
+          <td>
+              <form action="/spam/deleteItem/${id}/" style="display: inline;" method="post">
+                  <input class="block" type="submit" value="Delete" />
+              </form>
+          </td>`
+
+            t.appendChild(a)
+        }
+
+        ;
+        (async () => {
+            let items = (
+                await (await window.fetch(window.location.href + "getList")).json()
+            ).items
+
+            console.log(items)
+
+            items.forEach((item) => {
+                appendNewItem(item.fields.email, item.fields.spam, item.pk)
+            })
+        })()
+    </script>
+
+</body>
+
+</html>
