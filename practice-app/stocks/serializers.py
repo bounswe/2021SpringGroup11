@@ -7,7 +7,7 @@ from .models import Comment
 class StockQuoteSerializer(serializers.ModelSerializer):
     class Meta:
         model = StockQuote
-        fields = ['id', 'symbol', 'data']
+        fields = ['id', 'symbol', 'current', 'high', 'low']
 
 
 class StockCandleSerializer(serializers.ModelSerializer):

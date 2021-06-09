@@ -1,13 +1,12 @@
-import django
-
-from django.contrib.postgres.fields import ArrayField
 from django.db import models
 
 
 class StockQuote(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     symbol = models.CharField(max_length=50, blank=True, default='', unique=True)
-    data = models.TextField(blank=True, default='')
+    current = models.FloatField(default=0.0)
+    high = models.FloatField(default=0.0)
+    low = models.FloatField(default=0.0)
 
     class Meta:
         ordering = ['created']
