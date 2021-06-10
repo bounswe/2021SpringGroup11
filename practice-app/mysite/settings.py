@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'stocks.apps.StocksConfig',
     'spam',
+    'logosearch',
     'ETFSector'
 ]
 

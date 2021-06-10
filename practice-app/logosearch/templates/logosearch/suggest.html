@@ -1,0 +1,34 @@
+<!Doctype html5>
+<html>
+    <head>
+    <title>Group 11</title>
+    </head>
+
+    <body>
+    <center>
+        <p>
+            <h1>Logo Search</h1>
+            <form id='logoSearch' action="suggest" method='post'>
+                <input type="text" placeholder="Url to Site" name="Site" required>
+				<input type="text" placeholder="Url to Image" name="Image" required>
+				<button type='submit'>Suggest New Logo</button>
+            </form>
+        </p>
+    </center>
+    <center>
+
+
+{%if exp %}
+<p>{{exp}}</p>
+{% endif %} 
+
+{% if site %}
+<p>Site: {{site}}</p>
+{% endif %} 
+
+{% if image%}
+<img src={{image}}>
+{% endif %} 
+    </center>
+    </body>
+</html>

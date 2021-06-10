@@ -1,0 +1,37 @@
+<!Doctype html5>
+<html>
+    <head>
+    <title>Group 11</title>
+    </head>
+
+    <body>
+    <center>
+        <p>
+            <h1>Logo Search</h1>
+            <form id='logoSearch' action="" method='get'>
+                <input type="text" placeholder="Url to Site" name="Site" required>
+                <button type='search'>Search</button>
+            </form>
+        </p>
+		<form action='suggest' method='GET'>
+			<button type='submit'>Suggest New Logo</button>
+		</form>
+    </center>
+    <center>
+
+{% if site %}
+<p>Site: {{site}}</p>
+{% endif %} 
+
+{% if image%}
+<img src={{image}}>
+{% endif %} 
+
+{%if exp %}
+<p>{{exp}}</p>
+{% endif %} 
+    </center>
+<a href="https://clearbit.com">Logos provided by Clearbit</a>
+
+    </body>
+</html>
