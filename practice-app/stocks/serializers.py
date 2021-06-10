@@ -19,4 +19,4 @@ class StockCandleSerializer(serializers.ModelSerializer):
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
-        fields = ['id', 'symbol', 'user', 'message', 'created']
+        fields = ['id', 'symbol', 'user', 'comment', 'created']
