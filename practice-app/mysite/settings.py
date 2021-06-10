@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'stocks.apps.StocksConfig',
-    'spam'
+    'spam',
+    'ETFSector'
 ]
 
 MIDDLEWARE = [
