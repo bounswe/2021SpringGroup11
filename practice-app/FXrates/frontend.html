@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>
+FX Rates
+</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script type="text/javascript" src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="https://canvasjs.com/assets/script/jquery.canvasjs.min.js"></script>
+
+<script>
+process = function(input) {
+
+var dps = [];
+var chart = new CanvasJS.Chart("plotdiv", {
+	animationEnabled: true,
+	exportEnabled: true,
+	title: {
+		text: "FX Rates"
+	},
+	axisX: {
+		valueFormatString: "YYYY MMM DD - HH : mm "
+	},
+	axisY: {
+		title: "Price"
+	},
+	data: [{
+		type: "ohlc",
+		name: "FX Price",
+		color: "#DD7E86",
+		showInLegend: true,
+		yValueFormatString: "##0.00000",
+		xValueType: "dateTime",
+		dataPoints: dps
+	}]
+});
+
+inp_pair=document.querySelector('input[name="pair"]:checked').value;
+inp_freq=document.querySelector('input[name="frequency"]:checked').value;
+inp_start=Date.parse(document.getElementById("starttime").value)/1000;
+inp_end=Date.parse(document.getElementById("endtime").value)/1000;
+
+$.getJSON("api/"+inp_pair+"/"+inp_freq+"/"+inp_start+"/"+inp_end+".json", parseData);
+
+function parseData(result) {
+	for (var i = 0; i < result.length; i++) {
+		dps.push({
+			x: result[i].time*1000,
+			y: result[i].price
+		});
+	}
+	chart.render();
+}
+}
+
+postcomment = function(input) {
+
+    inp_pair=document.querySelector('input[name="commentpair"]:checked').value;
+    username=document.getElementById("username").value;
+    commentmessage=document.getElementById("message").value;
+    
+    var postdata={
+        pair:inp_pair,
+        name:username,
+        message:commentmessage
+    }
+
+    $.post("postcomment.html",JSON.stringify(postdata),function() {$("#comments").load("getcomments.html");},'json');
+ 
+// Perform other work here ...
+ 
+}
+
+</script>
+
+</head>
+
+<body onload="$('#comments').load('getcomments.html');">
+<h1>Welcome to Interactive Forex Rates Application</h1>
+
+<form id="queryform">
+    <h3>Currency pair:</h3>
+
+    <input type="radio" name="pair" id="EURUSD" value="EUR_USD" required>
+    <label for="EURUSD">Euro/United States Dollar</label><br>
+    <input type="radio" name="pair" id="GBPUSD" value="GBP_USD" required>
+    <label for="GBPUSD">British Pound/United States Dollar</label><br>
+    <input type="radio" name="pair" id="USDJPY" value="USD_JPY" required>
+    <label for="USDJPY">United States Dollar/Japanese Yen</label><br>
+    <input type="radio" name="pair" id="USDTRY" value="USD_TRY" required>
+    <label for="USDTRY">United States Dollar/Turkish Lira</label><br>
+    <br>
+    
+    <h3>Time Horizon:</h3>
+    <label for="starttime">Start the chart at:</label><br>
+    <input type="datetime-local" id="starttime" required><br>
+
+    <label for="endtime">End the chart at:</label><br>
+    <input type="datetime-local" id="endtime" required><br>
+    <br>
+
+    <h3>Data frequency:</h3>
+ 
+    <input type="radio" name="frequency" id="M1" value="1" required>
+    <label for="M1">Every minute<label><br>
+    <input type="radio" name="frequency" id="M5" value="5" required>
+    <label for="M5">Every 5 minutes<label><br>
+    <input type="radio" name="frequency" id="M15" value="15" required>
+    <label for="M15">Every 15 minutes<label><br>
+    <input type="radio" name="frequency" id="H1" value="60" required>
+    <label for="H1">Every hour<label><br>
+
+    <input type="button" value="Show" id="formbutton" onclick="process()">
+</form>
+<br>
+
+<div id="plotdiv" style="height: 500px; width= 100%;"></div>
+
+<h2>Comments</h2>
+
+<div id="comments">
+</div>
+
+<h3>Post a Comment</h3>
+
+<form id="commentform">
+    <label>Currency pair</label><br>
+    <input type="radio" name="commentpair" id="cEURUSD" value="EUR_USD">
+    <label for="cEURUSD">Euro/United States Dollar</label><br>
+    <input type="radio" name="commentpair" id="cGBPUSD" value="GBP_USD">
+    <label for="cGBPUSD">British Pound/United States Dollar</label><br>
+    <input type="radio" name="commentpair" id="cUSDJPY" value="USD_JPY">
+    <label for="cUSDJPY">United States Dollar/Japanese Yen</label><br>
+    <input type="radio" name="commentpair" id="cUSDTRY" value="USD_TRY">
+    <label for="cUSDTRY">United States Dollar/Turkish Lira</label><br>
+    <br>
+
+    <label for="username">Your visible name</label><br>
+    <input type="text" id="username" required><br>
+
+    <label for="message">Your message</label><br>
+    <textarea id="message" rows="4" cols="50" required>
+    </textarea><br>
+    
+    <input type="button" value="Post Comment" id="commentbutton" onclick="postcomment()" required>
+
+</form>
+
+</body>
+</html>

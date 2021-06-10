@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'stocks.apps.StocksConfig',
     'spam',
     'logosearch',
-    'ETFSector'
+    'ETFSector',
+    'FXrates'
 ]
 
 MIDDLEWARE = [
