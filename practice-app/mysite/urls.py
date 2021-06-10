@@ -25,4 +25,5 @@ urlpatterns = [
     path('logosearch/', include('logosearch.urls')),
     path('ETFSector/', include('ETFSector.urls')),
     path('FXrates/', include('FXrates.urls')),
+     path('commodities/', include('commodities.urls')),
 ]
