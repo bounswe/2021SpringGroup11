@@ -27,5 +27,6 @@ class Command(BaseCommand):
                 close=resp['c']
                 timestamp=resp['t']
                 for i in range(len(timestamp)):
+                    FX.objects.filter(pair=sym,frame=res,data_time=timestamp[i]).delete()#avoid duplicates
                     f=FX(pair=sym,frame=res,acq_time=int(time.time()),source="Finnhub.io",data_time=timestamp[i],open=open[i],high=high[i],low=low[i],close=close[i])
                     f.save()
