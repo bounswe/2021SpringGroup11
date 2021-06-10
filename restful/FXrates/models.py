@@ -1,4 +1,5 @@
 from django.db import models
+from datetime import datetime
 
 # Create your models here.
 
@@ -26,4 +27,12 @@ class Comment(models.Model):
     user=models.CharField(max_length=50)
     message=models.CharField(max_length=1000)
     def __str__(self):
-        return "***COMMENT***\nPAIR: "+str(self.pair)+"\nUSER: "+str(self.user)+"\nTIME: "+str(self.time)+"\nMESSAGE: "+str(self.message)
+        #return "***COMMENT***\nPAIR: "+str(self.pair)+"\nUSER: "+str(self.user)+"\nTIME: "+str(self.time)+"\nMESSAGE: "+str(self.message)
+        res='<div name="comment"><hr>'
+        res+="<strong>Name:</strong> "+str(self.user)+"<br>"
+        res+="<strong>Pair:</strong> "+str(self.pair)+"<br>" 
+        res+="<strong>Time:</strong> "+str(datetime.utcfromtimestamp(self.time).strftime('%Y-%m-%d %H:%M:%S'))+"<br>"
+        res+="<strong>Comment:</strong> <br>"
+        res+="<p>"+str(self.message)+"</p><hr>"
+        res+="</div>"
+        return res
