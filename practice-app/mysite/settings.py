@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'spam',
     'logosearch',
     'ETFSector',
-    'FXrates'
+    'FXrates',
+    'commodities',
 ]
 
 MIDDLEWARE = [
