@@ -4,19 +4,16 @@ services:
   backend:
     container_name: backend
     build:
-      context: ./
-      dockerfile: Dockerfile
-    command: python manage.py runserver 0.0.0.0:8000
-    volumes:
-      - ./:/usr/src/backend/
+      context: .
+ #     dockerfile: Dockerfile
+    command: ["/app/startup_script.sh"]
+    #volumes:
+#      - ./:/usr/src/backend/
+    #  - ./:app/
     ports:
       - 8000:8000
-    environment:
-      - DB_NAME=dev
-      - DB_PORT=5432
-      - DB_HOST=db
-      - DB_PASSWORD=dev_password
-      - DB_USER=dev_user
+    env_file: 
+      - .env
     # env_file:
     #   - ./.env.dev
     # stdin_open: true
@@ -29,9 +26,9 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     environment:
-      - POSTGRES_USER=dev_user
-      - POSTGRES_PASSWORD=dev_password
-      - POSTGRES_DB=dev
+      POSTGRES_DB: 'defaultdb'
+      POSTGRES_USER: 'cmpe'
+      POSTGRES_PASSWORD: 'cmpe'
     ports:
       - 5432:5432
 volumes:
