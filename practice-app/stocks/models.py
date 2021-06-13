@@ -29,9 +29,9 @@ class StockCandle(models.Model):
 
 class Comment(models.Model):
     created = models.DateTimeField(auto_now_add=True)
-    symbol = models.CharField(max_length=50)
-    user = models.CharField(max_length=100)
-    comment = models.CharField(max_length=1000)
+    symbol = models.CharField(default='', max_length=50)
+    user = models.CharField(default='', max_length=100)
+    message = models.CharField(default='', max_length=1000)
 
     class Meta:
         ordering = ['created']

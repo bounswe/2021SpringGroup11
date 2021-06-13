@@ -1,409 +1,432 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8"/>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link
-            rel="stylesheet"
-            href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css"
-            integrity="undefined"
-            crossorigin="anonymous"
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css"
+      integrity="undefined"
+      crossorigin="anonymous"
     />
     <title>STOCKS</title>
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@100;300&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lato:wght@100;300&display=swap"
+      rel="stylesheet"
+    />
     <style>
-        * {
-            padding: 0;
-            margin: 0;
-            box-sizing: border-box;
-            font-family: 'Lato', sans-serif;
+      * {
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+        font-family: "Lato", sans-serif;
+      }
+
+      .currentWrapper {
+        display: flex;
+        justify-content: space-around;
+        border: 1px solid #ccc;
+        padding: 5px 0 5px 2px;
+        margin-top: 10px;
+        align-items: center;
+      }
+
+      .currentWrapper p {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        font-size: 0.8rem;
+      }
+
+      .cardWrapper {
+        border: 1px solid #ccc;
+        width: 100%;
+        padding: 5px 8px;
+        margin: 5px 0;
+      }
+
+      .cardWrapperRow {
+        display: flex;
+        flex-wrap: wrap;
+      }
+
+      .card-title {
+        font-size: 1.2rem;
+      }
+
+      .card-subtitle {
+        color: rgb(128, 127, 127);
+        font-size: 0.7rem;
+      }
+
+      .card-text {
+        margin-top: 12px;
+      }
+
+      .commentSectionTitle h4 {
+        padding: 15px 15px 15px 5px;
+        margin: 4px 0;
+        border-left: 1px solid #ccc;
+        font-weight: bold;
+        display: inline-block;
+      }
+
+      @media screen and (max-width: 992px) {
+        .row {
+          flex-direction: column;
         }
 
+        #getData {
+          flex-direction: column;
+        }
+
+        #formSubmit {
+          width: 100%;
+          margin-top: 15px;
+        }
+
+        #commentSubmt {
+          width: 100%;
+        }
+      }
+
+      @media screen and (max-width: 576px) {
         .currentWrapper {
-            display: flex;
-            justify-content: space-around;
-            border: 1px solid #ccc;
-            padding: 5px 0 5px 2px;
-            margin-top: 10px;
-            align-items: center;
+          flex-direction: column;
         }
-
-        .currentWrapper p {
-            margin: 0;
-            padding: 0;
-            display: flex;
-            align-items: center;
-            font-size: 0.8rem;
-        }
-
-        .cardWrapper {
-            border: 1px solid #ccc;
-            width: 100%;
-            padding: 5px 8px;
-            margin: 5px 0;
-        }
-
-        .cardWrapperRow {
-            display: flex;
-            flex-wrap: wrap;
-        }
-
-        .card-title {
-            font-size: 1.2rem;
-        }
-
-        .card-subtitle {
-            color: rgb(128, 127, 127);
-            font-size: 0.7rem;
-        }
-
-        .card-text {
-            margin-top: 12px;
-        }
-
-        .commentSectionTitle h4 {
-            padding: 15px 15px 15px 5px;
-            margin: 4px 0;
-            border-left: 1px solid #ccc;
-            font-weight: bold;
-            display: inline-block;
-
-        }
-
-        @media screen and (max-width: 992px) {
-            .row {
-                flex-direction: column;
-            }
-
-            #getData {
-                flex-direction: column;
-            }
-
-            #formSubmit {
-                width: 100%;
-                margin-top: 15px;
-            }
-
-            #commentSubmt {
-                width: 100%;
-            }
-        }
-
-        @media screen and (max-width: 576px) {
-            .currentWrapper {
-                flex-direction: column;
-            }
-
-        }
+      }
     </style>
-</head>
-<body>
-<script type="text/javascript" src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
-<script type="text/javascript" src="https://canvasjs.com/assets/script/jquery.canvasjs.min.js"></script>
-<div
-        class="
-        container-fluid pb-2
-      "
->
-    <div class="row">
+  </head>
+  <body>
+    <script
+      type="text/javascript"
+      src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"
+    ></script>
+    <script
+      type="text/javascript"
+      src="https://canvasjs.com/assets/script/jquery.canvasjs.min.js"
+    ></script>
+    <div class="container-fluid pb-2">
+      <div class="row">
         <div class="currentStock col-sm-12 col-md-10 col-lg-4"></div>
         <div class="col-sm-12 col-md-11 col-lg-8">
-            <form class="border p-4 mt-2 d-flex col-sm-12 col-md-11 col-lg-7" style="width: 100%" id="getData">
-                <div class="form-group" style="margin: 0 10px">
-                    <label for="symbols" class="col-2 col-form-label">Symbols</label>
-                    <select
-                            class="form-select"
-                            id="symbols"
-                            aria-label="Default select example"
-                            onchange="selectSymbol(this)"
-                            required
-                    >
-                        <option value=""></option>
-                        <option value="AAPL">APPLE</option>
-                        <option value="MSFT">MICROSOFT</option>
-                        <option value="GOOG">GOOGLE CLASS C</option>
-                        <option value="GOOGL">GOOGLE CLASS A</option>
-                        <option value="AMZN">AMAZON</option>
-                        <option value="FB">FACEBOOK</option>
-                        <option value="TSLA">TESLA</option>
-                        <option value="BABA">ALI BABA</option>
-                    </select>
-                </div>
-                <div class="form-group" style="margin: 0 10px">
-                    <label for="resolutions" class="col-2 col-form-label"
-                    >Resolutions</label
-                    >
-                    <select
-                            class="form-select"
-                            id="resolutions"
-                            aria-label="Default select example"
-                            required
-                    >
-                        <option value=""></option>
-                        <option value="5">5</option>
-                        <option value="15">15</option>
-                        <option value="30">30</option>
-                        <option value="60">60</option>
-                        <option value="D">D</option>
-                        <option value="W">W</option>
-                        <option value="M">M</option>
-                    </select>
-                </div>
-                <div class="form-group" style="margin: 0 10px">
-                    <label for="example-datetime-local-input" class="col-2 col-form-label"
-                    >From</label
-                    >
-                    <label for="from"></label><input
-                        class="form-control"
-                        type="datetime-local"
-                        value="2021-04-03T13:45:00"
-                        id="from"
-                        required
-                />
-                </div>
-                <div class="form-group" style="margin: 0 10px">
-                    <label for="example-datetime-local-input" class="col-2 col-form-label"
-                    >To</label
-                    >
-                    <label for="to"></label><input
-                        class="form-control"
-                        type="datetime-local"
-                        value="2021-06-03T13:45:00"
-                        id="to"
-                        required
-                />
-                </div>
-                <button
-                        class="btn btn-primary"
-                        style="height: 40px; align-self: flex-end; margin-left: 10px"
-                        type="submit"
-                        id="formSubmit"
-                >
-                    Submit
-                </button>
-            </form>
-            <div class="w-100 border p-4">
-                <div id="chartContainer" style="height: 370px; width: 100%"></div>
+          <form
+            class="border p-4 mt-2 d-flex col-sm-12 col-md-11 col-lg-7"
+            style="width: 100%"
+            id="getData"
+          >
+            <div class="form-group" style="margin: 0 10px">
+              <label for="symbols" class="col-2 col-form-label">Symbols</label>
+              <select
+                class="form-select"
+                id="symbols"
+                aria-label="Default select example"
+                onchange="selectSymbol(this)"
+                required
+              >
+                <option value=""></option>
+                <option value="AAPL">APPLE</option>
+                <option value="MSFT">MICROSOFT</option>
+                <option value="GOOG">GOOGLE CLASS C</option>
+                <option value="GOOGL">GOOGLE CLASS A</option>
+                <option value="AMZN">AMAZON</option>
+                <option value="FB">FACEBOOK</option>
+                <option value="TSLA">TESLA</option>
+                <option value="BABA">ALI BABA</option>
+              </select>
             </div>
-            <div class="commentSectionTitle"><h4>COMMENTS</h4></div>
-            <div class="commentStock mt-3"></div>
+            <div class="form-group" style="margin: 0 10px">
+              <label for="resolutions" class="col-2 col-form-label"
+                >Resolutions</label
+              >
+              <select
+                class="form-select"
+                id="resolutions"
+                aria-label="Default select example"
+                required
+              >
+                <option value=""></option>
+                <option value="5">5</option>
+                <option value="15">15</option>
+                <option value="30">30</option>
+                <option value="60">60</option>
+                <option value="D">D</option>
+                <option value="W">W</option>
+                <option value="M">M</option>
+              </select>
+            </div>
+            <div class="form-group" style="margin: 0 10px">
+              <label
+                for="example-datetime-local-input"
+                class="col-2 col-form-label"
+                >From</label
+              >
+              <label for="from"></label
+              ><input
+                class="form-control"
+                type="datetime-local"
+                value="2021-06-03T13:45:00"
+                id="from"
+                required
+              />
+            </div>
+            <div class="form-group" style="margin: 0 10px">
+              <label
+                for="example-datetime-local-input"
+                class="col-2 col-form-label"
+                >To</label
+              >
+              <label for="to"></label
+              ><input
+                class="form-control"
+                type="datetime-local"
+                value="2021-06-12T13:45:00"
+                id="to"
+                required
+              />
+            </div>
+            <button
+              class="btn btn-primary"
+              style="height: 40px; align-self: flex-end; margin-left: 10px"
+              type="submit"
+              id="formSubmit"
+            >
+              Submit
+            </button>
+          </form>
+          <div class="w-100 border p-4">
+            <div id="chartContainer" style="height: 370px; width: 100%"></div>
+          </div>
+          <div class="commentSectionTitle"><h4>COMMENTS</h4></div>
+          <div class="commentStock mt-3"></div>
 
-            <form class="col-sm-12 col-md-11 col-lg-8" style="width: 80%; display:none" id="getComments">
-                <div class="form-group">
-                    <label>Username</label>
-                    <label for="user"></label><input
-                        type="text"
-                        class="form-control"
-                        id="user"
-                        placeholder=""
-                        required
-                />
-                </div>
-                <div class="form-group">
-                    <label>Comment</label>
-                    <label for="comment"></label>
-                    <textarea placeholder="Write your comment here." class="form-control" id="comment"
-                              required></textarea>
-                </div>
-                <button type="submit" class="btn btn-primary mt-2">Submit</button>
-            </form>
+          <form
+            class="col-sm-12 col-md-11 col-lg-8"
+            style="width: 80%; display: none"
+            id="getComments"
+          >
+            <div class="form-group">
+              <label>Username</label>
+              <label for="user"></label
+              ><input
+                type="text"
+                class="form-control"
+                id="user"
+                placeholder=""
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label>Comment</label>
+              <label for="comment"></label>
+              <textarea
+                placeholder="Write your comment here."
+                class="form-control"
+                id="comment"
+                required
+              ></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary mt-2">Submit</button>
+          </form>
         </div>
+      </div>
     </div>
 
-</div>
-
-<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
-<script>
-    const URL = "http://localhost:8000";
-    const dataPoints = [];
-    let symbolsSelect = "";
-    const selectSymbol = (selectObject) => {
+    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+    <script>
+      const URL = "http://localhost:8000";
+      const dataPoints = [];
+      let symbolsSelect = "";
+      const selectSymbol = (selectObject) => {
         symbolsSelect = selectObject.value;
-    };
-    $.ajaxSetup({
+      };
+      $.ajaxSetup({
         headers: {
-            'Access-Control-Allow-Origin': "*",
-            'Access-Control-Allow-Methods': "GET, POST, OPTIONS, PUT, DELETE",
-            'Access-Control-Allow-Headers': "X-Requested-With,Accept,Content-Type, Origin"
-        }
-    });
-    document
-            .querySelector("#getData")
-            .addEventListener("submit", async (e) => {
-                const resolutions = document.querySelector("#resolutions").value;
-                const from = document.querySelector("#from").value;
-                const to = document.querySelector("#to").value;
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "GET, POST, OPTIONS, PUT, DELETE",
+          "Access-Control-Allow-Headers":
+            "X-Requested-With,Accept,Content-Type, Origin",
+        },
+      });
+      document
+        .querySelector("#getData")
+        .addEventListener("submit", async (e) => {
+          const resolutions = document.querySelector("#resolutions").value;
+          const from = document.querySelector("#from").value;
+          const to = document.querySelector("#to").value;
 
-                let myFrom = new Date(from);
-                let myEpochFrom = myFrom.getTime() / 1000.0;
-                let myTo = new Date(to);
-                let myEpochTo = myTo.getTime() / 1000.0;
+          let myFrom = new Date(from);
+          let myEpochFrom = myFrom.getTime() / 1000.0;
+          let myTo = new Date(to);
+          let myEpochTo = myTo.getTime() / 1000.0;
 
-                e.preventDefault();
-                await fetch(`${URL}/stocks/${symbolsSelect}/${resolutions}/${myEpochFrom}/${myEpochTo}`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                })
-                        .then((res) => res.json())
-                        .then((res) => getDataPoints(res))
-                fetch(`${URL}/stocks/comments/${symbolsSelect}`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                })
-                        .then((res) => res.json())
-                        .then((res) => parseComments(res))
-                document.querySelector("#getComments").style.display = "block";
+          e.preventDefault();
+          await fetch(
+            `${URL}/stocks/${symbolsSelect}/${resolutions}/${myEpochFrom}/${myEpochTo}`,
+            {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          )
+            .then((res) => res.json())
+            .then((res) => getDataPoints(res));
+          fetch(`${URL}/stocks/comments/${symbolsSelect}`, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          })
+            .then((res) => res.json())
+            .then((res) => parseComments(res));
+          document.querySelector("#getComments").style.display = "block";
+        });
 
-            });
+      document
+        .querySelector("#getComments")
+        .addEventListener("submit", async (e) => {
+          const user = document.querySelector("#user").value;
+          const comment = document.querySelector("#comment").value;
 
-    document
-            .querySelector("#getComments")
-            .addEventListener("submit", async (e) => {
-                const user = document.querySelector("#user").value;
-                const comment = document.querySelector("#comment").value;
+          e.preventDefault();
+          await fetch(`${URL}/stocks/comments/${symbolsSelect}`, {
+            method: "POST",
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              symbol: symbolsSelect,
+              user: user,
+              message: comment,
+            }),
+          });
+          alert("Your comment is added");
+          document.querySelector("#formSubmit").click();
+          document.querySelector("#user").value = "";
+          document.querySelector("#comment").value = "";
+        });
 
-                e.preventDefault();
-                await fetch(`${URL}/stocks/comments/${symbolsSelect}`, {
-                    method: 'POST',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        symbol: symbolsSelect,
-                        user: user,
-                        comment: comment
-                    })
-                })
-                alert("Your comment is added");
-                document.querySelector("#formSubmit").click();
-                document.querySelector("#user").value = "";
-                document.querySelector("#comment").value = "";
-            });
-
-    const chart = new CanvasJS.Chart("chartContainer", {
+      const chart = new CanvasJS.Chart("chartContainer", {
         animationEnabled: true,
         theme: "dark2", // "light1", "light2", "dark1", "dark2"
         exportEnabled: true,
 
         title: {
-            text: "",
+          text: "",
         },
         subtitles: [
-            {
-                text: "Averages",
-            },
+          {
+            text: "Averages",
+          },
         ],
         axisX: {
-            interval: 1,
-            valueFormatString: "MMM",
+          interval: 1,
+          valueFormatString: "MMM",
         },
         axisY: {
-            prefix: "$",
-            title: "Price",
+          prefix: "$",
+          title: "Price",
         },
         toolTip: {
-            content:
-                    "Date: {x}<br/><strong>Price:</strong><br />Open: {y[0]}, Close: {y[3]}<br/>High: {y[1]}, Low: {y[2]}",
+          content:
+            "Date: {x}<br/><strong>Price:</strong><br />Open: {y[0]}, Close: {y[3]}<br/>High: {y[1]}, Low: {y[2]}",
         },
         data: [
-            {
-                type: "candlestick",
-                yValueFormatString: "$##0.00",
-                dataPoints: dataPoints,
-            },
+          {
+            type: "candlestick",
+            yValueFormatString: "$##0.00",
+            dataPoints: dataPoints,
+          },
         ],
-    });
-    const getDataPoints = (res) => {
+      });
+      const getDataPoints = (res) => {
         const commentDiv = document.querySelector(".commentStock");
         commentDiv.innerHTML = "";
         if (dataPoints.length !== 0) {
-            dataPoints.length = 0;
+          dataPoints.length = 0;
         }
         res.map((i) => {
-            dataPoints.push({
-                x: new Date(i.time * 1000),
-                y: [
-                    parseFloat(i.open),
-                    parseFloat(i.high),
-                    parseFloat(i.low),
-                    parseFloat(i.close),
-                ],
-            });
+          dataPoints.push({
+            x: new Date(i.time * 1000),
+            y: [
+              parseFloat(i.open),
+              parseFloat(i.high),
+              parseFloat(i.low),
+              parseFloat(i.close),
+            ],
+          });
         });
         chart.render();
-    };
+      };
 
-    const parseComments = (comments) => {
+      const parseComments = (comments) => {
         const commentDiv = document.querySelector(".commentStock");
         comments.map((i) => {
-            let divRow = document.createElement("div");
-            divRow.classList.add("cardWrapperRow");
-            commentDiv.appendChild(divRow)
+          let divRow = document.createElement("div");
+          divRow.classList.add("cardWrapperRow");
+          commentDiv.appendChild(divRow);
 
-            let card = document.createElement("div");
-            card.classList.add("cardWrapper");
-            divRow.appendChild(card);
+          let card = document.createElement("div");
+          card.classList.add("cardWrapper");
+          divRow.appendChild(card);
 
-            let cardTitle = document.createElement("h5");
-            cardTitle.classList.add("card-title");
-            cardTitle.innerHTML = i.user;
-            card.appendChild(cardTitle);
+          let cardTitle = document.createElement("h5");
+          cardTitle.classList.add("card-title");
+          cardTitle.innerHTML = i.user;
+          card.appendChild(cardTitle);
 
-            let cardSubtitle = document.createElement("h6");
-            cardSubtitle.classList.add("card-subtitle");
-            cardSubtitle.innerHTML = new Date(i.created).toLocaleString();
-            card.appendChild(cardSubtitle);
+          let cardSubtitle = document.createElement("h6");
+          cardSubtitle.classList.add("card-subtitle");
+          cardSubtitle.innerHTML = new Date(i.created).toLocaleString();
+          card.appendChild(cardSubtitle);
 
-            let cardText = document.createElement("p");
-            cardText.classList.add("card-text");
-            cardText.innerHTML = i.comment;
-            card.appendChild(cardText);
-        })
-    }
-    window.onload = function () {
+          let cardText = document.createElement("p");
+          cardText.classList.add("card-text");
+          cardText.innerHTML = i.message;
+          card.appendChild(cardText);
+        });
+      };
+      window.onload = function () {
         fetch(`${URL}/stocks`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
         })
-                .then((res) => res.json())
-                .then((res) => createCurrentPrices(res))
+          .then((res) => res.json())
+          .then((res) => createCurrentPrices(res));
+      };
 
-    }
-
-    const createCurrentPrices = (data) => {
+      const createCurrentPrices = (data) => {
         const stockDiv = document.querySelector(".currentStock");
         data.map((i) => {
-            let divCol = document.createElement("div");
-            divCol.classList.add("currentWrapper")
-            stockDiv.appendChild(divCol);
+          let divCol = document.createElement("div");
+          divCol.classList.add("currentWrapper");
+          stockDiv.appendChild(divCol);
 
-            let symbol = document.createElement("strong");
-            symbol.classList.add("font-weight-bold")
-            symbol.innerHTML = i.symbol;
-            divCol.appendChild(symbol);
+          let symbol = document.createElement("strong");
+          symbol.classList.add("font-weight-bold");
+          symbol.innerHTML = i.symbol;
+          divCol.appendChild(symbol);
 
-            let current = document.createElement("p");
-            current.innerHTML = "current price:  " + i.current;
-            divCol.appendChild(current);
+          let current = document.createElement("p");
+          current.innerHTML = "current price:  " + i.current;
+          divCol.appendChild(current);
 
-            let high = document.createElement("p");
-            high.innerHTML = "high price:  " + i.high;
-            divCol.appendChild(high);
+          let high = document.createElement("p");
+          high.innerHTML = "high price:  " + i.high;
+          divCol.appendChild(high);
 
-            let low = document.createElement("p");
-            low.innerHTML = "low price:  " + i.low;
-            divCol.appendChild(low);
+          let low = document.createElement("p");
+          low.innerHTML = "low price:  " + i.low;
+          divCol.appendChild(low);
         });
-    };
-</script>
-</body>
+      };
+    </script>
+  </body>
 </html>
