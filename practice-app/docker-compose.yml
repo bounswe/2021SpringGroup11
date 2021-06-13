@@ -18,6 +18,7 @@ services:
       - DB_HOST=db
       - DB_PASSWORD=dev_password
       - DB_USER=dev_user
+      - QUANDL_API_KEY='FpzfCbdQK7s7NZRY9F2U'
     # env_file:
     #   - ./.env.dev
     # stdin_open: true
