@@ -19,3 +19,4 @@ For further information please have a look at our [wiki page](https://github.com
 - [Muhammed Emin Deniz](https://github.com/emindeniz99)
 - [Egemen Kaplan](https://github.com/EgemenKaplan)
 - [Kürşat Bakiş](https://github.com/kursatbakis)
+- [Hazar Çakır](https://github.com/hazerank)
