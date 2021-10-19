@@ -2,7 +2,7 @@
 
 # Description
 
-Welcome to our github repository. We are 11th group of CMPE352 Fundamentals of Software Engineering course.
+Welcome to our github repository. We are 11th group of CMPE352-CMPE451 courses.
 We will work on a software project as a team throughout this term.
 
 For further information please have a look at our [wiki page](https://github.com/bounswe/2021SpringGroup11/wiki).
