@@ -14,7 +14,7 @@ For further information please have a look at our [wiki page](https://github.com
 - [Bekir Tatar](https://github.com/bekirtatar)
 - [Alper Canberk Balcı](https://github.com/canberkboun9)
 - [Mehmet Yasin Şeremet](https://github.com/myasins)
-- [Hatice Şule Erkul](https://github.com/hsuleerkul)
+- [Meltem Arslan](https://github.com/meltemarsl)
 - [Selman Berk Özkurt](github.com/SelmanB)
 - [Muhammed Emin Deniz](https://github.com/emindeniz99)
 - [Egemen Kaplan](https://github.com/EgemenKaplan)
