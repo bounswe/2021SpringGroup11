@@ -1,0 +1,4 @@
+djangorestframework
+pyyaml
+heybooster_toolkit
+pymongo[srv]
