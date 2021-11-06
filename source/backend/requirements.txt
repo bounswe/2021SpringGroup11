@@ -1,4 +1,5 @@
 djangorestframework
 pyyaml
 heybooster_toolkit
+jwt
 pymongo[srv]
