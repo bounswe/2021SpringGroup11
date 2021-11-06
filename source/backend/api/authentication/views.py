@@ -125,6 +125,5 @@ class BanUser(APIView):
         user.isBanned = True
         user.update()
 
-        print(user)
-        return Response({'detail': 'User banned successfully'}, status=status.HTTP_200_OK)
+        return Response({'detail': f'User with username: {user.username} banned successfully'}, status=status.HTTP_200_OK)
 
