@@ -12,7 +12,9 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Text("homePage"),
+      body: Center(
+        child: Text("homePage"),
+      ),
       resizeToAvoidBottomInset: false,
     );
   }
