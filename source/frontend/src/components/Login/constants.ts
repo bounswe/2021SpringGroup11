@@ -1,0 +1,10 @@
+export const DEFAULT_ACTION = 'app/Login/DEFAULT_ACTION';
+export const LOGIN = 'app/Login/LOGIN';
+export const LOGIN_SUCCESS = 'app/Login/LOGIN_SUCCESS';
+export const LOGIN_FAILURE = 'app/Login/LOGIN_FAILURE';
+export const CHECKAUTH = 'app/Login/CHECKAUTH';
+export const CHECKAUTH_SUCCESS = 'app/Login/CHECKAUTH_SUCCESS';
+export const CHECKAUTH_FAILURE = 'app/Login/CHECKAUTH_FAILURE';
+export const LOGOUT = 'app/Login/LOGOUT';
+export const LOGOUT_SUCCESS = 'app/Login/LOGOUT_SUCCESS';
+export const LOGOUT_FAILURE = 'app/Login/LOGOUT_FAILURE';

@@ -1,23 +1,35 @@
-import React from "react";
-import { Redirect } from "react-router-dom";
-import Home from "./components/Home";
-import Login from "./components/Login";
+import { Redirect } from 'react-router-dom';
+import { lazy, LazyExoticComponent } from 'react';
 
 const routes: {
   path: string;
-  component: () => JSX.Element;
+  component: (() => JSX.Element) | LazyExoticComponent<(props: any) => JSX.Element>;
+  exact: boolean;
+  requestAuth: boolean;
 }[] = [
   {
-    path: "/",
-    component: () => <Redirect to="/home"></Redirect>,
+    path: '/',
+    exact: true,
+    component: () => <Redirect to="/home" />,
+    requestAuth: true,
   },
   {
-    path: "/login",
-    component: () => <Login />,
+    path: '/login',
+    exact: true,
+    component: lazy(() => import('./components/Login')),
+    requestAuth: false,
   },
   {
-    path: "/home",
-    component: () => <Home />,
+    path: '/signup',
+    exact: true,
+    component: lazy(() => import('./components/Signup')),
+    requestAuth: true,
+  },
+  {
+    path: '/home',
+    exact: true,
+    component: lazy(() => import('./components/Home')),
+    requestAuth: true,
   },
 ];
 
