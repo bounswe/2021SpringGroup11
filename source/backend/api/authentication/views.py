@@ -52,15 +52,14 @@ class LogIn(APIView):
             return Response({'detail': 'Wrong password'}, status=status.HTTP_401_UNAUTHORIZED)
 
         return Response(
-            {
-                'data': create_jwt({
-                    'username': user.username,
-                    'password': user.password,
-                    'email': user.email,
-                    'isAdmin': user.isAdmin,
-                    'exp': int(time.time()) + 60*60
-                    })
-            }, status=status.HTTP_200_OK)
+            create_jwt({
+                'username': user.username,
+                'password': user.password,
+                'email': user.email,
+                'isAdmin': user.isAdmin,
+                'exp': int(time.time()) + 60*60
+                })
+        , status=status.HTTP_200_OK)
 
 
 class RefreshToken(APIView):
@@ -95,12 +94,11 @@ class RefreshToken(APIView):
                 
                 if user:
                     return Response(
-            {
-                'data': create_jwt({
-                    'username': user['username'],
-                    'password': user['password'],
-                    'email': user['email'],
-                    'isAdmin': user['isAdmin'],
-                    'exp': int(time.time()) + 60*60
-                    })
-            }, status=status.HTTP_200_OK)
+                        create_jwt({
+                            'username': user['username'],
+                            'password': user['password'],
+                            'email': user['email'],
+                            'isAdmin': user['isAdmin'],
+                            'exp': int(time.time()) + 60*60
+                            })
+                    , status=status.HTTP_200_OK)

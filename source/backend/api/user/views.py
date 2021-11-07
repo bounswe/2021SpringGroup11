@@ -6,7 +6,6 @@ from heybooster.helpers.database.mongodb import MongoDBHelper
 from django.conf import settings
 from authentication.models import User
 
-
 class EditUser(APIView):
     """
         Edit User Class
@@ -29,4 +28,19 @@ class EditUser(APIView):
         user = User(**user)
         user.update()
 
-        return Response({'data': user.get_dict()}, status=status.HTTP_200_OK)
+        return Response(user.get_dict(), status=status.HTTP_200_OK)
+
+
+class SearchUser(APIView):
+    """
+        Search User Class
+    """
+    def get(self, search_text, request):
+        with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
+            users = db.find(
+                'user', # TODO Create fulltext index on username
+                query={'$or': [{'$text': {'$search': search_text}}, {'username': {'$regex': search_text, '$options': 'i'}}]},
+                projection={'username': 1}
+            )
+
+        return Response(users, status=status.HTTP_200_OK)

@@ -37,13 +37,13 @@ class User:
     
     def insert(self):
         with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
-            self._id = db.insert_one('user', self.get_dict()).inserted_id
+            self._id = db.insert_one('user', self.get_dict(get_password=True)).inserted_id
 
     def update(self):
         with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
             db.find_and_modify(collection='user', query={'_id': self._id}, **self.get_dict())
     
-    def get_dict(self, get_id=False):
+    def get_dict(self, get_id=False, get_password=False):
         result = vars(self)
         
         if '_id' in result.keys():
@@ -51,5 +51,8 @@ class User:
                 result['_id'] = str(result['_id'])
             else:
                 result.pop('_id')
+        
+        #if not get_password:
+        #    result.pop('password')
 
         return result
