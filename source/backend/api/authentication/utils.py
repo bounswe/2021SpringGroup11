@@ -1,8 +1,19 @@
 import jwt
 import time
+import requests
+import base64
 from rest_framework.permissions import BasePermission
-from rest_framework.exceptions import NotAuthenticated, PermissionDenied
+from rest_framework.exceptions import NotAuthenticated, PermissionDenied, APIException
 from django.conf import settings
+from googleapiclient.discovery import build
+from google.auth.transport.requests import Request
+from google.oauth2.credentials import Credentials
+from email.mime.text import MIMEText
+
+SCOPES = ['https://www.googleapis.com/auth/gmail.send',
+          'https://www.googleapis.com/auth/gmail.readonly']
+TOKEN_URI = 'https://oauth2.googleapis.com/token'
+
 
 class IsAuthenticated(BasePermission):
     """
@@ -79,3 +90,89 @@ def decode_jwt(encoded_jwt):
         encoded_jwt = encoded_jwt.encode()
     
     return jwt.decode(encoded_jwt, settings.SECRET_KEY, algorithms=['HS256'])
+
+def send_email_via_sendinblue(subject='Hey', from_email='erenaltunoglu@gmail.com', from_name='Renaissance', to_email='', to_name=''):
+    requests.post('https://api.sendinblue.com/v3/smtp/email',
+        headers={'api-key': settings.SENDINBLUE_API_KEY},
+        json={
+            'sender': {
+                'name': from_name,
+                'email': from_email
+            },
+            'to': [
+                {
+                    'email': to_email,
+                    'name': to_name
+                }
+            ],
+            'subject': subject,
+            'htmlContent':'<html><head></head><body><p>Hello,</p>This is my first transactional email sent from Sendinblue. Welcome.......</p></body></html>'
+        }
+    )
+
+
+EMAIL_TEMPLATE = """
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head></head>
+<body>
+<br> Welcome to Renaissance, "{username}"  <a href="http://renaissance.com/" target="_blank">renaissance.com</a>
+</body>
+""" 
+
+def get_service():
+    """
+        Returns service
+    """
+    creds = Credentials(token=settings.GMAIL_TOKEN, token_uri=TOKEN_URI, refresh_token=settings.GMAIL_REFRESH_TOKEN, client_id=settings.GMAIL_CLIENT_ID,
+                        client_secret=settings.GMAIL_CLIENT_SECRET, scopes=SCOPES)
+    if not creds.valid:
+        if creds.expired:
+            try:
+                creds.refresh(Request())
+            except:
+                raise APIException('GMAIL APP CRASHED (CANNOT REFRESH)')
+        # # Save the credentials for the next run
+        # os.environ['GMAIL_TOKEN'] = creds.token
+        # os.environ['GMAIL_REFRESH_TOKEN'] = creds.refresh_token
+
+    try:
+        return build('gmail', 'v1', credentials=creds)
+    except:
+        raise APIException('GMAIL APP CRASHED (SERVICE BUILD)')
+
+
+def create_message(sender, to, subject, message_text):
+    """
+    Create a message for an email.
+        :sender: Email address of the sender.
+        :to: Email address of the receiver.
+        :subject: The subject of the email message.
+        :message_text: The text of the email message.
+
+        returns an object containing a base64url encoded email object.
+    """
+    message = MIMEText(message_text, 'html')
+    message['to'] = to
+    message['from'] = sender
+    message['subject'] = subject
+    raw_message = base64.urlsafe_b64encode(message.as_bytes())
+    
+    return {'raw': raw_message.decode("utf-8")}
+
+
+def send_email(receiver, username):
+    """
+        Sends email
+        :reciever: email address of receiver
+        :username: username of 
+    """
+    try:
+        service = get_service()
+        user_id = 'me'
+        subject = 'Hello from Renaissance'
+        message_text = EMAIL_TEMPLATE.format(username=username)
+        message = create_message(settings.SENDER_EMAIL, receiver, subject, message_text)
+        service.users().messages().send(userId=user_id, body=message).execute()
+    except:
+        print('Could not send email')

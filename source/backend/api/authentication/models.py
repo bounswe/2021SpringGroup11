@@ -19,10 +19,19 @@ class User:
         self.isAdmin = kwargs.get('isAdmin', False)
         self.isBanned = kwargs.get('isBanned', False)
         self.createdAt = kwargs.get('createdAt', int(time.time()))
+        self.updatedAt = kwargs.get('updatedAt', self.createdAt)
+        self.lastLogin = kwargs.get('lastLogin')
+        self.finishedResourceCount = kwargs.get('finishedResourceCount', 0)
+        self.isVerified = kwargs.get('isVerified', False)
+        #self.followedResources = kwargs.get('followedResources', [])
+        #self.followedResources = kwargs.get('followedResources', [])
+        #self.followedResources = kwargs.get('followedResources', [])
+        #self.followedResources = kwargs.get('followedResources', [])
+        
         self.bio = kwargs.get('bio', '')
         self.rememberMe = kwargs.get('rememberMe', True)
 
-        # ObjectID not JSON serializable
+        # ObjectID is not JSON serializable
         if kwargs.get('_id'):
             self._id = kwargs['_id']
 
@@ -51,8 +60,9 @@ class User:
                 result['_id'] = str(result['_id'])
             else:
                 result.pop('_id')
-        
-        #if not get_password:
-        #    result.pop('password')
+
+        if not get_password:
+            if result.get('password'):
+                result.pop('password')
 
         return result

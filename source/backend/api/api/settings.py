@@ -42,6 +42,7 @@ SESSION_SAVE_EVERY_REQUEST = True
 DB_NAME = env_data['DB_NAME']
 MONGO_URI = env_data['MONGO_URI']
 
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -131,3 +132,10 @@ STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# E-Mailing service
+GMAIL_CLIENT_SECRET = env_data['GMAIL_CLIENT_SECRET']
+GMAIL_CLIENT_ID = env_data['GMAIL_CLIENT_ID']
+GMAIL_REFRESH_TOKEN = env_data['GMAIL_REFRESH_TOKEN']
+GMAIL_TOKEN = env_data['GMAIL_TOKEN']
+SENDER_EMAIL = env_data['GMAIL_FROM_ADDRESS']
+SENDINBLUE_API_KEY = env_data['SENDINBLUE_API_KEY']
