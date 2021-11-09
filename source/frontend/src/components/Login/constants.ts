@@ -8,3 +8,6 @@ export const CHECKAUTH_FAILURE = 'app/Login/CHECKAUTH_FAILURE';
 export const LOGOUT = 'app/Login/LOGOUT';
 export const LOGOUT_SUCCESS = 'app/Login/LOGOUT_SUCCESS';
 export const LOGOUT_FAILURE = 'app/Login/LOGOUT_FAILURE';
+export const FORGOT_PASSWORD = 'app/Login/FORGOT_PASSWORD';
+export const FORGOT_PASSWORD_SUCCESS = 'app/Login/FORGOT_PASSWORD_SUCCESS';
+export const FORGOT_PASSWORD_FAILURE = 'app/Login/FORGOT_PASSWORD_FAILURE';

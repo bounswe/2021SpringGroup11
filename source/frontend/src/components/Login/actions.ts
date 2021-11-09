@@ -9,6 +9,9 @@ import {
   LOGOUT,
   LOGOUT_FAILURE,
   LOGOUT_SUCCESS,
+  FORGOT_PASSWORD,
+  FORGOT_PASSWORD_SUCCESS,
+  FORGOT_PASSWORD_FAILURE,
 } from './constants';
 
 export function defaultAction() {
@@ -73,5 +76,26 @@ export function checkAuthSuccess(authInfo) {
 export function checkAuthFailure() {
   return {
     type: CHECKAUTH_FAILURE,
+  };
+}
+
+export function forgotPassword(mail) {
+  return {
+    type: FORGOT_PASSWORD,
+    mail,
+  };
+}
+
+export function forgotPasswordSuccess(response) {
+  return {
+    type: FORGOT_PASSWORD_SUCCESS,
+    response,
+  };
+}
+
+export function forgotPasswordFailure(response) {
+  return {
+    type: FORGOT_PASSWORD_FAILURE,
+    response,
   };
 }
