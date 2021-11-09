@@ -2,7 +2,7 @@ import time
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from authentication.utils import create_jwt, decode_jwt, send_email, IsAdmin
+from authentication.utils import create_jwt, decode_jwt, send_email, create_forgot_password_link
 from heybooster.helpers.database.mongodb import MongoDBHelper
 from django.conf import settings
 from common.data_check import check_data_keys
@@ -21,9 +21,6 @@ class SignUp(APIView):
         with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
             if db.find_one('user', query={'$or': [{'email': data['email']}, {'username': data['username']}]}):
                 return Response({'detail': 'Email or username in use'}, status=status.HTTP_406_NOT_ACCEPTABLE)
-
-        if data['password'] != data['password_repeat']:            
-            return Response({'detail': 'Passwords must be match'}, status=status.HTTP_406_NOT_ACCEPTABLE)
         
         user = User(**data)
         user.hash_password()
@@ -110,4 +107,35 @@ class RefreshToken(APIView):
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
+class ForgotPassword(APIView):
+    """
+        Forgot Password API
+    """
 
+    def post(self, request):
+        data = request.data
+        key_error = check_data_keys(data=data, necessary_keys=['username'])
+        
+        if key_error:
+            return Response({'detail': key_error}, status.HTTP_400_BAD_REQUEST)
+        
+        with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
+            user = db.find_one('user', query={'username': data['username']})
+        
+        if not user or user.get('isDeleted'):
+            return Response('USER_NOT_FOUND', status=status.HTTP_404_NOT_FOUND)
+
+        if user['isBanned']:
+            return Response('USER_IS_BANNED', status=status.HTTP_400_BAD_REQUEST)
+
+        link = create_forgot_password_link(jwt=create_jwt(
+            {
+            'username': user['username'],
+            'email': user['email'],
+            'isAdmin': user['isAdmin'],
+            'exp': int(time.time()) + 60*60
+            }
+        ))
+        send_email(receiver=user['email'], username=user['username'], forgot_password_link=link)
+
+        return Response('EMAIL_SENT', status=status.HTTP_202_ACCEPTED)

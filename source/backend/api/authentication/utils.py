@@ -1,3 +1,4 @@
+from os import link
 import jwt
 import time
 import requests
@@ -121,6 +122,15 @@ EMAIL_TEMPLATE = """
 </body>
 """ 
 
+EMAIL_TEMPLATE_FORGOT_PASSWORD = """
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head></head>
+<body>
+<br> "{username}" Change your password from this link, {link}
+</body>
+""" 
+
 def get_service():
     """
         Returns service
@@ -162,18 +172,44 @@ def create_message(sender, to, subject, message_text):
     return {'raw': raw_message.decode("utf-8")}
 
 
-def send_email(receiver, username):
+def send_email(receiver, username, forgot_password_link: str=''):
     """
         Sends email
         :receiver: email address of receiver
         :username: username of 
     """
-    try:
-        service = get_service()
-        user_id = 'me'
-        subject = 'Hello from Renaissance'
-        message_text = EMAIL_TEMPLATE.format(username=username)
-        message = create_message(settings.SENDER_EMAIL, receiver, subject, message_text)
-        service.users().messages().send(userId=user_id, body=message).execute()
-    except:
-        print('Could not send email')
+    if forgot_password_link:
+        try:
+            service = get_service()
+            user_id = 'me'
+            subject = 'Renew your Password'
+            message_text = EMAIL_TEMPLATE_FORGOT_PASSWORD.format(username=username, link=forgot_password_link)
+            print(receiver)
+            print(username)
+            print(forgot_password_link)
+            message = create_message(settings.SENDER_EMAIL, receiver, subject, message_text)
+            service.users().messages().send(userId=user_id, body=message).execute()
+        
+        except:
+            print('Could not send email')
+    else:
+        try:
+            service = get_service()
+            user_id = 'me'
+            subject = 'Hello from Renaissance'
+            message_text = EMAIL_TEMPLATE.format(username=username)
+            message = create_message(settings.SENDER_EMAIL, receiver, subject, message_text)
+            service.users().messages().send(userId=user_id, body=message).execute()
+        except:
+            print('Could not send email')
+
+
+def create_forgot_password_link(jwt) -> str:
+    """
+        Util function for creating forgot password link
+        :username: username of user
+    """
+    # TODO change url
+    redirect_url = 'frontend'
+    
+    return redirect_url + f'?jwt={jwt}'
