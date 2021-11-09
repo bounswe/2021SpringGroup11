@@ -73,8 +73,8 @@ class _BottomNavigationPageState extends State<BottomNavigationPage> {
                 builder: (context) => ProfilePage(user: User(
                   username: 'ss',
                   email: 'fefe',
-                  lastName: 'sarf',
-                  firstName: 'rprp',
+                  lastname: 'sarf',
+                  firstname: 'rprp',
                   profilePictureUrl: 'fr4t'
                 )),
                 settings: route

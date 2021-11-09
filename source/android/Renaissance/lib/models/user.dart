@@ -1,22 +1,25 @@
 class User {
-  late String username;
-  late String email;
-  late String firstName;
-  late String lastName;
-  late String profilePictureUrl;
+  final String? username;
+  final String? email;
+  final String? firstname;
+  final String? lastname;
+  final String? profilePictureUrl;
+  final String? bio;
+  final bool? isAdmin;
 
-  User({ required this.username,
-    required this.email,
-    required this.firstName,
-    required this.lastName,
-    required this.profilePictureUrl
+  const User({
+    this.username, this.email, this.firstname, this.lastname, this.profilePictureUrl, this.bio, this.isAdmin
   });
 
-  User.fromJson(Map<String, dynamic> json) {
-    username = json['username'];
-    email = json['email'];
-    firstName = json['firstName'];
-    lastName = json['lastName'];
-    profilePictureUrl = json['profilePictureUrl'];
+  factory User.fromJson(Map<String, dynamic> json) {
+    return User(
+        username: json['username'] as String?,
+        email: json['email'] as String?,
+        firstname: json['firstname'] as String?,
+        lastname: json['lastname'] as String?,
+        profilePictureUrl: json['profilePictureUrl'] as String?,
+        bio: json['bio'] as String?,
+        isAdmin: json['isAdmin'] as bool?
+    );
   }
 }
