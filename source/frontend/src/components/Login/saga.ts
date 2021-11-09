@@ -1,6 +1,6 @@
 import { put, call, select, takeLatest } from 'redux-saga/effects';
 import { CHECKAUTH, LOGIN, LOGOUT, FORGOT_PASSWORD } from './constants';
-import push from 'react-router-dom';
+import history from '../../utils/history';
 import makeSelectLogin from './selectors';
 import { LOGIN_URL } from '../../utils/endpoints';
 import { post } from '../../utils/axios';
@@ -31,7 +31,9 @@ export function* doLogin() {
       if (loginData.remember) {
         auth.setAuthInfoToLocalStorage(user);
       }
-      loginData?.redirectFrom ? yield put(push(loginData.redirectFrom)) : yield put(push('/home'));
+      loginData?.redirectFrom
+        ? yield put(history.push(loginData.redirectFrom))
+        : yield put(history.push('/home'));
     } else {
       yield put(loginFailure('LOGIN ERROR MESSAGE WILL BE WRITTEN HERE'));
     }
@@ -48,9 +50,9 @@ export function* checkAuth() {
     if (user) {
       yield put(checkAuthSuccess(user));
       if (loginData.redirectFrom) {
-        yield put(push(loginData.redirectFrom));
+        yield put(history.push(loginData.redirectFrom));
       } else {
-        yield put(push('/'));
+        yield put(history.push('/'));
       }
     } else {
       yield put(checkAuthFailure());
