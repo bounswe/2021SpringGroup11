@@ -55,7 +55,8 @@ class IsAdmin(BasePermission):
             
             return token_info['isAdmin']
         else:
-            raise NotAuthenticated('No credentials provided for request')
+            raise PermissionDenied('This user is not admin')
+
 
 def verify_jwt_token(token):
     """
@@ -164,7 +165,7 @@ def create_message(sender, to, subject, message_text):
 def send_email(receiver, username):
     """
         Sends email
-        :reciever: email address of receiver
+        :receiver: email address of receiver
         :username: username of 
     """
     try:

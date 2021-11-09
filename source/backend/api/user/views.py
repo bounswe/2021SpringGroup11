@@ -1,7 +1,7 @@
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from authentication.utils import IsAuthenticated
+from authentication.utils import IsAuthenticated, IsAdmin
 from heybooster.helpers.database.mongodb import MongoDBHelper
 from django.conf import settings
 from authentication.models import User
@@ -44,3 +44,27 @@ class SearchUser(APIView):
             )
 
         return Response(users, status=status.HTTP_200_OK)
+
+
+class BanUser(APIView):
+    permission_classes = [IsAdmin]
+
+    def post(self, request):
+        data = request.data
+        key_error = check_data_keys(data=data, necessary_keys=['username'])
+
+        if key_error:
+            return Response({'detail': key_error}, status.HTTP_400_BAD_REQUEST)
+
+        with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
+            user = db.find_one('user', query={'username': data['username']})
+
+        if not user or user['isBanned']:  # USER_NOT_FOUND
+            return Response({'detail': 'There is no user'}, status=status.HTTP_406_NOT_ACCEPTABLE)
+
+        user = User(**user)
+        user.isBanned = True
+        user.update()
+
+        return Response({'detail': f'User with username: {user.username} banned successfully'},
+                        status=status.HTTP_200_OK)
