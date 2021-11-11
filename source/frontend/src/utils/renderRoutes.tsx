@@ -13,7 +13,7 @@ const renderRoutes = () => {
               exact={route.exact}
               render={(props) => {
                 if (auth.isAuthenticated()) {
-                  return <route.component {...props} />;
+                  return <route.component {...props} route={route} />;
                 }
                 return (
                   <Redirect

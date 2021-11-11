@@ -1,9 +1,13 @@
 import produce from 'immer';
+
 import {
   CHECKAUTH,
   CHECKAUTH_FAILURE,
   CHECKAUTH_SUCCESS,
   DEFAULT_ACTION,
+  FORGOT_PASSWORD,
+  FORGOT_PASSWORD_SUCCESS,
+  FORGOT_PASSWORD_FAILURE,
   LOGIN,
   LOGIN_FAILURE,
   LOGIN_SUCCESS,
@@ -15,11 +19,13 @@ import {
 export const initialState = {
   redirectFrom: null,
   loading: true,
-  userName: '',
+  username: '',
   password: '',
   remember: true,
   loginErrorMessage: '',
   authInfo: JSON.parse(sessionStorage.getItem('authInfo')),
+  mail: '',
+  mailSentForPassword: '',
 };
 
 const loginReducer = (state = initialState, action) =>
@@ -41,7 +47,7 @@ const loginReducer = (state = initialState, action) =>
         break;
       case LOGIN:
         draft.loading = true;
-        draft.userName = action.userInfo.userName;
+        draft.username = action.userInfo.username;
         draft.password = action.userInfo.password;
         draft.remember = action.userInfo.remember;
         break;
@@ -57,19 +63,30 @@ const loginReducer = (state = initialState, action) =>
       case LOGOUT:
         draft.redirectFrom = null;
         draft.loading = true;
-        draft.userName = '';
+        draft.username = '';
         draft.password = '';
         draft.authInfo = {};
         break;
       case LOGOUT_SUCCESS:
         draft.redirectFrom = null;
         draft.loading = false;
-        draft.userName = '';
+        draft.username = '';
         draft.password = '';
         draft.authInfo = {};
         break;
       case LOGOUT_FAILURE:
         draft.redirectFrom = null;
+        draft.loading = false;
+        break;
+      case FORGOT_PASSWORD:
+        draft.mail = null;
+        draft.loading = true;
+        break;
+      case FORGOT_PASSWORD_SUCCESS:
+        draft.loading = false;
+        break;
+      case FORGOT_PASSWORD_FAILURE:
+        draft.mailSentForPassword = action.response.isSuccess;
         draft.loading = false;
         break;
     }
