@@ -5,6 +5,7 @@ from authentication.utils import IsAuthenticated, IsAdmin
 from heybooster.helpers.database.mongodb import MongoDBHelper
 from django.conf import settings
 from authentication.models import User
+from common.data_check import check_data_keys
 
 class EditUser(APIView):
     """
@@ -35,7 +36,7 @@ class SearchUser(APIView):
     """
         Search User Class
     """
-    def get(self, search_text, request):
+    def get(self, request, search_text):
         with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
             users = db.find(
                 'user', # TODO Create fulltext index on username
@@ -68,3 +69,24 @@ class BanUser(APIView):
 
         return Response({'detail': f'User with username: {user.username} banned successfully'},
                         status=status.HTTP_200_OK)
+
+class GetProfile(APIView):
+
+    def get(self, request, username):
+        with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
+            user = db.find_one(
+                    'user',
+                    query={'username': username},
+                    projection={
+                        '_id': 0,
+                        'updatedAt': 0,
+                        'password': 0,
+                        'lastLogin': 0,
+                        'rememberMe': 0, 
+                    }
+                )
+
+            if not user or user['isBanned'] or user.get('isDeleted'):
+                return Response('USER_NOT_FOUND', status=status.HTTP_404_NOT_FOUND)
+        
+        return Response(user, status=status.HTTP_200_OK)
