@@ -19,12 +19,12 @@ import React from 'react';
 import NavBar from '../NavBar';
 
 interface Props {}
-const Home = (props: Props) => {
+const Profile = (props: Props) => {
   return (
     <div>
-      <NavBar title="Home"></NavBar>
+      <NavBar title="Profile"></NavBar>
     </div>
   );
 };
 
-export default Home;
+export default Profile;
