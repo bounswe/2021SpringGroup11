@@ -4,7 +4,7 @@ from rest_framework.views import APIView
 from authentication.utils import IsAuthenticated, IsAdmin
 from heybooster.helpers.database.mongodb import MongoDBHelper
 from django.conf import settings
-from authentication.models import User
+from common.models import User
 from common.data_check import check_data_keys
 
 class EditUser(APIView):
@@ -21,7 +21,7 @@ class EditUser(APIView):
             user = db.find_one('user', query={'email': data['email'], 'username': data['username']})
 
         if not user:
-            return Response({'detail': 'No such user'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'detail': 'NO_USER'}, status=status.HTTP_400_BAD_REQUEST)
         
         for key, value in data.items():
             user[key] = value
@@ -60,8 +60,8 @@ class BanUser(APIView):
         with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
             user = db.find_one('user', query={'username': data['username']})
 
-        if not user or user['isBanned']:  # USER_NOT_FOUND
-            return Response({'detail': 'There is no user'}, status=status.HTTP_406_NOT_ACCEPTABLE)
+        if not user or user['isBanned']:
+            return Response({'detail': 'NO_USER'}, status=status.HTTP_406_NOT_ACCEPTABLE)
 
         user = User(**user)
         user.isBanned = True
@@ -90,3 +90,33 @@ class GetProfile(APIView):
                 return Response('USER_NOT_FOUND', status=status.HTTP_404_NOT_FOUND)
         
         return Response(user, status=status.HTTP_200_OK)
+
+
+class ChangePassword(APIView):
+    """
+            Change User Password after Login
+    """
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        data = request.data
+        key_error = check_data_keys(data=data, necessary_keys=['password'])
+
+        if key_error:
+            return Response({'detail': key_error}, status.HTTP_400_BAD_REQUEST)
+
+        with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
+            user = db.find_one('user', query={'email': data['email'], 'username': data['username']})
+
+        if not user:
+            return Response({'detail': 'NO_USER'}, status=status.HTTP_400_BAD_REQUEST)
+
+        for key, value in data.items():
+            user[key] = value
+
+        user = User(**user)
+        user.password = data['password']
+        user.hash_password()
+        user.update()
+
+        return Response(user.get_dict(), status=status.HTTP_200_OK)

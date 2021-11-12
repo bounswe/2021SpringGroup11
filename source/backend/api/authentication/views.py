@@ -6,7 +6,7 @@ from authentication.utils import create_jwt, decode_jwt, send_email, create_forg
 from heybooster.helpers.database.mongodb import MongoDBHelper
 from django.conf import settings
 from common.data_check import check_data_keys
-from authentication.models import User
+from common.models import User
 
 
 class SignUp(APIView):
@@ -20,7 +20,7 @@ class SignUp(APIView):
 
         with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
             if db.find_one('user', query={'$or': [{'email': data['email']}, {'username': data['username']}]}):
-                return Response({'detail': 'Email or username in use'}, status=status.HTTP_406_NOT_ACCEPTABLE)
+                return Response({'detail': 'USERNAME_ALREADY_EXISTS'}, status=status.HTTP_406_NOT_ACCEPTABLE)
         
         user = User(**data)
         user.hash_password()
@@ -28,7 +28,7 @@ class SignUp(APIView):
 
         send_email(data['email'], data['username'])
 
-        return Response({'detail': 'User successfully created'}, status=status.HTTP_200_OK)
+        return Response({'detail': 'USER_CREATED'}, status=status.HTTP_200_OK)
 
 
 class LogIn(APIView):
@@ -44,12 +44,12 @@ class LogIn(APIView):
             user = db.find_one('user', query={'username': data['username']})
             
         if not user or user['isBanned']:
-            return Response({'detail': 'There is no user'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'detail': 'NO_USER'}, status=status.HTTP_400_BAD_REQUEST)
 
         user = User(**user)
         
         if not user.check_password(password=data['password']):
-            return Response({'detail': 'Wrong password'}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response({'detail': 'WRONG_PASSWORD'}, status=status.HTTP_401_UNAUTHORIZED)
 
         user.lastLogin = int(time.time())
         user.update()
@@ -104,7 +104,7 @@ class RefreshToken(APIView):
                             })
                     , status=status.HTTP_200_OK)
         
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+        return Response({'detail': 'REFRESH_FAILED'},status=status.HTTP_400_BAD_REQUEST)
 
 
 class ForgotPassword(APIView):
@@ -123,17 +123,17 @@ class ForgotPassword(APIView):
             user = db.find_one('user', query={'username': data['username']})
         
         if not user or user.get('isDeleted'):
-            return Response('USER_NOT_FOUND', status=status.HTTP_404_NOT_FOUND)
+            return Response({'detail': 'USER_NOT_FOUND'}, status=status.HTTP_404_NOT_FOUND)
 
         if user['isBanned']:
-            return Response('USER_IS_BANNED', status=status.HTTP_400_BAD_REQUEST)
+            return Response({'detail': 'USER_IS_BANNED'}, status=status.HTTP_400_BAD_REQUEST)
 
         link = create_forgot_password_link(jwt=create_jwt(
             {
-            'username': user['username'],
-            'email': user['email'],
-            'isAdmin': user['isAdmin'],
-            'exp': int(time.time()) + 60*60
+                'username': user['username'],
+                'email': user['email'],
+                'isAdmin': user['isAdmin'],
+                'exp': int(time.time()) + 60*60
             }
         ))
         send_email(receiver=user['email'], username=user['username'], forgot_password_link=link)
