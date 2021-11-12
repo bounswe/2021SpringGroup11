@@ -7,7 +7,6 @@ import {
   Typography,
   TextField,
   Button,
-  Grid,
   InputAdornment,
   IconButton,
 } from '@mui/material/';
@@ -55,10 +54,10 @@ const useStyles = makeStyles(() => ({
     background: 'rgba(0,0,0,0.1)',
     borderRadius: '20px',
     height: '50px',
-    margin: 'normal'
+    margin: 'normal',
   },
   textFieldRoot: {
-    margin: '10px'
+    margin: '10px',
   },
   textCred: {
     fontFamily: 'Roboto',
@@ -91,21 +90,20 @@ const SignUp = (props: Props) => {
   const classes = useStyles();
 
   const [emailError, setEmailError] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
+
+  const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => setShowPassword(!showPassword);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    if(!emailValidation(data.get('email')))
-    {
-        return;
-    };
-    if(!passwordValidation(data.get('password'), data.get('repeatPassword'))){
+    if (!emailValidation(data.get('email'))) {
       return;
     }
-
+    if (!passwordValidation(data.get('password'), data.get('repeatPassword'))) {
+      return;
+    }
 
     dispatch(
       signup({
@@ -120,20 +118,23 @@ const SignUp = (props: Props) => {
     console.log(props.signup);
   };
   const emailValidation = (email) => {
-    const regex = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
-    if(!email || regex.test(email) === false){
-        setEmailError(true);
-        return false;
+    const regex =
+      /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+    if (!email || regex.test(email) === false) {
+      setEmailError(true);
+      return false;
     }
+    setEmailError(false);
     return true;
-  }
+  };
   const passwordValidation = (password1, password2) => {
-    if(password1 !== password2){
-        setPasswordError(true);
-        return false;
+    if (password1 !== password2) {
+      setPasswordError(true);
+      return false;
     }
+    setPasswordError(false);
     return true;
-  }
+  };
 
   return (
     <Container className={classes.root} maxWidth="xs">
@@ -156,7 +157,7 @@ const SignUp = (props: Props) => {
         <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
           <TextField
             InputProps={{ className: classes.textField }}
-            className = {classes.textFieldRoot}
+            className={classes.textFieldRoot}
             required
             fullWidth
             id="name"
@@ -164,24 +165,20 @@ const SignUp = (props: Props) => {
             name="name"
             autoComplete="name"
             autoFocus
-            error={props.signup.signupErrorMessage}
-            helperText={props.signup.signupErrorMessage}
           />
-           <TextField
+          <TextField
             InputProps={{ className: classes.textField }}
-            className = {classes.textFieldRoot}
+            className={classes.textFieldRoot}
             required
             fullWidth
             id="surname"
             label="Surname"
             name="surname"
             autoComplete="surname"
-            error={props.signup.signupErrorMessage}
-            helperText={props.signup.signupErrorMessage}
           />
-           <TextField
+          <TextField
             InputProps={{ className: classes.textField }}
-            className = {classes.textFieldRoot}
+            className={classes.textFieldRoot}
             required
             fullWidth
             id="username"
@@ -193,15 +190,14 @@ const SignUp = (props: Props) => {
           />
           <TextField
             InputProps={{ className: classes.textField }}
-            className = {classes.textFieldRoot}
-            required
+            className={classes.textFieldRoot}
             fullWidth
             id="email"
             label="Email"
             name="email"
             autoComplete="email"
             error={emailError}
-            helperText={"Email is not valid."}
+            helperText={emailError ? 'Email is not valid.' : ''}
           />
           <TextField
             InputProps={{
@@ -218,7 +214,7 @@ const SignUp = (props: Props) => {
                 </InputAdornment>
               ),
             }}
-            className = {classes.textFieldRoot}
+            className={classes.textFieldRoot}
             required
             fullWidth
             name="password"
@@ -242,7 +238,7 @@ const SignUp = (props: Props) => {
                 </InputAdornment>
               ),
             }}
-            className = {classes.textFieldRoot}
+            className={classes.textFieldRoot}
             required
             fullWidth
             name="repeatPassword"
@@ -250,7 +246,7 @@ const SignUp = (props: Props) => {
             type={showPassword ? 'text' : 'password'}
             id="repeatPassword"
             error={passwordError}
-            helperText={"Passwords are not identical."}
+            helperText={passwordError && 'Passwords are not identical.'}
           />
           <Button
             className={classes.button}
@@ -278,4 +274,3 @@ function mapDispatchToProps(dispatch) {
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 export default compose(withConnect)(SignUp);
-
