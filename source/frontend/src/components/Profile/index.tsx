@@ -198,13 +198,13 @@ const ProfileContent = (props: ProfileContentProps) => {
           }}
         >
           {props.resources
-            .filter((r) => r.isFollewed)
+            .filter((r) => r.isFollowed)
             .map((resource) => {
               return (
                 <ResourceCard
                   resource={resource}
                   onClick={() => {}}
-                  buttonText={resource.isEnrolled ? 'Unfollow' : 'Follow'}
+                  buttonText={resource.isFollowed ? 'Unfollow' : 'Follow'}
                   onButtonClick={() => {
                     alert('TODO');
                   }}
@@ -257,7 +257,7 @@ interface Resource {
   effort: number; // percent
   rating: number;
   isEnrolled: boolean;
-  isFollewed: boolean;
+  isFollowed: boolean;
 }
 interface ResourceCardProps {
   resource: Resource;
