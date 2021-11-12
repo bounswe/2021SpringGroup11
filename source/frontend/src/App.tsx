@@ -1,22 +1,22 @@
-import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
+import renderRoutes from './utils/renderRoutes';
+import history from './utils/history';
+import { Router } from 'react-router-dom';
+
+import { Suspense } from 'react';
+import { createTheme, LinearProgress, ThemeProvider } from '@mui/material';
+import { Provider } from 'react-redux';
+import store from './store';
+
+const theme = createTheme();
 
 export function App() {
   return (
-    <>
-      <CssBaseline />
-      <h1>Hello world!</h1>
-      <Button
-        sx={{
-          color: "yellow",
-          ":hover": {
-            backgroundColor: "red",
-          },
-        }}
-        variant="contained"
-      >
-        Hello World
-      </Button>
-    </>
+    <Provider store={store}>
+      <ThemeProvider theme={theme}>
+        <Router history={history}>
+          <Suspense fallback={<LinearProgress />}>{renderRoutes()}</Suspense>
+        </Router>
+      </ThemeProvider>
+    </Provider>
   );
 }
