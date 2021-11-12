@@ -177,7 +177,7 @@ const Login = (props: Props) => {
               <Button
                 onClick={() => history.push('/signup')}
                 size="medium"
-                style={{ color: '#000000', background: '#9EE97A' }}
+                style={{ color: '#000000', background: '#9EE97A' , marginLeft: 'auto' }}
               >
                 Sign Up
               </Button>
