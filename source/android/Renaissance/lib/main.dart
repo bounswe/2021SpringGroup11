@@ -12,6 +12,8 @@ Future<void> main() async {
   var isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
-    home: isLoggedIn ? BottomNavigationPage() : BottomNavigationPage(), // MUST BE SET TO HOMEPAGE IF LOGGED IN.
+    home: isLoggedIn
+        ? BottomNavigationPage()
+        : BottomNavigationPage(), // MUST BE SET TO HOMEPAGE IF LOGGED IN.
   ));
 }
