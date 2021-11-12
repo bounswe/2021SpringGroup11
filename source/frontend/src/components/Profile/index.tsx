@@ -21,9 +21,11 @@ import {
 } from '@mui/material';
 import React from 'react';
 import NavBar from '../NavBar';
+import { getProfileData } from './helper';
 
 interface Props {}
 const Profile = (props: Props) => {
+  const { resources, user, stats, favorites } = getProfileData();
   return (
     <div>
       <NavBar title="Profile"></NavBar>
@@ -38,7 +40,7 @@ const Profile = (props: Props) => {
         }}
       >
         <div></div>
-        <img src="https://picsum.photos/200/200?random=1" alt="" />
+        <img src={user.photo} alt="" />
       </div>
       <div
         style={{
@@ -61,12 +63,7 @@ const Profile = (props: Props) => {
             padding: '5px',
           }}
         >
-          {[
-            { text: 'Enrolled', value: '28' },
-            { text: 'Done', value: '28' },
-            { text: 'Followings', value: '145' },
-            { text: 'Followers', value: '540' },
-          ].map((item) => {
+          {stats.map((item) => {
             return (
               <div
                 style={{
@@ -95,8 +92,8 @@ const Profile = (props: Props) => {
               justifyContent: 'space-around',
             }}
           >
-            <div style={{ color: 'red' }}>{'GRANDMASTER'}</div>
-            <div style={{ color: 'white' }}>{'username'}</div>
+            <div style={{ color: 'red' }}>{user.experience}</div>
+            <div style={{ color: 'white' }}>{user.username}</div>
           </div>
         </div>
         <Button
@@ -108,47 +105,29 @@ const Profile = (props: Props) => {
           Edit Your Profile
         </Button>
       </div>
-      <ProfileContent />
+      <ProfileContent user={user} resources={resources} favorites={favorites} />
     </div>
   );
 };
 
-const ProfileContent = () => {
-  const resourcesEnrolled: Resource[] = [
-    {
-      title: 'Tennis - Beginner',
-      effort: 30,
-      rating: 6.1,
-      isEnrolled: true,
-      isFollewed: false,
-    },
-    {
-      title: 'Tennis - Beginner',
-      effort: 30,
-      rating: 6.1,
-      isEnrolled: true,
-      isFollewed: false,
-    },
-    {
-      title: 'Tennis - Beginner',
-      effort: 30,
-      rating: 6.1,
-      isEnrolled: true,
-      isFollewed: false,
-    },
-  ];
+interface ProfileContentProps {
+  resources: Resource[];
+  favorites: { text: string; value: string }[];
+  user: any;
+}
+const ProfileContent = (props: ProfileContentProps) => {
   return (
     <div
       style={{
         background: '#E5E5EE',
-        alignItems: 'center',
+        // alignItems: 'center',
         display: 'flex',
         justifyContent: 'space-around',
       }}
     >
       <div
         style={{
-          flex: 3,
+          flex: 2,
         }}
       >
         <div
@@ -159,12 +138,8 @@ const ProfileContent = () => {
             justifyContent: 'space-around',
           }}
         >
-          <div style={{ color: 'red' }}>{'NAME SURNAME'}</div>
-          <div style={{ background: 'white', borderRadius: '5px' }}>
-            {
-              ' Cupidatat exercitation anim id elit qui culpa. Pariatur quis esse mollit non commodo qui magna. Consectetur qui nisi culpa eu dolor labore exercitation occaecat ad cupidatat reprehenderit. Consectetur dolore culpa sunt occaecat laborum laborum ex nisi fugiat ex. '
-            }
-          </div>
+          <div style={{ color: 'red' }}>{props.user.name}</div>
+          <div style={{ background: 'white', borderRadius: '5px' }}>{props.user.bio}</div>
         </div>
       </div>
 
@@ -175,7 +150,6 @@ const ProfileContent = () => {
           padding: '5px',
         }}
       >
-        {' '}
         <h2>Resources Enrolled</h2>
         <div
           style={{
@@ -187,19 +161,21 @@ const ProfileContent = () => {
             flexWrap: 'wrap',
           }}
         >
-          {resourcesEnrolled.map((resource) => {
-            return (
-              <ResourceCard
-                resource={resource}
-                onClick={() => {}}
-                buttonText={resource.isEnrolled ? 'Unenroll' : 'Enroll'}
-                onButtonClick={() => {
-                  alert('TODO');
-                }}
-                color="#9EE97A"
-              />
-            );
-          })}
+          {props.resources
+            .filter((r) => r.isEnrolled)
+            .map((resource) => {
+              return (
+                <ResourceCard
+                  resource={resource}
+                  onClick={() => {}}
+                  buttonText={resource.isEnrolled ? 'Unenroll' : 'Enroll'}
+                  onButtonClick={() => {
+                    alert('TODO');
+                  }}
+                  color="#9EE97A"
+                />
+              );
+            })}
         </div>
       </div>
 
@@ -210,7 +186,6 @@ const ProfileContent = () => {
           padding: '5px',
         }}
       >
-        {' '}
         <h2>Resources Following</h2>
         <div
           style={{
@@ -222,56 +197,56 @@ const ProfileContent = () => {
             flexWrap: 'wrap',
           }}
         >
-          {resourcesEnrolled.map((resource) => {
-            return (
-              <ResourceCard
-                resource={resource}
-                onClick={() => {}}
-                buttonText={resource.isEnrolled ? 'Unfollow' : 'Follow'}
-                onButtonClick={() => {
-                  alert('TODO');
-                }}
-                color="#70A9FF"
-              />
-            );
-          })}
+          {props.resources
+            .filter((r) => r.isFollewed)
+            .map((resource) => {
+              return (
+                <ResourceCard
+                  resource={resource}
+                  onClick={() => {}}
+                  buttonText={resource.isEnrolled ? 'Unfollow' : 'Follow'}
+                  onButtonClick={() => {
+                    alert('TODO');
+                  }}
+                  color="#70A9FF"
+                />
+              );
+            })}
         </div>
       </div>
 
-      <div
-        style={{
-          alignItems: 'center',
-          display: 'flex',
-          flex: 1,
-
-          justifyContent: 'space-around',
-          padding: '5px',
-          flexDirection: 'column',
-        }}
-      >
+      <div>
         <h2>Favorites</h2>
+        <div
+          style={{
+            alignItems: 'center',
+            display: 'flex',
+            flex: 1,
 
-        {[
-          { text: 'Tags', value: '5' },
-          { text: 'Resources', value: '5' },
-        ].map((item) => {
-          return (
-            <div
-              style={{
-                alignItems: 'center',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'space-around',
-                borderRadius: '10px',
-                background: 'white',
-                margin: '10px',
-              }}
-            >
-              <div style={{ color: 'green' }}>{item.text}</div>
-              <div>{item.value}</div>
-            </div>
-          );
-        })}
+            justifyContent: 'space-around',
+            padding: '5px',
+            flexDirection: 'column',
+          }}
+        >
+          {props.favorites.map((item) => {
+            return (
+              <div
+                style={{
+                  alignItems: 'center',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'space-around',
+                  borderRadius: '10px',
+                  background: 'white',
+                  margin: '10px',
+                }}
+              >
+                <div style={{ color: 'green' }}>{item.text}</div>
+                <div>{item.value}</div>
+              </div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );
@@ -295,7 +270,7 @@ interface ResourceCardProps {
 const ResourceCard = (props: ResourceCardProps) => {
   return (
     <>
-      <Card onClick={props.onClick} sx={{ width: '150px', background: props.color }}>
+      <Card onClick={props.onClick} sx={{ width: '140px', background: props.color, margin: '5px' }}>
         <CardContent>
           <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
             {props.resource.title}
