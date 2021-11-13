@@ -11,6 +11,7 @@ import {
   Card,
   CardActions,
   CardContent,
+  CircularProgress,
   IconButton,
   InputBase,
   Menu,
@@ -19,13 +20,52 @@ import {
   Toolbar,
   Typography,
 } from '@mui/material';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import NavBar from '../NavBar';
 import { getProfileData } from './helper';
 
 interface Props {}
 const Profile = (props: Props) => {
-  const { resources, user, stats, favorites } = getProfileData();
+  const [resources, setResources] = useState(null);
+  const [user, setUser] = useState(null);
+  const [stats, setStats] = useState(null);
+  const [favorites, setFavorites] = useState(null);
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    (async () => {
+      // simulate api request waiting
+      setTimeout(async () => {
+        const {
+          resources: _resources,
+          user: _user,
+          stats: _stats,
+          favorites: _favorites,
+        } = await getProfileData();
+        console.log(_resources);
+
+        setResources(_resources);
+        setUser(_user);
+        setStats(_stats);
+        setFavorites(_favorites);
+        setLoading(false);
+      }, 1000);
+    })();
+  }, []);
+
+  if (loading) {
+    return (
+      <div>
+        <NavBar title="Profile"></NavBar>
+        <Box
+          sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '90vh' }}
+        >
+          <CircularProgress />
+        </Box>
+      </div>
+    );
+  }
   return (
     <div>
       <NavBar title="Profile"></NavBar>

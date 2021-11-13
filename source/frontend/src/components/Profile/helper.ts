@@ -1,4 +1,4 @@
-export const getProfileData = () => {
+export const getProfileData = async () => {
   // TODO: fetch data from API
   const resources = [
     {
