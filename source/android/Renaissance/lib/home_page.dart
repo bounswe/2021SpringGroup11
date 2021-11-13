@@ -31,6 +31,7 @@ class _HomePageState extends State<HomePage> {
           {"name": "Pop1", "effort": 2, "rating": 1.2},
           {"name": "Pop2", "effort": 2, "rating": 1.3},
           {"name": "Pop3", "effort": 2, "rating": 1.4},
+          {"name": "Pop4", "effort": 2, "rating": 1.4},
         ]
       },
       {
@@ -180,15 +181,17 @@ class _HomePageState extends State<HomePage> {
                 decoration: BoxDecoration(
                     color: Color(0x99FFFFFF),
                     borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    ...(tags[_pageIndex]["tags"] as List<Map<String, Object>>)
-                        .map((tag) {
-                      return TagContainer(tag["name"] as String,
-                          tag["effort"] as int, tag["rating"] as double);
-                    }).toList(),
-                  ],
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      ...(tags[_pageIndex]["tags"] as List<Map<String, Object>>)
+                          .map((tag) {
+                        return TagContainer(tag["name"] as String,
+                            tag["effort"] as int, tag["rating"] as double);
+                      }).toList(),
+                    ],
+                  ),
                 ),
               ),
               Row(
