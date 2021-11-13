@@ -12,7 +12,7 @@ class TagContainer extends StatelessWidget {
           print("Course Clicked");
         },
         child: Container(
-          width: 110,
+          width: 105,
           height: 80,
           margin: EdgeInsets.all(5),
           color: Colors.transparent,
