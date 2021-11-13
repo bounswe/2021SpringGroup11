@@ -51,6 +51,20 @@ class _HomePageState extends State<HomePage> {
         ]
       },
     ];
+    var paths = [
+      {"name": "Selam", "effort": 2, "rating": 1.8},
+      {"name": "Muz", "effort": 2, "rating": 1.8},
+      {"name": "Ahoy", "effort": 2, "rating": 1.9},
+      {"name": "Cam", "effort": 2, "rating": 1.5},
+      {"name": "Kar", "effort": 2, "rating": 1.6},
+      {"name": "Araba", "effort": 2, "rating": 1.7},
+      {"name": "Selam", "effort": 2, "rating": 1.8},
+      {"name": "Muz", "effort": 2, "rating": 1.8},
+      {"name": "Ahoy", "effort": 2, "rating": 1.9},
+      {"name": "Cam", "effort": 2, "rating": 1.5},
+      {"name": "Kar", "effort": 2, "rating": 1.6},
+      {"name": "Araba", "effort": 2, "rating": 1.7},
+    ];
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         home: Scaffold(
@@ -219,41 +233,15 @@ class _HomePageState extends State<HomePage> {
                   )
                 ],
               ),
-              Wrap(
-                spacing: 4,
-                alignment: WrapAlignment.center,
-                children: [
-                  CourseContainer("hello hello hello hge", 1, 2.0),
-                  CourseContainer("hello hello hello hge", 1, 2.0),
-                  CourseContainer("hello hello hello hge", 1, 2.0)
-                ],
-              ),
-              Wrap(
-                spacing: 4,
-                alignment: WrapAlignment.center,
-                children: [
-                  CourseContainer("hello hello hello hge", 1, 2.0),
-                  CourseContainer("hello hello hello hge", 1, 2.0),
-                  CourseContainer("hello hello hello hge", 1, 2.0)
-                ],
-              ),
-              Wrap(
-                spacing: 4,
-                alignment: WrapAlignment.center,
-                children: [
-                  CourseContainer("hello hello hello hge", 1, 2.0),
-                  CourseContainer("hello hello hello hge", 1, 2.0),
-                  CourseContainer("hello hello hello hge", 1, 2.0)
-                ],
-              ),
-              Wrap(
-                spacing: 4,
-                alignment: WrapAlignment.center,
-                children: [
-                  CourseContainer("hello hello hello hge", 1, 2.0),
-                  CourseContainer("hello hello hello hge", 1, 2.0),
-                  CourseContainer("hello hello hello hge", 1, 2.0)
-                ],
+              GridView.count(
+                crossAxisCount: 3,
+                shrinkWrap: true,
+                padding: const EdgeInsets.all(10),
+                physics: ScrollPhysics(),
+                children: paths.map((path) {
+                  return CourseContainer(path["name"] as String,
+                      path["effort"] as int, path["rating"] as double);
+                }).toList(),
               ),
             ],
           ),

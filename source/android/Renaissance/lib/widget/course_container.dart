@@ -12,8 +12,6 @@ class CourseContainer extends StatelessWidget {
           print("Course Clicked");
         },
         child: Container(
-          width: 110,
-          height: 130,
           margin: EdgeInsets.all(5),
           color: Colors.transparent,
           child: Container(
