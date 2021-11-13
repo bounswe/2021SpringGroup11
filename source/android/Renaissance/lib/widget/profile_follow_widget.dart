@@ -1,25 +1,20 @@
 import 'package:flutter/material.dart';
 
-class StatsWidget extends StatelessWidget {
-  StatsWidget(this.favourite_count,this.enrolled_course_count,this.done_course_count);
-  final int favourite_count;
-  final int done_course_count;
-  final int enrolled_course_count;
-  //final int follower_count;
-  //final int following_count;
+class FollowerWidget extends StatelessWidget {
+  FollowerWidget(this.follower_count,this.following_count);
+  final int follower_count;
+  final int following_count;
 
   @override
   Widget build(BuildContext context) => Container(
-    height: 64,
       child:Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          buildButton(context, favourite_count.toString(), 'Favourites'),
-          buildButton(context, enrolled_course_count.toString(), 'Enrolled'),
-          buildButton(context, done_course_count.toString(), 'Done'),
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            buildButton(context, follower_count.toString(), 'Followers'),
+            buildButton(context, following_count.toString(), 'Followings'),
 
-      ]
-  )
+          ]
+      )
   );
 
 
