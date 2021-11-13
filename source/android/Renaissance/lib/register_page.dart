@@ -1,6 +1,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:portakal/http_services.dart';
 import 'my_colors.dart';
 
 // TODO: Password validation
@@ -14,6 +15,14 @@ class _RegisterPageState extends State<RegisterPage> {
   String username = "";
   String password = "";
   String repeatedPassword = "";
+  final _formKey = GlobalKey<FormState>();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController confirmPasswordController = TextEditingController();
+  TextEditingController usernameController = TextEditingController();
+  TextEditingController firstNameController = TextEditingController();
+  TextEditingController lastNameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -22,13 +31,11 @@ class _RegisterPageState extends State<RegisterPage> {
           resizeToAvoidBottomInset: false,
           backgroundColor: Colors.white,
           body: Container(
-            child: ListView(
-              padding: EdgeInsets.zero,
-              physics: NeverScrollableScrollPhysics(),
+            child: Column(
               children: <Widget> [
                 Container(
                     width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height / 3.4,
+                    height: MediaQuery.of(context).size.height / 4.1,
                     decoration: BoxDecoration(
                         gradient: LinearGradient(
                           begin: Alignment.topCenter,
@@ -40,43 +47,45 @@ class _RegisterPageState extends State<RegisterPage> {
                         ),
                         borderRadius: BorderRadius.only(bottomLeft: Radius.circular(90), bottomRight: Radius.circular(70))
                     ),
-                    child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Spacer(),
-                          Align(alignment: Alignment.center,
-                              child: Image(image: AssetImage('assets/logo.png'))),
-                          Spacer(),
-                        ]
-                    )
+                    child: Image(image: AssetImage('assets/logo.png'))
                 ),
-                Container(
-                  height: MediaQuery.of(context).size.height/2,
-                  width: MediaQuery.of(context).size.width,
-                  padding: EdgeInsets.only(top: 50),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      _emailTextField(),
-                      _usernameTextField(),
-                      _passwordTextField(),
-                      _repeatPasswordTextField(),
-                      SizedBox(height: 10),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: Container(
-                          width: 200,
-                          height: 45,
-                          padding: EdgeInsets.only(left: 20, right: 30),
-                          child: _registerButton(),
-                        )
-                      )
-                    ],
-                  ),
+                SizedBox(height: 30,),
+                Expanded(
+                  flex: 2,
+                  child: Form(
+                    key: _formKey,
+                    child: Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          _emailTextField(),
+                          _usernameTextField(),
+                          _firstNameTextField(),
+                          _lastNameTextField(),
+                          _passwordTextField(),
+                          _repeatPasswordTextField(),
+                          SizedBox(height: 10),
+                          Align(
+                              alignment: Alignment.centerRight,
+                              child: Container(
+                                width: 200,
+                                height: 45,
+                                padding: EdgeInsets.only(left: 20, right: 30),
+                                child: _registerButton(),
+                              )
+                          )
+                        ],
+                      ),
+                    ),
+                  )
                 ),
                 Container(
                     width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height / 4.5,
+                    height: 100,
+                    //padding: EdgeInsets.only(top: 40),
+                    margin: EdgeInsets.only(top: 30),
                     decoration: BoxDecoration(
                         gradient: LinearGradient(
                           begin: Alignment.topCenter,
@@ -90,9 +99,9 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
                     child: Container(
                       width: MediaQuery.of(context).size.width / 1.5,
-                      padding: EdgeInsets.symmetric(vertical: 15.0),
+                      padding: EdgeInsets.symmetric(vertical: 20.0),
+                      child: _loginButton(),
                       alignment: Alignment.center,
-                      child: _loginButton()
                     )
                 )
               ],
@@ -116,115 +125,128 @@ class _RegisterPageState extends State<RegisterPage> {
   );
 
   Widget _emailTextField() {
-    return Container(
-      width: MediaQuery.of(context).size.width/1.2,
-      height: 54,
-      padding: EdgeInsets.only(
-          top: 6,left: 16, right: 16, bottom: 4
-      ),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(
-            Radius.circular(50)
-        ),
-        color: Colors.black.withOpacity(0.1),
-      ),
-      child: TextField(
-        style: TextStyle(color: Color(0xff3c3c3c), fontSize: 18.0, fontWeight: FontWeight.w700),
-        decoration: InputDecoration(
-          border: InputBorder.none,
+    return TextFormField(
+      keyboardType: TextInputType.emailAddress,
+      controller: emailController,
+      style: TextStyle(color: Color(0xff3c3c3c), fontSize: 18.0, fontWeight: FontWeight.w700),
+      decoration: InputDecoration(
+          border: OutlineInputBorder(borderSide: BorderSide(color: Colors.black54), borderRadius: BorderRadius.circular(40)),
           icon: Icon(Icons.mail,
             color: Colors.black,
           ),
           hintText: 'E-mail',
-        ),
+          filled: true,
+          fillColor: Colors.black.withOpacity(0.1),
+          contentPadding: EdgeInsets.symmetric(horizontal: 10)
       ),
     );
   }
 
   Widget _usernameTextField() {
-    return Container(
-      width: MediaQuery.of(context).size.width/1.2,
-      height: 54,
-      padding: EdgeInsets.only(
-          top: 6,left: 16, right: 16, bottom: 4
-      ),
-      margin: EdgeInsets.only(top: 15),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(
-            Radius.circular(50)
+    return TextFormField(
+      style: TextStyle(color: Color(0xff3c3c3c), fontSize: 18.0, fontWeight: FontWeight.w700),
+      controller: usernameController,
+      decoration: InputDecoration(
+        border: OutlineInputBorder(borderSide: BorderSide(color: Colors.black54), borderRadius: BorderRadius.circular(40)),
+        icon: Icon(Icons.alternate_email,
+          color: Colors.black,
         ),
-        color: Colors.black.withOpacity(0.1),
-      ),
-      child: TextField(
-        style: TextStyle(color: Color(0xff3c3c3c), fontSize: 18.0, fontWeight: FontWeight.w700),
-        decoration: InputDecoration(
-          border: InputBorder.none,
-          icon: Icon(Icons.alternate_email,
-            color: Colors.black,
-          ),
-          hintText: 'Username',
-        ),
+        hintText: 'Username',
+        filled: true,
+        fillColor: Colors.black.withOpacity(0.1),
+        contentPadding: EdgeInsets.symmetric(horizontal: 10),
       ),
     );
   }
 
   Widget _passwordTextField() {
-    return Container(
-      width: MediaQuery.of(context).size.width/1.2,
-      height: 54,
-      margin: EdgeInsets.only(top: 15),
-      padding: EdgeInsets.only(
-          top: 6,left: 16, right: 16, bottom: 4
+    return TextFormField(
+      obscureText: true,
+      style: TextStyle(color: Color(0xff3c3c3c), fontSize: 18.0, fontWeight: FontWeight.w700),
+      decoration: InputDecoration(
+          border: OutlineInputBorder(borderSide: BorderSide(color: Colors.black54), borderRadius: BorderRadius.circular(40)),
+          icon: Icon(Icons.vpn_key, color: Colors.black),
+          contentPadding: EdgeInsets.symmetric(horizontal: 10),
+          filled: true,
+          fillColor: Colors.black.withOpacity(0.1),
+          hintText: 'Password'
       ),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(
-            Radius.circular(50)
-        ),
-        color: Colors.black.withOpacity(0.1),
-      ),
-      child: TextField(
+      controller: passwordController,
+      validator: (password) {
+        if (password!.length < 5) {
+          return 'Password must be at least 5 characters';
+        }
+      },
+    );
+  }
+
+  Widget _firstNameTextField() {
+    return TextFormField(
         obscureText: true,
+        controller: firstNameController,
         style: TextStyle(color: Color(0xff3c3c3c), fontSize: 18.0, fontWeight: FontWeight.w700),
         decoration: InputDecoration(
-            border: InputBorder.none,
-            icon: Icon(Icons.vpn_key,
-              color: Colors.black,
-            ),
-            hintText: 'Password',
-        ),
-      ),
+          border: OutlineInputBorder(borderSide: BorderSide(color: Colors.black54), borderRadius: BorderRadius.circular(40)),
+          icon: Icon(Icons.person, color: Colors.black),
+          hintText: 'First Name',
+          contentPadding: EdgeInsets.symmetric(horizontal: 10),
+          filled: true,
+          fillColor: Colors.black.withOpacity(0.1),
+        )
+    );
+  }
+
+  Widget _lastNameTextField() {
+    return TextFormField(
+        obscureText: true,
+        controller: lastNameController,
+        style: TextStyle(color: Color(0xff3c3c3c), fontSize: 18.0, fontWeight: FontWeight.w700),
+        decoration: InputDecoration(
+          border: OutlineInputBorder(borderSide: BorderSide(color: Colors.black54), borderRadius: BorderRadius.circular(40)),
+          icon: Icon(Icons.person, color: Colors.black),
+          hintText: 'Last Name',
+          contentPadding: EdgeInsets.symmetric(horizontal: 10),
+          filled: true,
+          fillColor: Colors.black.withOpacity(0.1),
+        )
     );
   }
 
   Widget _repeatPasswordTextField() {
-    return Container(
-      width: MediaQuery.of(context).size.width/1.2,
-      height: 54,
-      margin: EdgeInsets.only(top: 15),
-      padding: EdgeInsets.only(
-          top: 6,left: 16, right: 16, bottom: 4
-      ),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(
-            Radius.circular(50)
-        ),
-        color: Colors.black.withOpacity(0.1),
-      ),
-      child: TextField(
-        obscureText: true,
-        style: TextStyle(color: Color(0xff3c3c3c), fontSize: 18.0, fontWeight: FontWeight.w700),
-        decoration: InputDecoration(
-          border: InputBorder.none,
+    return TextFormField(
+      obscureText: true,
+      style: TextStyle(color: Color(0xff3c3c3c), fontSize: 18.0, fontWeight: FontWeight.w700),
+      decoration: InputDecoration(
+          border: OutlineInputBorder(borderSide: BorderSide(color: Colors.black54), borderRadius: BorderRadius.circular(40)),
           icon: Icon(Icons.vpn_key,
             color: Colors.black,
           ),
           hintText: 'Repeat Password',
-        ),
+          filled: true,
+          contentPadding: EdgeInsets.symmetric(horizontal: 10),
+          fillColor: Colors.black.withOpacity(0.1)
       ),
+      validator: (password) {
+        if(password != passwordController.text) {
+          return 'Passwords must match';
+        }
+        return null;
+      },
+      autovalidateMode: AutovalidateMode.always,
     );
   }
 
-  Widget _registerButton() => ElevatedButton(onPressed: (){},
+  Widget _registerButton() => ElevatedButton(onPressed: () async {
+    try {
+      bool result = await HttpService.shared.register(emailController.text, usernameController.text, firstNameController.text, lastNameController.text, passwordController.text);
+      if (result) {
+
+      }
+    } on Exception catch(error) {
+      print(error);
+    }
+
+  },
     child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [

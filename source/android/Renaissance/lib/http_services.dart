@@ -1,18 +1,24 @@
+import 'dart:io';
+
 import 'package:flutter/animation.dart';
 import 'package:http/http.dart';
 import 'dart:convert';
 
 import 'package:portakal/models/login_response.dart';
+import 'package:portakal/token.dart';
 
 class HttpService {
-  String baseUrl = "localhost:8000"; // write server ip / url here
+  String baseUrl = "http://35.209.23.51"; // write server ip / url here
   static HttpService shared = HttpService();
-  Map<String, String> headers = {
+  String? token = Token.shared.token;
+  late Map<String, String> headers = {
     'Content-Type': 'application/json; charset=UTF-8',
+    HttpHeaders.authorizationHeader: 'Bearer $token'
   };
 
   Future<LoginResponse> login(String username, String password) async {
-    String url = baseUrl + "/authentication/login";
+    // only JWT strings return from this endpoint.
+    String url = baseUrl + "/authentication/login/";
     Response res = await post(
       Uri.parse(url),
       headers: headers,
@@ -33,7 +39,7 @@ class HttpService {
   }
 
   Future<bool> register(String email, String username, String firstname, String lastname, String password) async {
-    String url = baseUrl + '/authentication/register';
+    String url = baseUrl + '/authentication/register/';
     Response res = await post(
       Uri.parse(url),
       headers: headers,
@@ -54,10 +60,19 @@ class HttpService {
     }
   }
 
-  /*Future<String> forgotPassword(String email) async {
-    String url = baseUrl + 'api/forgotPassword';
-
-  }*/
+  Future<bool> forgotPassword(String username) async {
+    String url = baseUrl + '/authentication/forgot-password/';
+    Response res = await post(
+      Uri.parse(url),
+      body: jsonEncode({
+        'username': username
+      })
+    );
+    if (res.statusCode == 202) {
+      return true;
+    }
+    return false;
+  }
 
  /* Future<String> refreshToken() async {
     String url = baseUrl + '/authentication/refresh-token';
@@ -78,7 +93,6 @@ class HttpService {
         'username': username
       })
     );
-
     if (res.statusCode == 200) {
       return true;
     }

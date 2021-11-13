@@ -19,6 +19,7 @@ class _LoginPageState extends State<LoginPage> {
   String password = "";
   bool _passwordVisible = false;
   final _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -60,61 +61,45 @@ class _LoginPageState extends State<LoginPage> {
                       padding: EdgeInsets.only(top: 100),
                       child: Form(
                         key: _formKey,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Container(
-                              width: MediaQuery.of(context).size.width/1.2,
-                              height: 54,
-                              padding: EdgeInsets.only(
-                                  top: 6,left: 16, right: 16, bottom: 4
-                              ),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.all(
-                                    Radius.circular(50)
-                                ),
-                                color: Colors.black.withOpacity(0.1),
-                              ),
-                              child: TextFormField(
+                        child: Padding(
+                          padding: const EdgeInsets.all(15.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              TextFormField(
                                 style: TextStyle(color: Color(0xff3c3c3c), fontSize: 18.0, fontWeight: FontWeight.w700),
                                 decoration: InputDecoration(
-                                  border: InputBorder.none,
-                                  icon: Icon(Icons.mail,
-                                    color: Colors.black,
-                                  ),
-                                  hintText: 'E-mail',
+                                    border: OutlineInputBorder(borderSide: BorderSide(color: Colors.black54), borderRadius: BorderRadius.circular(40)),
+                                    icon: Icon(Icons.mail,
+                                      color: Colors.black,
+                                    ),
+                                    hintText: 'E-mail',
+                                    contentPadding: EdgeInsets.symmetric(horizontal: 10),
+                                    filled: true,
+                                    fillColor: Colors.black.withOpacity(0.1)
                                 ),
                                 validator: (email) {
                                   //Check if email address is valid here, if invalid, return a message.
+                                  if (email == null || email!.length == 0) {
+                                    return "email cannot be empty !";
+                                  }
                                   return null;
                                 },
                                 onSaved: (value) {
                                   email = value!.trim();
                                 },
                               ),
-                            ),
-                            Container(
-                              width: MediaQuery.of(context).size.width/1.2,
-                              height: 54,
-                              margin: EdgeInsets.only(top: 15),
-                              padding: EdgeInsets.only(
-                                  top: 6,left: 16, right: 16, bottom: 4
-                              ),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.all(
-                                    Radius.circular(50)
-                                ),
-                                color: Colors.black.withOpacity(0.1),
-                              ),
-                              child: TextFormField(
+                              TextFormField(
                                 obscureText: !_passwordVisible,
                                 style: TextStyle(color: Color(0xff3c3c3c), fontSize: 18.0, fontWeight: FontWeight.w700),
                                 decoration: InputDecoration(
-                                    border: InputBorder.none,
+                                    border:  OutlineInputBorder(borderSide: BorderSide(color: Colors.black54), borderRadius: BorderRadius.circular(40)),
                                     icon: Icon(Icons.vpn_key,
                                       color: Colors.black,
                                     ),
                                     hintText: 'Password',
+                                    filled: true,
+                                    fillColor: Colors.black.withOpacity(0.1),
                                     suffixIcon: IconButton(
                                       icon: Icon(
                                         _passwordVisible ? Icons.visibility : Icons.visibility_off,
@@ -125,27 +110,31 @@ class _LoginPageState extends State<LoginPage> {
                                           _passwordVisible = !_passwordVisible;
                                         });
                                       },
-                                    )
+                                    ),
+                                    contentPadding: EdgeInsets.symmetric(horizontal: 10)
                                 ),
                                 validator: (password) {
-                                  return "null";
+                                  if (password!.length == 0) {
+                                    return "Password cant be empty....";
+                                  }
+                                  return null;
                                 },
                                 onSaved: (value) {
                                   password = value!.trim();
                                 },
                               ),
-                            ),
-                            SizedBox(height: 40),
-                            Align(
-                                alignment: Alignment.centerRight,
-                                child: Container(
-                                  width: 150,
-                                  height: 45,
-                                  padding: EdgeInsets.only(left: 20, right: 30),
-                                  child: _loginButton(),
-                                )
-                            )
-                          ],
+                              SizedBox(height: 40),
+                              Align(
+                                  alignment: Alignment.centerRight,
+                                  child: Container(
+                                    width: 150,
+                                    height: 45,
+                                    padding: EdgeInsets.only(left: 20, right: 30),
+                                    child: _loginButton(),
+                                  )
+                              )
+                            ],
+                          ),
                         ),
                       )
                   ),
@@ -192,7 +181,9 @@ class _LoginPageState extends State<LoginPage> {
   );
 
   Widget _forgotPasswordButton() => ElevatedButton(
-    onPressed: () {},
+    onPressed: () {
+      _displayForgotPasswordDialog(context);
+    },
     child: Text('Forgot Password?', style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.w400)),
     style: ElevatedButton.styleFrom(
         primary: MyColors.lightGreen,
@@ -202,6 +193,60 @@ class _LoginPageState extends State<LoginPage> {
         )
     ),
   );
+
+  Future<void> _displayForgotPasswordDialog(BuildContext context) async {
+    String username = "";
+    return showDialog(context: context, builder: (context) {
+      return CupertinoAlertDialog(
+        title: Text("Forgot Password?"),
+        content: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text("Enter your username"),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: CupertinoTextField(
+                decoration: BoxDecoration(color: Colors.white70, shape: BoxShape.rectangle, borderRadius: BorderRadius.circular(10)),
+                onChanged: (value) {
+                  username = value;
+                },
+                placeholder: "Username",
+              ),
+            )
+          ],
+        ),
+        actions: [
+          MaterialButton(onPressed: (){ Navigator.pop(context); }, child: Text("Cancel"), color: Colors.red),
+          MaterialButton(
+              onPressed: () async {
+                if (username.isEmpty) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                          content: Text(
+                            'Username cant be empty !',
+                            style: TextStyle(
+                                decorationColor: Colors.greenAccent,
+                                fontSize: 25,
+                                fontWeight: FontWeight.bold),
+                          ),
+
+                      )
+                  );
+                  return;
+                }
+                bool success = await HttpService.shared.forgotPassword(username);
+                if (success) {
+                  print("success");
+                }
+                Navigator.pop(context);
+              },
+              child: Text("Send mail"),
+              color: Colors.green
+          ),
+        ],
+      );
+    });
+  }
 
   Widget _loginButton() => ElevatedButton(
     onPressed: () async {
