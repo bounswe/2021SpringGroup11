@@ -1,9 +1,10 @@
 # This is a basic workflow to help you get started with Actions
 
-name: CI
+name: Production Build
 
 # Controls when the workflow will run
 on:
+  pull_request:
   push:
     branches: [ frontend/develop ]
   pull_request:
@@ -19,10 +20,39 @@ jobs:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        node-version: [8.x, 10.x, 12.x]
+
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v1
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Yarn Install
+        run: |
+          yarn install
+      - name: Production Build
+        run: |
+          yarn build
+      - name: Unit Tests
+        run: |
+          yarn test
+      - name: Deploy to S3
+        uses: jakejarvis/s3-sync-action@master
+        with:
+          args: --acl public-read --delete
+        env:
+          AWS_S3_BUCKET: bounswe11.com
+          AWS_ACCESS_KEY_ID: AKIAXZ2EBCZWG57YHQNN
+          AWS_SECRET_ACCESS_KEY: 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
+          AWS_REGION: us-east-2
+          SOURCE_DIR: "build"
+
 
       # Runs a single command using the runners shell
       - name: Run a one-line script
