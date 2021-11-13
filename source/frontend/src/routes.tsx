@@ -11,7 +11,7 @@ const routes: {
     path: '/',
     exact: true,
     component: () => <Redirect to="/home" />,
-    requestAuth: true,
+    requestAuth: false,
   },
   {
     path: '/login',
@@ -29,7 +29,7 @@ const routes: {
     path: '/home',
     exact: true,
     component: lazy(() => import('./components/Home')),
-    requestAuth: true,
+    requestAuth: false,
   },
 ];
 
