@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:portakal/home_page.dart';
+import 'package:portakal/login_page.dart';
 import 'package:portakal/models/user.dart';
 import 'package:portakal/my_colors.dart';
 import 'explore_page.dart';
@@ -38,47 +39,38 @@ class _BottomNavigationPageState extends State<BottomNavigationPage> {
     return Scaffold(
       body: IndexedStack(
         index: _selectedIndex,
-        children:  <Widget>[
+        children: <Widget>[
           Navigator(
             key: _homeScreen,
             onGenerateRoute: (route) => MaterialPageRoute(
-                builder: (context) => HomePage(),
-                settings: route
-            ),
+                builder: (context) => HomePage(), settings: route),
           ),
           Navigator(
             key: _exploreScreen,
             onGenerateRoute: (route) => MaterialPageRoute(
-                builder: (context) => ExplorePage(),
-                settings: route
-            ),
+                builder: (context) => ExplorePage(), settings: route),
           ),
           Navigator(
             key: _addScreen,
             onGenerateRoute: (route) => MaterialPageRoute(
-                builder: (context) => ExplorePage(),
-                settings: route
-            ),
+                builder: (context) => ExplorePage(), settings: route),
           ),
           Navigator(
             key: _notificationScreen,
             onGenerateRoute: (route) => MaterialPageRoute(
-                builder: (context) => ExplorePage(),
-                settings: route
-            ),
+                builder: (context) => LoginPage(), settings: route),
           ),
           Navigator(
             key: _profileScreen,
             onGenerateRoute: (route) => MaterialPageRoute(
-                builder: (context) => ProfilePage(user: User(
-                  username: 'ss',
-                  email: 'fefe',
-                  lastname: 'sarf',
-                  firstname: 'rprp',
-                  profilePictureUrl: 'fr4t'
-                )),
-                settings: route
-            ),
+                builder: (context) => ProfilePage(
+                    user: User(
+                        username: 'ss',
+                        email: 'fefe',
+                        lastname: 'sarf',
+                        firstname: 'rprp',
+                        profilePictureUrl: 'fr4t')),
+                settings: route),
           ),
         ],
       ),
@@ -91,7 +83,7 @@ class _BottomNavigationPageState extends State<BottomNavigationPage> {
         iconSize: 36,
         backgroundColor: MyColors.blue,
         showUnselectedLabels: false,
-        items: const <BottomNavigationBarItem> [
+        items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Home',

@@ -16,6 +16,8 @@ Future<void> main() async {
   }
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
-    home: isLoggedIn ? BottomNavigationPage() : LoginPage(), // MUST BE SET TO HOMEPAGE IF LOGGED IN.
+    home: isLoggedIn
+        ? BottomNavigationPage()
+        : BottomNavigationPage(), // MUST BE SET TO HOMEPAGE IF LOGGED IN.
   ));
 }
