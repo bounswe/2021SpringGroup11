@@ -13,7 +13,8 @@ class CourseContainer extends StatelessWidget {
           print("Course Clicked");
         },
         child: Container(
-          margin: EdgeInsets.all(5),
+          width: 100,
+          height: 130,
           color: Colors.transparent,
           child: Container(
               padding: EdgeInsets.symmetric(horizontal: 7, vertical: 7),
@@ -33,6 +34,60 @@ class CourseContainer extends StatelessWidget {
                     children: [
                       Column(
                         children: [
+                          Text(course_name,
+                              overflow: TextOverflow.clip,
+                              maxLines: 2,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(fontSize: 14)),
+                          const SizedBox(height: 3),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Column(
+                                children: [
+                                  Text("Effort",
+                                      style: TextStyle(
+                                          fontSize: 14, color: Colors.yellow)),
+                                  const SizedBox(height: 1),
+                                  Text(course_effort.toString(),
+                                      style: TextStyle(
+                                          fontSize: 14, color: Colors.white))
+                                ],
+                              ),
+                              const SizedBox(width: 5),
+                              Column(
+                                children: [
+                                  Text("Rating",
+                                      style: TextStyle(
+                                          fontSize: 14, color: Colors.yellow)),
+                                  const SizedBox(height: 1),
+                                  Text(course_rating.toString(),
+                                      style: TextStyle(
+                                          fontSize: 14, color: Colors.white))
+                                ],
+                              )
+                            ],
+                          ),
+                          const SizedBox(height: 5),
+                          MaterialButton(
+                            shape: StadiumBorder(),
+                            color: MyColors.lightGrey,
+                            padding: EdgeInsets.symmetric(vertical: 2),
+                            onPressed: () {
+                              print("Selam");
+                            },
+                            materialTapTargetSize:
+                                MaterialTapTargetSize.shrinkWrap,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: <Widget>[
+                                Text("Follow",
+                                    style: TextStyle(
+                                        fontSize: 12, color: Colors.white)),
+                              ],
+                            ),
+                          ),
                           Text("Effort",
                               style: TextStyle(
                                   fontSize: 14, color: Colors.yellow)),
@@ -59,7 +114,7 @@ class CourseContainer extends StatelessWidget {
                   const SizedBox(height: 5),
                   MaterialButton(
                     shape: StadiumBorder(),
-                    color: MyColors.lightGrey,
+                    color: Color(0x99FFFFFF),
                     padding: EdgeInsets.symmetric(vertical: 2),
                     onPressed: () {
                       print("Selam");
@@ -69,7 +124,7 @@ class CourseContainer extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
-                        Text("Follow",
+                        Text("Unfollow",
                             style:
                                 TextStyle(fontSize: 12, color: Colors.white)),
                       ],

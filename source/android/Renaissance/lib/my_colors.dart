@@ -57,3 +57,16 @@ class MyColors {
     500: Color(0xff4c525c)
   });
 }
+
+  static const MaterialColor pink = MaterialColor(
+    0xffffbbbb,
+    <int, Color> {
+      50: Color(0xffffbbbb),
+      100: Color(0xffffbbbb),
+      200: Color(0xffffbbbb),
+      300: Color(0xffffbbbb),
+      400: Color(0xffffbbbb),
+      500: Color(0xffffbbbb)
+    }
+  );
+}
