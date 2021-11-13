@@ -20,7 +20,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [8.x, 10.x, 12.x]
+        node-version: [14.x]
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -51,7 +51,7 @@ jobs:
           AWS_ACCESS_KEY_ID: AKIAXZ2EBCZWG57YHQNN
           AWS_SECRET_ACCESS_KEY: 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
           AWS_REGION: us-east-2
-          SOURCE_DIR: "build"
+          SOURCE_DIR: "source/frontend/dist"
 
 
       # Runs a single command using the runners shell
