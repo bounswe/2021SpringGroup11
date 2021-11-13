@@ -31,7 +31,7 @@ SECRET_KEY = env_data['SECRET_KEY']
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['34.133.118.102']
 
 # Session Configuration
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
