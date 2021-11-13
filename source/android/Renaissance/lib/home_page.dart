@@ -18,7 +18,6 @@ class _HomePageState extends State<HomePage> {
   void changePage(int num) {
     setState(() {
       _pageIndex = num;
-      print("Deneme");
     });
   }
 
@@ -65,186 +64,180 @@ class _HomePageState extends State<HomePage> {
       {"name": "Kar", "effort": 2, "rating": 1.6},
       {"name": "Araba", "effort": 2, "rating": 1.7},
     ];
-    return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: Scaffold(
-          appBar: AppBar(
-              backgroundColor: MyColors.blue,
-              leading: Image(
-                image: AssetImage('assets/logoOnly.png'),
+    return Scaffold(
+      appBar: AppBar(
+          backgroundColor: MyColors.blue,
+          leading: Image(
+            image: AssetImage('assets/logoOnly.png'),
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(
+              bottom: Radius.circular(42),
+            ),
+          ),
+          title: Container(
+            width: double.infinity,
+            height: 40,
+            decoration: BoxDecoration(
+              color: Colors.transparent,
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(
+                color: Colors.white,
+                width: 2,
               ),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.vertical(
-                  bottom: Radius.circular(42),
+            ),
+            child: Center(
+              child: TextField(
+                style: TextStyle(
+                  color: Colors.white,
                 ),
-              ),
-              title: Container(
-                width: double.infinity,
-                height: 40,
-                decoration: BoxDecoration(
-                  color: Colors.transparent,
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(
-                    color: Colors.white,
-                    width: 2,
-                  ),
-                ),
-                child: Center(
-                  child: TextField(
-                    style: TextStyle(
+                decoration: InputDecoration(
+                    prefixIcon: Icon(
+                      Icons.search,
                       color: Colors.white,
                     ),
-                    decoration: InputDecoration(
-                        prefixIcon: Icon(
-                          Icons.search,
-                          color: Colors.white,
-                        ),
-                        hintText: 'Find something',
-                        hintStyle: TextStyle(
-                          color: Colors.white,
-                          fontStyle: FontStyle.italic,
-                        ),
-                        border: InputBorder.none),
+                    hintText: 'Find something',
+                    hintStyle: TextStyle(
+                      color: Colors.white,
+                      fontStyle: FontStyle.italic,
+                    ),
+                    border: InputBorder.none),
+              ),
+            ),
+          )),
+      body: ListView(
+        physics: BouncingScrollPhysics(),
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              ElevatedButton(
+                child: Text(
+                  'Popular',
+                  style: TextStyle(color: Colors.black),
+                ),
+                style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all(MyColors.lightYellow),
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
                   ),
                 ),
-              )),
-          body: ListView(
-            physics: BouncingScrollPhysics(),
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  ElevatedButton(
-                    child: Text(
-                      'Popular',
-                      style: TextStyle(color: Colors.black),
-                    ),
-                    style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStateProperty.all(MyColors.lightYellow),
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                      ),
-                    ),
-                    onPressed: () => changePage(0),
-                  ),
-                  ElevatedButton(
-                    child: Text(
-                      'For You',
-                      style: TextStyle(color: Colors.black),
-                    ),
-                    style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStateProperty.all(MyColors.lightYellow),
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                      ),
-                    ),
-                    onPressed: () => changePage(1),
-                  ),
-                  ElevatedButton(
-                    child: Text(
-                      'New',
-                      style: TextStyle(color: Colors.black),
-                    ),
-                    style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStateProperty.all(MyColors.lightYellow),
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                      ),
-                    ),
-                    onPressed: () => changePage(2),
-                  ),
-                ],
+                onPressed: () => changePage(0),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Expanded(
-                    child: ElevatedButton(
-                      child: Text(
-                        'Tags',
-                        style: TextStyle(color: Colors.black),
-                      ),
-                      style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all(Colors.orange),
-                        shape:
-                            MaterialStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15),
-                            side: BorderSide(width: 3),
-                          ),
-                        ),
-                      ),
-                      onPressed: () => null,
+              ElevatedButton(
+                child: Text(
+                  'For You',
+                  style: TextStyle(color: Colors.black),
+                ),
+                style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all(MyColors.lightYellow),
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
                     ),
-                  )
-                ],
-              ),
-              Container(
-                width: double.infinity,
-                padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-                decoration: BoxDecoration(
-                    color: Color(0x99FFFFFF),
-                    borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: [
-                      ...(tags[_pageIndex]["tags"] as List<Map<String, Object>>)
-                          .map((tag) {
-                        return TagContainer(tag["name"] as String,
-                            tag["effort"] as int, tag["rating"] as double);
-                      }).toList(),
-                    ],
                   ),
                 ),
+                onPressed: () => changePage(1),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Expanded(
-                    child: ElevatedButton(
-                      child: Text(
-                        'Paths',
-                        style: TextStyle(color: Colors.black),
-                      ),
-                      style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all(Colors.orange),
-                        shape:
-                            MaterialStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15),
-                            side: BorderSide(width: 3),
-                          ),
-                        ),
-                      ),
-                      onPressed: () => null,
+              ElevatedButton(
+                child: Text(
+                  'New',
+                  style: TextStyle(color: Colors.black),
+                ),
+                style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all(MyColors.lightYellow),
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
                     ),
-                  )
-                ],
-              ),
-              GridView.count(
-                crossAxisCount: 3,
-                shrinkWrap: true,
-                padding: const EdgeInsets.all(10),
-                physics: ScrollPhysics(),
-                children: paths.map((path) {
-                  return CourseContainer(path["name"] as String,
-                      path["effort"] as int, path["rating"] as double);
-                }).toList(),
+                  ),
+                ),
+                onPressed: () => changePage(2),
               ),
             ],
           ),
-        ));
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Expanded(
+                child: ElevatedButton(
+                  child: Text(
+                    'Tags',
+                    style: TextStyle(color: Colors.black),
+                  ),
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(Colors.orange),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                        side: BorderSide(width: 3),
+                      ),
+                    ),
+                  ),
+                  onPressed: () => null,
+                ),
+              )
+            ],
+          ),
+          Container(
+            width: double.infinity,
+            padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+            decoration: BoxDecoration(
+                color: Color(0x99FFFFFF),
+                borderRadius: BorderRadius.all(Radius.circular(10.0))),
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: [
+                  ...(tags[_pageIndex]["tags"] as List<Map<String, Object>>)
+                      .map((tag) {
+                    return TagContainer(tag["name"] as String,
+                        tag["effort"] as int, tag["rating"] as double);
+                  }).toList(),
+                ],
+              ),
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Expanded(
+                child: ElevatedButton(
+                  child: Text(
+                    'Paths',
+                    style: TextStyle(color: Colors.black),
+                  ),
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(Colors.orange),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                        side: BorderSide(width: 3),
+                      ),
+                    ),
+                  ),
+                  onPressed: () => null,
+                ),
+              )
+            ],
+          ),
+          GridView.count(
+            crossAxisCount: 3,
+            shrinkWrap: true,
+            padding: const EdgeInsets.all(10),
+            physics: ScrollPhysics(),
+            children: paths.map((path) {
+              return CourseContainer(path["name"] as String,
+                  path["effort"] as int, path["rating"] as double);
+            }).toList(),
+          ),
+        ],
+      ),
+    );
   }
 }

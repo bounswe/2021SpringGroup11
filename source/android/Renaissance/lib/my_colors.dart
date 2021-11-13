@@ -39,6 +39,14 @@ class MyColors {
     400: Color(0xfff25151),
     500: Color(0xfff25151)
   });
+  static const MaterialColor lightGrey = MaterialColor(0x99FFFFFF, <int, Color>{
+    50: Color(0x99FFFFFF),
+    100: Color(0x99FFFFFF),
+    200: Color(0x99FFFFFF),
+    300: Color(0x99FFFFFF),
+    400: Color(0x99FFFFFF),
+    500: Color(0x99FFFFFF)
+  });
 
   static const MaterialColor darkGray = MaterialColor(0xff4c525c, <int, Color>{
     50: Color(0xff4c525c),

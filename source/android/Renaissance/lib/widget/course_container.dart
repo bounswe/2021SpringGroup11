@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:portakal/my_colors.dart';
 
 class CourseContainer extends StatelessWidget {
   CourseContainer(this.course_name, this.course_effort, this.course_rating);
@@ -58,7 +59,7 @@ class CourseContainer extends StatelessWidget {
                   const SizedBox(height: 5),
                   MaterialButton(
                     shape: StadiumBorder(),
-                    color: Color(0x99FFFFFF),
+                    color: MyColors.lightGrey,
                     padding: EdgeInsets.symmetric(vertical: 2),
                     onPressed: () {
                       print("Selam");
