@@ -117,6 +117,6 @@ class ChangePassword(APIView):
         user = User(**user)
         user.password = data['password']
         user.hash_password()
-        user.update()
+        user.update(update_password=True)
 
         return Response(user.get_dict(), status=status.HTTP_200_OK)

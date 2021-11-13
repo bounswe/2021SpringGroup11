@@ -49,9 +49,9 @@ class User:
         with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
             self._id = db.insert_one('user', self.get_dict(get_password=True)).inserted_id
 
-    def update(self):
+    def update(self, update_password=False):
         with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
-            db.find_and_modify(collection='user', query={'_id': self._id}, **self.get_dict())
+            db.find_and_modify(collection='user', query={'_id': self._id}, **self.get_dict(get_password=update_password))
 
     def get_dict(self, get_id=False, get_password=False):
         result = vars(self)
