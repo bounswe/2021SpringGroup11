@@ -22,7 +22,7 @@ const routes: {
   {
     path: '/signup',
     exact: true,
-    component: lazy(() => import('./components/Signup')),
+    component: lazy(() => import('./components/SignUp')),
     requestAuth: false,
   },
   {

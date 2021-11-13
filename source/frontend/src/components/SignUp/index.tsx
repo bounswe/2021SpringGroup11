@@ -7,27 +7,26 @@ import {
   Typography,
   TextField,
   Button,
-  Grid,
   InputAdornment,
   IconButton,
 } from '@mui/material/';
 import { makeStyles } from '@mui/styles';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 // @ts-ignore
-import loginBottomRight from '../../images/login-bottom-right.png';
+import greenEllipse from '../../images/green-ellipse.png';
 // @ts-ignore
-import loginTopLeft from '../../images/login-top-left.png';
+import redEllipse from '../../images/red-ellipse.png';
 // @ts-ignore
 import logo from '../../images/logo.png';
-import { login } from './actions';
+import { signup } from './actions';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import makeSelectLogin from './selectors';
+import makeSelectSignUp from './selectors';
 import { createStructuredSelector } from 'reselect';
 interface Props {
   history: any;
   dispatch: any;
-  login: any;
+  signup: any;
 }
 
 const useStyles = makeStyles(() => ({
@@ -54,6 +53,11 @@ const useStyles = makeStyles(() => ({
   textField: {
     background: 'rgba(0,0,0,0.1)',
     borderRadius: '20px',
+    height: '50px',
+    margin: 'normal',
+  },
+  textFieldRoot: {
+    margin: '10px',
   },
   textCred: {
     fontFamily: 'Roboto',
@@ -76,13 +80,17 @@ const useStyles = makeStyles(() => ({
   button: {
     background: '#70A9FF',
     height: '80px',
+    margin: '10px',
     borderRadius: '20px',
   },
 }));
 
-const Login = (props: Props) => {
+const SignUp = (props: Props) => {
   const { history, dispatch } = props;
   const classes = useStyles();
+
+  const [emailError, setEmailError] = useState(false);
+  const [passwordError, setPasswordError] = useState(false);
 
   const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => setShowPassword(!showPassword);
@@ -90,21 +98,48 @@ const Login = (props: Props) => {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
+    if (!emailValidation(data.get('email'))) {
+      return;
+    }
+    if (!passwordValidation(data.get('password'), data.get('repeatPassword'))) {
+      return;
+    }
 
     dispatch(
-      login({
+      signup({
+        name: data.get('name'),
+        surname: data.get('surname'),
         username: data.get('username'),
+        email: data.get('email'),
         password: data.get('password'),
       }),
     );
 
-    console.log(props.login);
+    console.log(props.signup);
+  };
+  const emailValidation = (email) => {
+    const regex =
+      /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+    if (!email || regex.test(email) === false) {
+      setEmailError(true);
+      return false;
+    }
+    setEmailError(false);
+    return true;
+  };
+  const passwordValidation = (password1, password2) => {
+    if (password1 !== password2) {
+      setPasswordError(true);
+      return false;
+    }
+    setPasswordError(false);
+    return true;
   };
 
   return (
     <Container className={classes.root} maxWidth="xs">
-      <img className={classes.imgTopLeft} src={loginTopLeft} alt={'ellipses'} />
-      <img className={classes.imgBottomRight} src={loginBottomRight} alt={'ellipse'} />
+      <img className={classes.imgTopLeft} src={redEllipse} alt={'ellipses'} />
+      <img className={classes.imgBottomRight} src={greenEllipse} alt={'ellipse'} />
       <CssBaseline />
       <Box
         sx={{
@@ -117,21 +152,52 @@ const Login = (props: Props) => {
       >
         <img className={classes.logo} src={logo} alt={'logo'} />
         <Typography className={classes.textCred} component="h1" variant="h5">
-          Enter Your Credentials
+          Create an Account
         </Typography>
         <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
           <TextField
             InputProps={{ className: classes.textField }}
-            margin="normal"
+            className={classes.textFieldRoot}
+            required
+            fullWidth
+            id="name"
+            label="Name"
+            name="name"
+            autoComplete="name"
+            autoFocus
+          />
+          <TextField
+            InputProps={{ className: classes.textField }}
+            className={classes.textFieldRoot}
+            required
+            fullWidth
+            id="surname"
+            label="Surname"
+            name="surname"
+            autoComplete="surname"
+          />
+          <TextField
+            InputProps={{ className: classes.textField }}
+            className={classes.textFieldRoot}
             required
             fullWidth
             id="username"
             label="Username"
             name="username"
             autoComplete="username"
-            autoFocus
-            error={props.login.loginErrorMessage}
-            helperText={props.login.loginErrorMessage}
+            error={props.signup.signupErrorMessage}
+            helperText={props.signup.signupErrorMessage}
+          />
+          <TextField
+            InputProps={{ className: classes.textField }}
+            className={classes.textFieldRoot}
+            fullWidth
+            id="email"
+            label="Email"
+            name="email"
+            autoComplete="email"
+            error={emailError}
+            helperText={emailError ? 'Email is not valid.' : ''}
           />
           <TextField
             InputProps={{
@@ -148,7 +214,7 @@ const Login = (props: Props) => {
                 </InputAdornment>
               ),
             }}
-            margin="normal"
+            className={classes.textFieldRoot}
             required
             fullWidth
             name="password"
@@ -157,6 +223,31 @@ const Login = (props: Props) => {
             id="password"
             autoComplete="current-password"
           />
+          <TextField
+            InputProps={{
+              className: classes.textField,
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={handleClickShowPassword}
+                    onMouseDown={handleClickShowPassword}
+                  >
+                    {showPassword ? <Visibility /> : <VisibilityOff />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+            className={classes.textFieldRoot}
+            required
+            fullWidth
+            name="repeatPassword"
+            label="Repeat password"
+            type={showPassword ? 'text' : 'password'}
+            id="repeatPassword"
+            error={passwordError}
+            helperText={passwordError && 'Passwords are not identical.'}
+          />
           <Button
             className={classes.button}
             type="submit"
@@ -164,25 +255,8 @@ const Login = (props: Props) => {
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
           >
-            Sign In
+            Get Started!
           </Button>
-          <Grid container>
-            <Grid style={{ marginTop: 'auto' }} item xs>
-              <Button size="small" style={{ color: '#000000', background: '#FFAE48' }}>
-                Forgot password?
-              </Button>
-            </Grid>
-            <Grid item>
-              <Typography className={classes.textAcc}>Don't have an account?</Typography>
-              <Button
-                onClick={() => history.push('/signup')}
-                size="medium"
-                style={{ color: '#000000', background: '#9EE97A' , marginLeft: 'auto' }}
-              >
-                Sign Up
-              </Button>
-            </Grid>
-          </Grid>
         </Box>
       </Box>
     </Container>
@@ -190,7 +264,7 @@ const Login = (props: Props) => {
 };
 
 const mapStateToProps = createStructuredSelector({
-  login: makeSelectLogin(),
+  signup: makeSelectSignUp(),
 });
 function mapDispatchToProps(dispatch) {
   return {
@@ -199,4 +273,4 @@ function mapDispatchToProps(dispatch) {
 }
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
-export default compose(withConnect)(Login);
+export default compose(withConnect)(SignUp);
