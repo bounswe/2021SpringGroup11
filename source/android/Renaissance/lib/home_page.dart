@@ -13,11 +13,46 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  var _pageIndex = 0;
+
+  void changePage(int num) {
+    setState(() {
+      _pageIndex = num;
+      print("Deneme");
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    var tags = [
+      {
+        "name": "Popular",
+        "tags": [
+          {"name": "Pop1", "effort": 2, "rating": 1.2},
+          {"name": "Pop2", "effort": 2, "rating": 1.3},
+          {"name": "Pop3", "effort": 2, "rating": 1.4},
+        ]
+      },
+      {
+        "name": "For You",
+        "tags": [
+          {"name": "For1", "effort": 2, "rating": 1.5},
+          {"name": "For2", "effort": 2, "rating": 1.6},
+          {"name": "For3", "effort": 2, "rating": 1.7},
+        ]
+      },
+      {
+        "name": "New",
+        "tags": [
+          {"name": "New1", "effort": 2, "rating": 1.8},
+          {"name": "New2", "effort": 2, "rating": 1.8},
+          {"name": "New3", "effort": 2, "rating": 1.9},
+        ]
+      },
+    ];
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
+        debugShowCheckedModeBanner: false,
+        home: Scaffold(
           appBar: AppBar(
               backgroundColor: MyColors.blue,
               leading: Image(
@@ -58,177 +93,178 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               )),
-          body: ListView(physics: BouncingScrollPhysics(), children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                ElevatedButton(
-                  child: Text(
-                    'Popular',
-                    style: TextStyle(color: Colors.black),
-                  ),
-                  style: ButtonStyle(
-                    backgroundColor:
-                        MaterialStateProperty.all(MyColors.lightYellow),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
+          body: ListView(
+            physics: BouncingScrollPhysics(),
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  ElevatedButton(
+                    child: Text(
+                      'Popular',
+                      style: TextStyle(color: Colors.black),
+                    ),
+                    style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all(MyColors.lightYellow),
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
                       ),
                     ),
+                    onPressed: () => changePage(0),
                   ),
-                  onPressed: () => null,
-                ),
-                ElevatedButton(
-                  child: Text(
-                    'For You',
-                    style: TextStyle(color: Colors.black),
-                  ),
-                  style: ButtonStyle(
-                    backgroundColor:
-                        MaterialStateProperty.all(MyColors.lightYellow),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
+                  ElevatedButton(
+                    child: Text(
+                      'For You',
+                      style: TextStyle(color: Colors.black),
+                    ),
+                    style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all(MyColors.lightYellow),
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
                       ),
                     ),
+                    onPressed: () => changePage(1),
                   ),
-                  onPressed: () => null,
-                ),
-                ElevatedButton(
-                  child: Text(
-                    'New',
-                    style: TextStyle(color: Colors.black),
-                  ),
-                  style: ButtonStyle(
-                    backgroundColor:
-                        MaterialStateProperty.all(MyColors.lightYellow),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
+                  ElevatedButton(
+                    child: Text(
+                      'New',
+                      style: TextStyle(color: Colors.black),
+                    ),
+                    style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all(MyColors.lightYellow),
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
                       ),
                     ),
+                    onPressed: () => changePage(2),
                   ),
-                  onPressed: () => null,
-                ),
-              ],
-            ),
-            Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
-              Expanded(
-                child: ElevatedButton(
-                  child: Text(
-                    'Tags',
-                    style: TextStyle(color: Colors.black),
-                  ),
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(Colors.orange),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        side: BorderSide(width: 3),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Expanded(
+                    child: ElevatedButton(
+                      child: Text(
+                        'Tags',
+                        style: TextStyle(color: Colors.black),
                       ),
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all(Colors.orange),
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15),
+                            side: BorderSide(width: 3),
+                          ),
+                        ),
+                      ),
+                      onPressed: () => null,
                     ),
-                  ),
-                  onPressed: () => null,
-                ),
-              )
-            ]),
-            Container(
+                  )
+                ],
+              ),
+              Container(
                 width: double.infinity,
-                color: Colors.transparent,
-                child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-                    decoration: BoxDecoration(
-                        color: Color(0x99FFFFFF),
-                        borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const SizedBox(width: 6),
-                            TagContainer("hello", 1, 2.0),
-                            const SizedBox(width: 12),
-                            TagContainer("hello ", 1, 2.0),
-                            const SizedBox(width: 12),
-                            TagContainer(" hge", 1, 2.0)
-                          ],
+                padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                decoration: BoxDecoration(
+                    color: Color(0x99FFFFFF),
+                    borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ...(tags[_pageIndex]["tags"] as List<Map<String, Object>>)
+                        .map((tag) {
+                      return TagContainer(tag["name"] as String,
+                          tag["effort"] as int, tag["rating"] as double);
+                    }).toList(),
+                  ],
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Expanded(
+                    child: ElevatedButton(
+                      child: Text(
+                        'Paths',
+                        style: TextStyle(color: Colors.black),
+                      ),
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all(Colors.orange),
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15),
+                            side: BorderSide(width: 3),
+                          ),
                         ),
-                        const SizedBox(height: 18),
-                        Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Expanded(
-                                child: ElevatedButton(
-                                  child: Text(
-                                    'Paths',
-                                    style: TextStyle(color: Colors.black),
-                                  ),
-                                  style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty.all(
-                                        Colors.orange),
-                                    shape: MaterialStateProperty.all<
-                                        RoundedRectangleBorder>(
-                                      RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(15),
-                                          side: BorderSide(width: 3)),
-                                    ),
-                                  ),
-                                  onPressed: () => null,
-                                ),
-                              )
-                            ]),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const SizedBox(width: 6),
-                            CourseContainer("hello hello hello hge", 1, 2.0),
-                            const SizedBox(width: 12),
-                            CourseContainer("hello hello hello hge", 1, 2.0),
-                            const SizedBox(width: 12),
-                            CourseContainer("hello hello hello hge", 1, 2.0)
-                          ],
-                        ),
-                        const SizedBox(height: 8),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const SizedBox(width: 6),
-                            CourseContainer("hello hello hello hge", 1, 2.0),
-                            const SizedBox(width: 12),
-                            CourseContainer("hello hello hello hge", 1, 2.0),
-                            const SizedBox(width: 12),
-                            CourseContainer("hello hello hello hge", 1, 2.0)
-                          ],
-                        ),
-                        const SizedBox(height: 8),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const SizedBox(width: 6),
-                            CourseContainer("hello hello hello hge", 1, 2.0),
-                            const SizedBox(width: 12),
-                            CourseContainer("hello hello hello hge", 1, 2.0),
-                            const SizedBox(width: 12),
-                            CourseContainer("hello hello hello hge", 1, 2.0)
-                          ],
-                        ),
-                        const SizedBox(height: 8),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const SizedBox(width: 6),
-                            CourseContainer("hello hello hello hge", 1, 2.0),
-                            const SizedBox(width: 12),
-                            CourseContainer("hello hello hello hge", 1, 2.0),
-                            const SizedBox(width: 12),
-                            CourseContainer("hello hello hello hge", 1, 2.0)
-                          ],
-                        ),
-                      ],
-                    ))),
-          ])),
-    );
+                      ),
+                      onPressed: () => null,
+                    ),
+                  )
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const SizedBox(width: 6),
+                  CourseContainer("hello hello hello hge", 1, 2.0),
+                  const SizedBox(width: 12),
+                  CourseContainer("hello hello hello hge", 1, 2.0),
+                  const SizedBox(width: 12),
+                  CourseContainer("hello hello hello hge", 1, 2.0)
+                ],
+              ),
+              const SizedBox(height: 8),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const SizedBox(width: 6),
+                  CourseContainer("hello hello hello hge", 1, 2.0),
+                  const SizedBox(width: 12),
+                  CourseContainer("hello hello hello hge", 1, 2.0),
+                  const SizedBox(width: 12),
+                  CourseContainer("hello hello hello hge", 1, 2.0)
+                ],
+              ),
+              const SizedBox(height: 8),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const SizedBox(width: 6),
+                  CourseContainer("hello hello hello hge", 1, 2.0),
+                  const SizedBox(width: 12),
+                  CourseContainer("hello hello hello hge", 1, 2.0),
+                  const SizedBox(width: 12),
+                  CourseContainer("hello hello hello hge", 1, 2.0)
+                ],
+              ),
+              const SizedBox(height: 8),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const SizedBox(width: 6),
+                  CourseContainer("hello hello hello hge", 1, 2.0),
+                  const SizedBox(width: 12),
+                  CourseContainer("hello hello hello hge", 1, 2.0),
+                  const SizedBox(width: 12),
+                  CourseContainer("hello hello hello hge", 1, 2.0)
+                ],
+              ),
+            ],
+          ),
+        ));
   }
 }

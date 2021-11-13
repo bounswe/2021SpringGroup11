@@ -14,6 +14,7 @@ class TagContainer extends StatelessWidget {
         child: Container(
           width: 100,
           height: 80,
+          margin: EdgeInsets.all(10),
           color: Colors.transparent,
           child: Container(
               padding: EdgeInsets.symmetric(horizontal: 7, vertical: 7),
