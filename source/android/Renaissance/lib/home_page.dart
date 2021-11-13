@@ -216,50 +216,39 @@ class _HomePageState extends State<HomePage> {
                   )
                 ],
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+              Wrap(
+                spacing: 4,
+                alignment: WrapAlignment.center,
                 children: [
-                  const SizedBox(width: 6),
                   CourseContainer("hello hello hello hge", 1, 2.0),
-                  const SizedBox(width: 12),
                   CourseContainer("hello hello hello hge", 1, 2.0),
-                  const SizedBox(width: 12),
                   CourseContainer("hello hello hello hge", 1, 2.0)
                 ],
               ),
-              const SizedBox(height: 8),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+              Wrap(
+                spacing: 4,
+                alignment: WrapAlignment.center,
                 children: [
-                  const SizedBox(width: 6),
                   CourseContainer("hello hello hello hge", 1, 2.0),
-                  const SizedBox(width: 12),
                   CourseContainer("hello hello hello hge", 1, 2.0),
-                  const SizedBox(width: 12),
                   CourseContainer("hello hello hello hge", 1, 2.0)
                 ],
               ),
-              const SizedBox(height: 8),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+              Wrap(
+                spacing: 4,
+                alignment: WrapAlignment.center,
                 children: [
-                  const SizedBox(width: 6),
                   CourseContainer("hello hello hello hge", 1, 2.0),
-                  const SizedBox(width: 12),
                   CourseContainer("hello hello hello hge", 1, 2.0),
-                  const SizedBox(width: 12),
                   CourseContainer("hello hello hello hge", 1, 2.0)
                 ],
               ),
-              const SizedBox(height: 8),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+              Wrap(
+                spacing: 4,
+                alignment: WrapAlignment.center,
                 children: [
-                  const SizedBox(width: 6),
                   CourseContainer("hello hello hello hge", 1, 2.0),
-                  const SizedBox(width: 12),
                   CourseContainer("hello hello hello hge", 1, 2.0),
-                  const SizedBox(width: 12),
                   CourseContainer("hello hello hello hge", 1, 2.0)
                 ],
               ),
