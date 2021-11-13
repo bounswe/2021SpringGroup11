@@ -72,18 +72,18 @@ class _HomePageState extends State<HomePage> {
           ),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.vertical(
-              bottom: Radius.circular(42),
+              bottom: Radius.circular(20),
             ),
           ),
           title: Container(
-            width: double.infinity,
             height: 40,
+            margin: EdgeInsets.only(right: 10),
             decoration: BoxDecoration(
               color: Colors.transparent,
               borderRadius: BorderRadius.circular(10),
               border: Border.all(
                 color: Colors.white,
-                width: 2,
+                width: 1,
               ),
             ),
             child: Center(
@@ -101,10 +101,12 @@ class _HomePageState extends State<HomePage> {
                       color: Colors.white,
                       fontStyle: FontStyle.italic,
                     ),
-                    border: InputBorder.none),
+                    border: InputBorder.none
+                ),
               ),
             ),
-          )),
+          )
+      ),
       body: ListView(
         physics: BouncingScrollPhysics(),
         children: [

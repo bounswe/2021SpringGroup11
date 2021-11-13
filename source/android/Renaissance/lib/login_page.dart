@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:portakal/my_colors.dart';
 import 'package:portakal/register_page.dart';
+import 'package:portakal/token.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'http_services.dart';
@@ -80,7 +81,7 @@ class _LoginPageState extends State<LoginPage> {
                                 ),
                                 validator: (email) {
                                   //Check if email address is valid here, if invalid, return a message.
-                                  if (email == null || email!.length == 0) {
+                                  if (email == null || email.length == 0) {
                                     return "email cannot be empty !";
                                   }
                                   return null;
@@ -256,6 +257,7 @@ class _LoginPageState extends State<LoginPage> {
         // do something with response.
         SharedPreferences prefs = await SharedPreferences.getInstance();
         prefs.setBool('isLoggedIn', true);
+        Token.shared.setToken("ERFeferferf");
       }
     },
     child: Row(

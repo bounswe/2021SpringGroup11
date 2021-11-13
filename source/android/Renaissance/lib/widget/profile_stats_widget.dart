@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:portakal/my_colors.dart';
 
 class StatsWidget extends StatelessWidget {
   StatsWidget(this.favourite_count,this.enrolled_course_count,this.done_course_count);
@@ -10,9 +11,13 @@ class StatsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-    height: 64,
+    padding: EdgeInsets.all(7),
+      decoration: BoxDecoration(
+        color: MyColors.lightGrey,
+        borderRadius: BorderRadius.circular(50)
+      ),
       child:Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
           buildButton(context, favourite_count.toString(), 'Favourites'),
           buildButton(context, enrolled_course_count.toString(), 'Enrolled'),
@@ -33,9 +38,8 @@ class StatsWidget extends StatelessWidget {
         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
         child: Column(
           mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-
             Text(
               text,
               style: TextStyle(fontWeight: FontWeight.bold,fontSize: 14,color:Color(0xFF219653)),
