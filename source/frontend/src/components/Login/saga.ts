@@ -20,7 +20,6 @@ export function* doLogin() {
     username: loginData.username,
     password: loginData.password,
   };
-  console.log('HERE I AM');
   try {
     // @ts-ignore
     const response = yield call(post, LOGIN_URL, userData);
