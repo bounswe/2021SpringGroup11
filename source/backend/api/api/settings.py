@@ -33,7 +33,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-# CORS
+# CORS Configuration
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_HEADERS = [
@@ -47,6 +47,15 @@ CORS_ALLOW_HEADERS = [
     'x-csrftoken',
     'x-requested-with',
     'sentry-trace',
+]
+
+CORS_ORIGIN_REGEX_WHITELIST = [
+    r'^https://(\w+\.){0,}bounswe11.com.s3-website.us-east-2.amazonaws\.com',
+    r'^http://(\w+\.){0,}bounswe11.com.s3-website.us-east-2.amazonaws\.com',
+    r'^http://(\w+\.){0,}localhost:1234',
+    r'^http://(\w+\.){0,}localhost:8000',
+    r'^http://(\w+\.){0,}localhost:8080',
+    r'^http://(\w+\.){0,}localhost:8081'
 ]
 
 # Session Configuration
