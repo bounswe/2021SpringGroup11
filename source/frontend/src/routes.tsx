@@ -11,7 +11,7 @@ const routes: {
     path: '/',
     exact: true,
     component: () => <Redirect to="/home" />,
-    requestAuth: true,
+    requestAuth: false,
   },
   {
     path: '/login',

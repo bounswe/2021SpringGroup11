@@ -2,11 +2,12 @@ import { put, call, select, takeLatest } from 'redux-saga/effects';
 import { CHECKAUTH, LOGIN, LOGOUT, FORGOT_PASSWORD } from './constants';
 import history from '../../utils/history';
 import makeSelectLogin from './selectors';
-import { LOGIN_URL } from '../../utils/endpoints';
+import { LOGIN_URL, FORGOT_PASSWORD_URL } from '../../utils/endpoints';
 import { post } from '../../utils/axios';
 import {
   checkAuthFailure,
   checkAuthSuccess,
+  forgotPasswordSuccess,
   loginFailure,
   loginSuccess,
   logoutFailure,
@@ -14,18 +15,21 @@ import {
 } from './actions';
 import auth from '../../utils/auth';
 
-export function* doLogin() {
+export function* doLoginSaga() {
   const loginData = yield select(makeSelectLogin());
   const userData = {
     username: loginData.username,
     password: loginData.password,
   };
-  console.log('HERE I AM');
   try {
     // @ts-ignore
     const response = yield call(post, LOGIN_URL, userData);
-    if (response.isSuccess) {
-      const user = response.data;
+    console.log(response);
+    if (response.token) {
+      const user = {
+        username: userData.username,
+        token: response.token,
+      };
       yield put(loginSuccess(user));
       auth.setAuthInfoToSession(user);
       if (loginData.remember) {
@@ -35,10 +39,10 @@ export function* doLogin() {
         ? yield put(history.push(loginData.redirectFrom))
         : yield put(history.push('/home'));
     } else {
-      yield put(loginFailure('LOGIN ERROR MESSAGE WILL BE WRITTEN HERE'));
+      yield put(loginFailure(response));
     }
   } catch (error) {
-    yield put(loginFailure({ loginErrorMessage: 'LOGIN ERROR MESSAGE WILL BE WRITTEN HERE' }));
+    yield put(loginFailure({ loginErrorMessage: error.detail }));
   }
 }
 
@@ -72,10 +76,27 @@ export function* doLogout() {
   }
 }
 
-export function* forgotPasswordSaga() {}
+export function* forgotPasswordSaga() {
+  const selectedData = yield select(makeSelectLogin());
+  const userData = {
+    username: selectedData.username,
+  };
+  try {
+    // @ts-ignore
+    const response = yield call(post, FORGOT_PASSWORD_URL, userData);
+    if (response.code == 200) {
+      yield put(forgotPasswordSuccess(response));
+    } else {
+      yield put(loginFailure(response));
+    }
+  } catch (error) {
+    yield put(loginFailure({ loginErrorMessage: error.detail }));
+  }
+}
+
 export default function* loginSaga() {
+  yield takeLatest(LOGIN, doLoginSaga);
   yield takeLatest(CHECKAUTH, checkAuth);
   yield takeLatest(LOGOUT, doLogout);
-  yield takeLatest(LOGIN, doLogin);
-  yield takeLatest(FORGOT_PASSWORD, doLogin);
+  yield takeLatest(FORGOT_PASSWORD, forgotPasswordSaga);
 }
