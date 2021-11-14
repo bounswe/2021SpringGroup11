@@ -29,13 +29,19 @@ const routes: {
     path: '/home',
     exact: true,
     component: lazy(() => import('./components/Home')),
-    requestAuth: false, // to develop navbar and home page // TODO: remove after dev
+    requestAuth: false, // TODO: remove after dev
   },
   {
     path: '/profile',
     exact: true,
     component: lazy(() => import('./components/Profile')),
-    requestAuth: false, // to develop navbar and home page // TODO: remove after dev
+    requestAuth: false, // TODO: remove after dev
+  },
+  {
+    path: '/profile/:username',
+    exact: true,
+    component: lazy(() => import('./components/Profile')),
+    requestAuth: false, // TODO: remove after dev
   },
 ];
 
