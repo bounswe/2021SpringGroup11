@@ -23,12 +23,9 @@ import {
 import React, { useEffect, useState } from 'react';
 import NavBar from '../NavBar';
 import { getProfileData } from './helper';
-import { BrowserRouter as Router, Switch, Route, Link, useParams } from 'react-router-dom';
 
 interface Props {}
 const Profile = (props: Props) => {
-  const { username } = useParams();
-
   const [resources, setResources] = useState(null);
   const [user, setUser] = useState(null);
   const [stats, setStats] = useState(null);
@@ -37,7 +34,6 @@ const Profile = (props: Props) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    setLoading(true);
     (async () => {
       // simulate api request waiting
       setTimeout(async () => {
@@ -46,17 +42,17 @@ const Profile = (props: Props) => {
           user: _user,
           stats: _stats,
           favorites: _favorites,
-        } = await getProfileData(username || '@meltemarslan');
+        } = await getProfileData();
         console.log(_resources);
 
         setResources(_resources);
-        setUser({ ..._user });
+        setUser(_user);
         setStats(_stats);
         setFavorites(_favorites);
         setLoading(false);
       }, 1000);
     })();
-  }, [username]);
+  }, []);
 
   if (loading) {
     return (
