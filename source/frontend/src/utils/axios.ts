@@ -18,6 +18,7 @@ export function post(url, options, config) {
       Authorization: token ? `Bearer ${token}` : '',
       'Content-Type': 'application/json',
       Accept: 'application/json',
+      'Access-Control-Allow-Origin': '*',
     },
   };
   return axios.post(url, options, { ...header, ...config }).then(checkStatus);

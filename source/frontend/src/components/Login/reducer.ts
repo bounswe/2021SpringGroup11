@@ -18,14 +18,14 @@ import {
 
 export const initialState = {
   redirectFrom: null,
-  loading: true,
+  loading: false,
   username: '',
   password: '',
   remember: true,
   loginErrorMessage: '',
   authInfo: JSON.parse(sessionStorage.getItem('authInfo')),
   mail: '',
-  mailSentForPassword: '',
+  mailSentError: '',
 };
 
 const loginReducer = (state = initialState, action) =>
@@ -79,14 +79,14 @@ const loginReducer = (state = initialState, action) =>
         draft.loading = false;
         break;
       case FORGOT_PASSWORD:
-        draft.mail = null;
+        draft.username = action.userInfo.username;
         draft.loading = true;
         break;
       case FORGOT_PASSWORD_SUCCESS:
         draft.loading = false;
         break;
       case FORGOT_PASSWORD_FAILURE:
-        draft.mailSentForPassword = action.response.isSuccess;
+        draft.mailSentError = action.error;
         draft.loading = false;
         break;
     }
