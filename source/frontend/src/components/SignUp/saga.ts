@@ -4,10 +4,7 @@ import history from '../../utils/history';
 import makeSelectSignUp from './selectors';
 import { SIGNUP_URL } from '../../utils/endpoints';
 import { post } from '../../utils/axios';
-import {
-  signupFailure,
-  signupSuccess,
-} from './actions';
+import { signupFailure, signupSuccess } from './actions';
 
 export function* doSignUp() {
   const signupData = yield select(makeSelectSignUp());
@@ -18,13 +15,12 @@ export function* doSignUp() {
     email: signupData.email,
     password: signupData.password,
   };
-  console.log('HERE I AM');
   try {
     // @ts-ignore
     const response = yield call(post, SIGNUP_URL, userData);
     if (response.isSuccess) {
       yield put(signupSuccess());
-        put(history.push('/login'));
+      put(history.push('/login'));
     } else {
       yield put(signupFailure('SIGN UP ERROR MESSAGE WILL BE WRITTEN HERE'));
     }
@@ -33,7 +29,5 @@ export function* doSignUp() {
   }
 }
 export default function* signupSaga() {
-    yield takeLatest(SIGNUP, doSignUp);
+  yield takeLatest(SIGNUP, doSignUp);
 }
-
-

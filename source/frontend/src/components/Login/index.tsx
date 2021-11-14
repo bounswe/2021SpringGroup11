@@ -97,8 +97,6 @@ const Login = (props: Props) => {
         password: data.get('password'),
       }),
     );
-
-    console.log(props.login);
   };
 
   return (
@@ -168,7 +166,7 @@ const Login = (props: Props) => {
           </Button>
           <Grid container>
             <Grid style={{ marginTop: 'auto' }} item xs>
-              <Button size="small" style={{ color: '#000000', background: '#FFAE48' }}>
+              <Button size="medium" style={{ color: '#000000', background: '#FFAE48' }}>
                 Forgot password?
               </Button>
             </Grid>
@@ -177,7 +175,12 @@ const Login = (props: Props) => {
               <Button
                 onClick={() => history.push('/signup')}
                 size="medium"
-                style={{ color: '#000000', background: '#9EE97A' , marginLeft: 'auto' }}
+                style={{
+                  color: '#000000',
+                  background: '#9EE97A',
+                  marginLeft: '100px',
+                  right: 0,
+                }}
               >
                 Sign Up
               </Button>
