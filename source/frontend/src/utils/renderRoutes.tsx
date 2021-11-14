@@ -5,7 +5,6 @@ const renderRoutes = () => {
   return (
     <Switch>
       {_routes.map((route, index) => {
-        console.log(route.path, route.requestAuth);
         if (route.requestAuth) {
           return (
             <Route

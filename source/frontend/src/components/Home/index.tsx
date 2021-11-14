@@ -1,35 +1,32 @@
-import { Grid } from '@mui/material/';
+import NavBar from '../NavBar';
 import { makeStyles } from '@mui/styles';
-import ProfileBar from './ProfileBar';
-
-interface Props {}
+import ProfileBar from './components/ProfileBar';
+import Main from './components/Main';
 
 const useStyles = makeStyles(() => ({
   root: {
     height: '100vh',
   },
-  left: {
-    background: '#70A9FF',
+  middle: {
+    margin: 0,
+    padding: 0,
   },
-  middle: {},
-  right: {
-    background: '#70A9FF',
+  main: {
+    display: 'flex',
+    height: '100%',
   },
 }));
-const Home = (props: Props) => {
+
+const Home = () => {
   const classes = useStyles();
   return (
-    <Grid className={classes.root} container>
-      <Grid className={classes.left} item xs={12} md={2}>
-        LEFT
-      </Grid>
-      <Grid className={classes.middle} item xs={12} md={8}>
-        HOME
-      </Grid>
-      <Grid className={classes.right} item xs={12} md={2}>
+    <div className={classes.root}>
+      <NavBar title="Home" />
+      <div className={classes.main}>
+        <Main />
         <ProfileBar />
-      </Grid>
-    </Grid>
+      </div>
+    </div>
   );
 };
 

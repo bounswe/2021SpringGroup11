@@ -114,8 +114,6 @@ const SignUp = (props: Props) => {
         password: data.get('password'),
       }),
     );
-
-    console.log(props.signup);
   };
   const emailValidation = (email) => {
     const regex =
