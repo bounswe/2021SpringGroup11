@@ -1,4 +1,4 @@
-export const getProfileData = async () => {
+export const getProfileData = async (username: string) => {
   // TODO: fetch data from API
   const resources = [
     {
@@ -55,7 +55,7 @@ export const getProfileData = async () => {
     { text: 'Followers', value: '540' },
   ];
   const user = {
-    username: '@meltemarslan',
+    username: username,
     name: 'MELTEM ARSLAN',
     experience: 'GRANDMASTER',
     photo: 'https://picsum.photos/200/200?random=1',
