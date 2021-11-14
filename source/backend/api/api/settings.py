@@ -47,6 +47,7 @@ CORS_ALLOW_HEADERS = [
     'x-csrftoken',
     'x-requested-with',
     'sentry-trace',
+    'Access-Control-Allow-Origin'
 ]
 
 CORS_ORIGIN_REGEX_WHITELIST = [
