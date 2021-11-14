@@ -20,7 +20,7 @@ export function defaultAction() {
   };
 }
 
-export function login(userInfo) {
+export function doLogin(userInfo) {
   return {
     type: LOGIN,
     userInfo,
@@ -79,10 +79,10 @@ export function checkAuthFailure() {
   };
 }
 
-export function forgotPassword(mail) {
+export function forgotPassword(userInfo) {
   return {
     type: FORGOT_PASSWORD,
-    mail,
+    userInfo,
   };
 }
 

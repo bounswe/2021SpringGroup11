@@ -9,8 +9,8 @@ import { signupFailure, signupSuccess } from './actions';
 export function* doSignUp() {
   const signupData = yield select(makeSelectSignUp());
   const userData = {
-    name: signupData.name,
-    surname: signupData.surname,
+    firstname: signupData.name,
+    lastname: signupData.surname,
     username: signupData.username,
     email: signupData.email,
     password: signupData.password,
