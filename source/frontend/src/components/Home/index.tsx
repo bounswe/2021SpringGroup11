@@ -1,28 +1,31 @@
-import ExploreIcon from '@mui/icons-material/Explore';
-import NotificationsIcon from '@mui/icons-material/Notifications';
-import SearchIcon from '@mui/icons-material/Search';
-import SettingsIcon from '@mui/icons-material/Settings';
-import {
-  alpha,
-  AppBar,
-  Badge,
-  Box,
-  IconButton,
-  InputBase,
-  Menu,
-  MenuItem,
-  styled,
-  Toolbar,
-  Typography,
-} from '@mui/material';
-import React from 'react';
 import NavBar from '../NavBar';
+import { makeStyles } from '@mui/styles';
+import ProfileBar from './components/ProfileBar';
+import Main from './components/Main';
 
-interface Props {}
-const Home = (props: Props) => {
+const useStyles = makeStyles(() => ({
+  root: {
+    height: '100vh',
+  },
+  middle: {
+    margin: 0,
+    padding: 0,
+  },
+  main: {
+    display: 'flex',
+    height: '100%',
+  },
+}));
+
+const Home = () => {
+  const classes = useStyles();
   return (
-    <div>
-      <NavBar title="Home"></NavBar>
+    <div className={classes.root}>
+      <NavBar title="Home" />
+      <div className={classes.main}>
+        <Main />
+        <ProfileBar />
+      </div>
     </div>
   );
 };

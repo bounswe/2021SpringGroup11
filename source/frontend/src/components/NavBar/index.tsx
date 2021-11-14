@@ -17,6 +17,7 @@ import {
   Toolbar,
   Typography,
 } from '@mui/material';
+// @ts-ignore
 import React from 'react';
 import logo from '../../images/logo.png';
 
