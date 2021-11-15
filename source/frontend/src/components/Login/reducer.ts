@@ -47,12 +47,14 @@ const loginReducer = (state = initialState, action) =>
         break;
       case LOGIN:
         draft.loading = true;
+        draft.loginError = {};
         draft.username = action.userInfo.username;
         draft.password = action.userInfo.password;
         draft.remember = action.userInfo.remember;
         break;
       case LOGIN_SUCCESS:
         draft.loading = false;
+        draft.loginError = {};
         draft.authInfo = action.authInfo;
         break;
       case LOGIN_FAILURE:

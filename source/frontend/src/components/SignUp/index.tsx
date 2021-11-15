@@ -15,17 +15,20 @@ import {
 } from '@mui/material/';
 import { makeStyles } from '@mui/styles';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { connect } from 'react-redux';
+import { compose } from 'redux';
+import { createStructuredSelector } from 'reselect';
 // @ts-ignore
+
 import greenEllipse from '../../images/green-ellipse.png';
 // @ts-ignore
 import redEllipse from '../../images/red-ellipse.png';
 // @ts-ignore
 import logo from '../../images/logo.png';
+// eslint-disable-next-line import/extensions,import/no-unresolved
 import { doSignup } from './actions';
-import { connect } from 'react-redux';
-import { compose } from 'redux';
+// eslint-disable-next-line import/extensions,import/no-unresolved
 import makeSelectSignUp from './selectors';
-import { createStructuredSelector } from 'reselect';
 interface Props {
   history: any;
   dispatch: any;
@@ -88,6 +91,7 @@ const useStyles = makeStyles(() => ({
   },
   barContent: {
     padding: '40px',
+    background: '#70A9FF',
   },
   error: {
     backgroundColor: '#990000',
@@ -122,9 +126,47 @@ const SignUp = (props: Props) => {
       password: data.get('password'),
     };
 
+    const emailValidation = (email) => {
+      const regex =
+        /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i;
+      if (!email || regex.test(email) === false) {
+        setEmailError(true);
+        return false;
+      }
+      setEmailError(false);
+      return true;
+    };
+    const passwordValidation = (password1, password2) => {
+      if (password1 !== password2) {
+        setPasswordError(true);
+        return false;
+      }
+      setPasswordError(false);
+      return true;
+    };
+
+    const nameValidation = (name) => {
+      if (name === '') {
+        setNameError(true);
+        return false;
+      }
+      setNameError(false);
+      return true;
+    };
+
+    const surnameValidation = (surname) => {
+      if (surname === '') {
+        setSurnameError(true);
+        return false;
+      }
+      setSurnameError(false);
+      return true;
+    };
+
     if (!nameValidation(userInfo.name)) {
       return;
-    }if (!surnameValidation(userInfo.surname)) {
+    }
+    if (!surnameValidation(userInfo.surname)) {
       return;
     }
 
@@ -135,54 +177,15 @@ const SignUp = (props: Props) => {
       return;
     }
 
-    dispatch(
-      doSignup(userInfo),
-    );
+    dispatch(doSignup(userInfo));
 
     setOpenSnackBar(true);
   };
 
-  const emailValidation = (email) => {
-    const regex =
-      /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
-    if (!email || regex.test(email) === false) {
-      setEmailError(true);
-      return false;
-    }
-    setEmailError(false);
-    return true;
-  };
-  const passwordValidation = (password1, password2) => {
-    if (password1 !== password2) {
-      setPasswordError(true);
-      return false;
-    }
-    setPasswordError(false);
-    return true;
-  };
-
-  const nameValidation = (name) => {
-    if (name === '') {
-      setNameError(true);
-      return false;
-    }
-    setNameError(false);
-    return true;
-  };
-
-  const surnameValidation = (surname) => {
-    if (surname === '') {
-      setSurnameError(true);
-      return false;
-    }
-    setSurnameError(false);
-    return true;
-  };
-
   return (
-    <Container classN1ame={classes.root} maxWidth="xs">
-      <img className={classes.imgTopLeft} src={redEllipse} alt={'ellipses'} />
-      <img className={classes.imgBottomRight} src={greenEllipse} alt={'ellipse'} />
+    <Container className={classes.root} maxWidth="xs">
+      <img className={classes.imgTopLeft} src={redEllipse} alt="ellipses" />
+      <img className={classes.imgBottomRight} src={greenEllipse} alt="ellipse" />
       <CssBaseline />
       <Box
         sx={{
@@ -193,7 +196,7 @@ const SignUp = (props: Props) => {
           alignItems: 'center',
         }}
       >
-        <img className={classes.logo} src={logo} alt={'logo'} />
+        <img className={classes.logo} src={logo} alt="logo" />
         <Typography className={classes.textCred} component="h1" variant="h5">
           Create an Account
         </Typography>
@@ -209,7 +212,7 @@ const SignUp = (props: Props) => {
             autoComplete="name"
             autoFocus
             error={nameError}
-            helperText={nameError ? 'Name can\'t be empty.' : ''}
+            helperText={nameError ? "Name can't be empty." : ''}
           />
           <TextField
             InputProps={{ className: classes.textField }}
@@ -221,7 +224,7 @@ const SignUp = (props: Props) => {
             name="surname"
             autoComplete="surname"
             error={surnameError}
-            helperText={surnameError ? 'Surname can\'t be empty.' : ''}
+            helperText={surnameError ? "Surname can't be empty." : ''}
           />
           <TextField
             InputProps={{ className: classes.textField }}
@@ -232,8 +235,8 @@ const SignUp = (props: Props) => {
             label="Username"
             name="username"
             autoComplete="username"
-            error={props.signup.signupErrorMessage}
-            helperText={props.signup.signupErrorMessage}
+            error={!!signup.signupError.signupErrorMessage}
+            helperText={!!signup.signupError && signup.signupError.signupErrorMessage}
           />
           <TextField
             InputProps={{ className: classes.textField }}
@@ -319,15 +322,27 @@ const SignUp = (props: Props) => {
         onClose={() => setOpenSnackBar(!openSnackBar)}
         open={openSnackBar && !signup.loading}
       >
-        {!signup.error ? (
+        {!signup.signupError.error ? (
           <SnackbarContent
             className={classes.barContent}
             message={<span className={classes.message}>Successfully Registered!</span>}
+            action={
+              <Button
+                variant="contained"
+                color="success"
+                size="large"
+                onClick={() => history.push('/login')}
+              >
+                SIGN IN
+              </Button>
+            }
           />
         ) : (
           <SnackbarContent
             className={classes.error}
-            message={<span className={classes.message}>{signup.signupError.signupErrorMessage}</span>}
+            message={
+              <span className={classes.message}>{signup.signupError.signupErrorMessage}</span>
+            }
           />
         )}
       </Snackbar>

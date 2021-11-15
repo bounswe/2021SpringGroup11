@@ -5,7 +5,7 @@ class Auth {
   isAuthenticated() {
     const session = store.getState().login;
     const authInfo = this.getAuthInfoFromLocalStorage();
-    if (session && session.authInfo && session.authInfo.accessToken) {
+    if (session && session.authInfo && session.authInfo.token) {
       return true;
     }
     if (authInfo && authInfo?.accessToken) {

@@ -2,7 +2,6 @@ import ExploreIcon from '@mui/icons-material/Explore';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import SearchIcon from '@mui/icons-material/Search';
 import SettingsIcon from '@mui/icons-material/Settings';
-import history from '../../utils/history';
 
 import {
   alpha,
@@ -17,8 +16,8 @@ import {
   Toolbar,
   Typography,
 } from '@mui/material';
-// @ts-ignore
 import React from 'react';
+// @ts-ignore
 import logo from '../../images/logo.png';
 import SearchBox from './SearchBox';
 import { logout } from '../Login/actions';
@@ -29,10 +28,9 @@ interface Props {
   dispatch: any;
 }
 const NavBar = (props: Props) => {
-  const {history, dispatch} = props;
+  const { history, dispatch } = props;
   const [auth, setAuth] = React.useState(true);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setAuth(event.target.checked);
@@ -40,10 +38,8 @@ const NavBar = (props: Props) => {
 
   const handleLogout = () => {
     dispatch(logout());
-    console.log("HERE")
     history.push('/login');
-
-  }
+  };
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };

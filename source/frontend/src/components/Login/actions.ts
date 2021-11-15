@@ -28,6 +28,7 @@ export function doLogin(userInfo) {
 }
 
 export function loginSuccess(authInfo) {
+  console.log('ACTION');
   return {
     type: LOGIN_SUCCESS,
     authInfo,

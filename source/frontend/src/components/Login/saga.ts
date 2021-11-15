@@ -24,13 +24,13 @@ export function* doLoginSaga() {
   try {
     // @ts-ignore
     const response = yield call(post, LOGIN_URL, userData);
-    console.log(response);
     if (response.data) {
       const user = {
         username: userData.username,
         token: response.data,
       };
       yield put(loginSuccess(user));
+
       auth.setAuthInfoToSession(user);
       if (loginData.remember) {
         auth.setAuthInfoToLocalStorage(user);
@@ -42,19 +42,19 @@ export function* doLoginSaga() {
       yield put(loginFailure(response));
     }
   } catch (error) {
-    console.log(error.request);
     const usernameError = 'Username is invalid';
     const passwordError = 'Password is invalid';
     switch (error.request.status) {
       case 400:
-        yield put(loginFailure({ usernameError: usernameError }));
+        yield put(loginFailure({ usernameError }));
         break;
       case 401:
-        yield put(loginFailure({ passwordError: passwordError }));
+        yield put(loginFailure({ passwordError }));
         break;
       case 500:
         yield put(loginFailure({ usernameError: 'Try again later.' }));
         break;
+      default:
     }
   }
 }
@@ -97,7 +97,7 @@ export function* forgotPasswordSaga() {
   try {
     // @ts-ignore
     const response = yield call(post, FORGOT_PASSWORD_URL, userData);
-    if (response.code == 200) {
+    if (response.code === 200) {
       yield put(forgotPasswordSuccess(response));
     } else {
       yield put(loginFailure(response));
