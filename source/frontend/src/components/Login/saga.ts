@@ -14,7 +14,10 @@ import {
   logoutSuccess,
 } from './actions';
 import auth from '../../utils/auth';
-
+export interface sessionStorageUserData {
+  username: string;
+  token: string;
+}
 export function* doLoginSaga() {
   const loginData = yield select(makeSelectLogin());
   const userData = {
@@ -26,7 +29,7 @@ export function* doLoginSaga() {
     const response = yield call(post, LOGIN_URL, userData);
     console.log(response);
     if (response.token) {
-      const user = {
+      const user: sessionStorageUserData = {
         username: userData.username,
         token: response.token,
       };

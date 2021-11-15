@@ -24,6 +24,7 @@ import React, { useEffect, useState } from 'react';
 import NavBar from '../NavBar';
 import { getProfileData } from './helper';
 import { BrowserRouter as Router, Switch, Route, Link, useParams } from 'react-router-dom';
+import auth from '../../utils/auth';
 
 interface Props {}
 const Profile = (props: Props) => {
@@ -46,7 +47,7 @@ const Profile = (props: Props) => {
           user: _user,
           stats: _stats,
           favorites: _favorites,
-        } = await getProfileData(username || '@meltemarslan');
+        } = await getProfileData(username || auth.getAuthInfoFromSession()?.username || 'e');
         console.log(_resources);
 
         setResources(_resources);
@@ -83,8 +84,7 @@ const Profile = (props: Props) => {
           justifyContent: 'center',
         }}
       >
-        <div></div>
-        <img src={user.photo} alt="" />
+        <img style={{ height: '80%' }} src={user.photo} alt="" />
       </div>
       <div
         style={{

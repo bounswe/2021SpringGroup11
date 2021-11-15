@@ -1,5 +1,16 @@
+import { get } from '../../utils/axios';
+import { GET_USER_URL } from '../../utils/endpoints';
+
 export const getProfileData = async (username: string) => {
-  // TODO: fetch data from API
+  const profileData = (await get(GET_USER_URL + username + '/')).data;
+  const user = {
+    username: profileData.username,
+    name: `${profileData.firstname} ${profileData.lastname}`,
+    experience: 'GRANDMASTER',
+    photo: `https://ui-avatars.com/api/?name=${profileData.firstname} ${profileData.lastname}background=0D8ABC&color=000`,
+    bio: profileData.bio,
+  };
+
   const resources = [
     {
       title: 'Tennis - Beginner',
@@ -54,13 +65,6 @@ export const getProfileData = async (username: string) => {
     { text: 'Followings', value: '145' },
     { text: 'Followers', value: '540' },
   ];
-  const user = {
-    username: username,
-    name: 'MELTEM ARSLAN',
-    experience: 'GRANDMASTER',
-    photo: 'https://picsum.photos/200/200?random=1',
-    bio: 'Hi there! I am Meltem, a computer engineering student at Boğaziçi University. I love doing sports, cooking, traveling. If you would like to, we may enjoy these things together.',
-  };
 
   return {
     resources,
