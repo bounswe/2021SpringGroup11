@@ -22,7 +22,7 @@ class _RegisterPageState extends State<RegisterPage> {
   TextEditingController firstNameController = TextEditingController();
   TextEditingController lastNameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
-
+  bool _isLoading = false;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -272,7 +272,7 @@ class _RegisterPageState extends State<RegisterPage> {
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Invalid Register'),
+          title: Text(error.toString()),
           content: SingleChildScrollView(
             child: ListBody(
               children: const <Widget>[
@@ -324,19 +324,27 @@ class _RegisterPageState extends State<RegisterPage> {
 
   Widget _registerButton() => ElevatedButton(
         onPressed: () async {
-          //if (_repeatPasswordTextField().validate)
+          if (_formKey.currentState!.validate() == false || _isLoading) { return; }
           try {
+            setState(() {
+              _isLoading = true;
+            });
             bool result = await HttpService.shared.register(
                 emailController.text,
                 usernameController.text,
                 firstNameController.text,
                 lastNameController.text,
                 passwordController.text);
+            setState(() {
+              _isLoading = false;
+            });
             if (result) {
               _validRegister();
             } else {}
           } on Exception catch (error) {
-            print(error);
+            setState(() {
+              _isLoading = false;
+            });
             _invalidRegister(error);
           }
         },
@@ -350,7 +358,15 @@ class _RegisterPageState extends State<RegisterPage> {
                   color: Colors.white,
                   fontWeight: FontWeight.w400),
             ),
-            Icon(Icons.arrow_forward_sharp, color: Colors.white),
+            _isLoading ? Container(
+              width: 24,
+              height: 24,
+              padding: const EdgeInsets.all(2.0),
+              child: const CircularProgressIndicator(
+                color: Colors.white,
+                strokeWidth: 3,
+              ),
+            ) : Icon(Icons.arrow_forward_sharp, color: Colors.white),
           ],
         ),
         style: ElevatedButton.styleFrom(
