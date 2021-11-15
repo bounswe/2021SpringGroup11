@@ -25,7 +25,8 @@ export function* doSignUp() {
       yield put(signupFailure('SIGN UP ERROR MESSAGE WILL BE WRITTEN HERE'));
     }
   } catch (error) {
-    yield put(signupFailure({ signupErrorMessage: 'SIGN UP ERROR MESSAGE WILL BE WRITTEN HERE' }));
+    const singupError = 'This username or e-mail is already exists. Please choose another one.'
+    yield put(signupFailure({ signupErrorMessage: singupError }));
   }
 }
 export default function* signupSaga() {
