@@ -29,9 +29,9 @@ class User:
         # self.followedResources = kwargs.get('followedResources', [])
         # self.followedResources = kwargs.get('followedResources', [])
         # self.followedResources = kwargs.get('followedResources', [])
-
+        self.rememberMe = kwargs.get('rememberMe', True)
         self.bio = kwargs.get('bio', '')
-        self.photo = kwargs.get('photo','')
+        self.photo = kwargs.get('photo', '')
 
         # ObjectID is not JSON serializable
         if kwargs.get('_id'):
