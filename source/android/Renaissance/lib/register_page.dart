@@ -77,7 +77,8 @@ class _RegisterPageState extends State<RegisterPage> {
                           ],
                         ),
                       ),
-                    )),
+                    )
+                ),
                 Container(
                     width: MediaQuery.of(context).size.width,
                     height: 100,
@@ -139,7 +140,13 @@ class _RegisterPageState extends State<RegisterPage> {
           hintText: 'E-mail',
           filled: true,
           fillColor: Colors.black.withOpacity(0.1),
-          contentPadding: EdgeInsets.symmetric(horizontal: 10)),
+          contentPadding: EdgeInsets.symmetric(horizontal: 10)
+      ),
+      validator: (email) {
+        if (email == null || email.length < 5 || !email.contains('@') || !email.contains('.'))
+          return 'Email format incorrect';
+        return null;
+      },
     );
   }
 
@@ -148,12 +155,14 @@ class _RegisterPageState extends State<RegisterPage> {
       style: TextStyle(
           color: Color(0xff3c3c3c),
           fontSize: 18.0,
-          fontWeight: FontWeight.w700),
+          fontWeight: FontWeight.w700
+      ),
       controller: usernameController,
       decoration: InputDecoration(
         border: OutlineInputBorder(
             borderSide: BorderSide(color: Colors.black54),
-            borderRadius: BorderRadius.circular(40)),
+            borderRadius: BorderRadius.circular(40)
+        ),
         icon: Icon(
           Icons.alternate_email,
           color: Colors.black,
@@ -163,6 +172,11 @@ class _RegisterPageState extends State<RegisterPage> {
         fillColor: Colors.black.withOpacity(0.1),
         contentPadding: EdgeInsets.symmetric(horizontal: 10),
       ),
+      validator: (username) {
+        if (username == null || username.length < 3)
+          return "Username too short.";
+        return null;
+      },
     );
   }
 
@@ -207,7 +221,14 @@ class _RegisterPageState extends State<RegisterPage> {
           contentPadding: EdgeInsets.symmetric(horizontal: 10),
           filled: true,
           fillColor: Colors.black.withOpacity(0.1),
-        ));
+        ),
+      validator: (name) {
+          if (name == null || name.isEmpty) {
+            return 'Please enter your name';
+          }
+          return null;
+      },
+    );
   }
 
   Widget _lastNameTextField() {
@@ -226,7 +247,13 @@ class _RegisterPageState extends State<RegisterPage> {
           contentPadding: EdgeInsets.symmetric(horizontal: 10),
           filled: true,
           fillColor: Colors.black.withOpacity(0.1),
-        ));
+        ),
+      validator: (name) {
+          if(name == null || name.isEmpty)
+            return 'Please enter your last name';
+          return null;
+      },
+    );
   }
 
   Widget _repeatPasswordTextField() {
