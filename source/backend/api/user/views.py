@@ -6,6 +6,7 @@ from heybooster.helpers.database.mongodb import MongoDBHelper
 from django.conf import settings
 from common.models import User
 from common.data_check import check_data_keys
+import time
 
 class EditUser(APIView):
     """
@@ -33,6 +34,7 @@ class EditUser(APIView):
             user[key] = value
 
         user = User(**user)
+        user.updatedAt = int(time.time())
         user.update()
 
         return Response(user.get_dict(), status=status.HTTP_200_OK)
@@ -56,6 +58,7 @@ class DeleteUser(APIView):
         user['isDeleted'] = True
 
         user = User(**user)
+        user.updatedAt = int(time.time())
         user.update()
 
         return Response(user.get_dict(), status=status.HTTP_200_OK)
@@ -106,6 +109,7 @@ class BanUser(APIView):
 
         user = User(**user)
         user.isBanned = True
+        user.updatedAt = int(time.time())
         user.update()
 
         return Response({'detail': f'User with username: {user.username} banned successfully'},

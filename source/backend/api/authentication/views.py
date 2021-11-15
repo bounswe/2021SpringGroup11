@@ -24,6 +24,10 @@ class SignUp(APIView):
                 return Response({'detail': 'USERNAME_ALREADY_EXISTS'}, status=status.HTTP_406_NOT_ACCEPTABLE)
         
         user = User(**data)
+
+        user.updatedAt = int(time.time())
+        user.createdAt = int(time.time())
+
         user.hash_password()
         user.insert()
 
