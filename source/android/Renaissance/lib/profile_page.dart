@@ -37,7 +37,7 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: buildAppBar(context),
+      appBar: buildAppBar(context, widget.user.username!),
       body: ListView(
         physics: BouncingScrollPhysics(),
         children: [
@@ -55,10 +55,11 @@ class _ProfilePageState extends State<ProfilePage> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         CircleAvatar(
-                            backgroundImage: NetworkImage('https://thispersondoesnotexist.com/image'),
+                            backgroundColor: Colors.blueAccent,
+                            child: Text(widget.user.username![0].toUpperCase()),
                             radius: 32
                         ),
-                        StatsWidget(72, 40, 59)
+                        StatsWidget(0,0,0)
                       ]
                   ),
                   Container(
@@ -83,8 +84,8 @@ class _ProfilePageState extends State<ProfilePage> {
                             // for Vertical scrolling
                             scrollDirection: Axis.vertical,
                             child: Text(
-                              '''Merhaba ben Renaissance kullaniyorum... Yalnizca acil aramalar. Yazilim muhendisi. Blogger. Kabul etmiyoruz vazgecmiyoruz. :))''',
-                              style: TextStyle(fontSize: 14, height: 1.2),
+                              '''No Info Yet.''',
+                              style: TextStyle(fontSize: 14, height: 1.2,  fontStyle: FontStyle.italic),
                             ),
                           ),
                         ),
@@ -102,7 +103,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 borderRadius: BorderRadius.all(Radius.circular(50.0))
                             ),
                             child: new Center(
-                                child: FollowerWidget(71,81)
+                                child: FollowerWidget(0,0)
                             ),
                             margin: EdgeInsets.only(top: 10)
                         ),
@@ -127,12 +128,17 @@ class _ProfilePageState extends State<ProfilePage> {
           InkWell(
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Text('Favourite Resources',
+                child: Text('Favourite Paths',
                     style: TextStyle(fontSize: 14,decoration: TextDecoration.underline, fontWeight: FontWeight.bold, color: Colors.lightBlue)),
               ),
               onTap: () {},
           ),
-          SingleChildScrollView(
+          Padding(
+              padding: const EdgeInsets.symmetric(vertical:0,horizontal:10),
+              child:Text('No Favourite Paths Yet.',
+                  style: TextStyle(fontSize: 14, fontStyle: FontStyle.italic))
+          ),
+          /*SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(
               children:
@@ -141,16 +147,21 @@ class _ProfilePageState extends State<ProfilePage> {
                       path["effort"] as int, path["rating"] as double);
                 }).toList(),
             ),
-          ),
+          ),*/
           InkWell(
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Text('Enrolled Resources',
+                child: Text('Enrolled Paths',
                     style: TextStyle(fontSize: 14,decoration: TextDecoration.underline, fontWeight: FontWeight.bold, color: Colors.lightBlue)),
               ),
               onTap: () {}
           ),
-          SingleChildScrollView(
+          Padding(
+          padding: const EdgeInsets.symmetric(vertical:0,horizontal:10),
+          child:Text('No Enrolled Paths Yet.',
+              style: TextStyle(fontSize: 14, fontStyle: FontStyle.italic))
+          ),
+          /*SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(
               children: [
@@ -159,7 +170,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 CourseContainer("hello hello hello hge",1,2.0)
               ],
             ),
-          ),
+          ),*/
         ],
       ),
     );
