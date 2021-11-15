@@ -30,6 +30,7 @@ class User:
         # self.followedResources = kwargs.get('followedResources', [])
 
         self.bio = kwargs.get('bio', '')
+        self.photo = kwargs.get('photo', '')
         self.rememberMe = kwargs.get('rememberMe', True)
 
         # ObjectID is not JSON serializable
