@@ -22,7 +22,7 @@ class _LoginPageState extends State<LoginPage> {
   String password = "";
   bool _passwordVisible = false;
   final _formKey = GlobalKey<FormState>();
-
+  bool _isLoading = false;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -90,7 +90,7 @@ class _LoginPageState extends State<LoginPage> {
                                 validator: (username) {
                                   //Check if username address is valid here, if invalid, return a message.
                                   if (username == null || username.length == 0) {
-                                    return "username cannot be empty !";
+                                    return "Username cannot be empty !";
                                   }
                                   return null;
                                 },
@@ -134,7 +134,7 @@ class _LoginPageState extends State<LoginPage> {
                                         EdgeInsets.symmetric(horizontal: 10)),
                                 validator: (password) {
                                   if (password!.length == 0) {
-                                    return "Password cant be empty....";
+                                    return "Password cannot be empty !";
                                   }
                                   return null;
                                 },
@@ -273,14 +273,28 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget _loginButton() => ElevatedButton(
         onPressed: () async {
+          if (_isLoading) return;
           if (_formKey.currentState!.validate()) {
             _formKey.currentState!.save();
-            final response = await HttpService.shared.login(username, password);
-            User.me = await HttpService.shared.getUser(username);
-            SharedPreferences prefs = await SharedPreferences.getInstance();
-            prefs.setBool('isLoggedIn', true);
-            Navigator.pop(context);
-            Navigator.pushNamed(context, "/home");
+            try {
+              setState(() {
+                _isLoading = true;
+              });
+              List responses = await Future.wait([HttpService.shared.login(username, password), HttpService.shared.getUser(username)]);
+              setState(() {
+                _isLoading = false;
+              });
+              User.me = responses[1];
+              SharedPreferences prefs = await SharedPreferences.getInstance();
+              prefs.setBool('isLoggedIn', true);
+              Navigator.pop(context);
+              Navigator.pushNamed(context, "/home");
+            } on Exception catch(error) {
+              setState(() {
+                _isLoading = false;
+              });
+              _invalidLogin(error);
+            }
           }
         },
         child: Row(
@@ -293,7 +307,15 @@ class _LoginPageState extends State<LoginPage> {
                   color: Colors.white,
                   fontWeight: FontWeight.w400),
             ),
-            Icon(Icons.arrow_forward_sharp, color: Colors.white),
+            _isLoading ? Container(
+              width: 24,
+              height: 24,
+              padding: const EdgeInsets.all(2.0),
+              child: const CircularProgressIndicator(
+                color: Colors.white,
+                strokeWidth: 3,
+              ),
+            ) : Icon(CupertinoIcons.arrow_right_circle_fill, color: Colors.white70,),
           ],
         ),
         style: ElevatedButton.styleFrom(
@@ -303,4 +325,31 @@ class _LoginPageState extends State<LoginPage> {
             padding: EdgeInsets.all(10),
             primary: MyColors.darkGray),
       );
+
+  Future<void> _invalidLogin(Exception error) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(error.toString().substring(11, error.toString().length)),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: const <Widget>[
+                Text('Press try again with valid information'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            ElevatedButton(
+              child: const Text('Back'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 }

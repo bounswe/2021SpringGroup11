@@ -26,10 +26,10 @@ class HttpService {
         headers: headers,
         body: jsonEncode({'username': username, 'password': password}));
     if (res.statusCode == 200) {
-      Token.shared.setToken(res.body);
+      await Token.shared.setToken(res.body);
       return LoginResponse.fromJson(Jwt.parseJwt(res.body));
     } else if (res.statusCode == 400) {
-      throw Exception('Banned user');
+      throw Exception('No user exists for given username');
     } else if (res.statusCode == 401) {
       throw Exception('Wrong password');
     } else {
@@ -94,7 +94,7 @@ class HttpService {
     if (res.statusCode == 200) {
       return User.fromJson(jsonDecode(res.body));
     } else {
-      throw Exception("An error occurred.");
+      throw Exception(res.body);
     }
   }
 }
