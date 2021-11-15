@@ -9,6 +9,9 @@ import {
   Button,
   InputAdornment,
   IconButton,
+  Snackbar,
+  SnackbarContent,
+  CircularProgress,
 } from '@mui/material/';
 import { makeStyles } from '@mui/styles';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
@@ -18,7 +21,7 @@ import greenEllipse from '../../images/green-ellipse.png';
 import redEllipse from '../../images/red-ellipse.png';
 // @ts-ignore
 import logo from '../../images/logo.png';
-import { signup } from './actions';
+import { doSignup } from './actions';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import makeSelectSignUp from './selectors';
@@ -83,14 +86,27 @@ const useStyles = makeStyles(() => ({
     margin: '10px',
     borderRadius: '20px',
   },
+  barContent: {
+    padding: '40px',
+  },
+  error: {
+    backgroundColor: '#990000',
+  },
+  message: {
+    display: 'flex',
+    alignItems: 'center',
+  },
 }));
 
 const SignUp = (props: Props) => {
-  const { history, dispatch } = props;
+  const { history, dispatch, signup } = props;
   const classes = useStyles();
 
   const [emailError, setEmailError] = useState(false);
+  const [nameError, setNameError] = useState(false);
+  const [surnameError, setSurnameError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
+  const [openSnackBar, setOpenSnackBar] = useState(false);
 
   const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => setShowPassword(!showPassword);
@@ -98,23 +114,34 @@ const SignUp = (props: Props) => {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    if (!emailValidation(data.get('email'))) {
+    const userInfo = {
+      name: data.get('name'),
+      surname: data.get('surname'),
+      username: data.get('username'),
+      email: data.get('email'),
+      password: data.get('password'),
+    };
+
+    if (!nameValidation(userInfo.name)) {
+      return;
+    }if (!surnameValidation(userInfo.surname)) {
       return;
     }
-    if (!passwordValidation(data.get('password'), data.get('repeatPassword'))) {
+
+    if (!emailValidation(userInfo.email)) {
+      return;
+    }
+    if (!passwordValidation(userInfo.password, data.get('repeatPassword'))) {
       return;
     }
 
     dispatch(
-      signup({
-        name: data.get('name'),
-        surname: data.get('surname'),
-        username: data.get('username'),
-        email: data.get('email'),
-        password: data.get('password'),
-      }),
+      doSignup(userInfo),
     );
+
+    setOpenSnackBar(true);
   };
+
   const emailValidation = (email) => {
     const regex =
       /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
@@ -134,8 +161,26 @@ const SignUp = (props: Props) => {
     return true;
   };
 
+  const nameValidation = (name) => {
+    if (name === '') {
+      setNameError(true);
+      return false;
+    }
+    setNameError(false);
+    return true;
+  };
+
+  const surnameValidation = (surname) => {
+    if (surname === '') {
+      setSurnameError(true);
+      return false;
+    }
+    setSurnameError(false);
+    return true;
+  };
+
   return (
-    <Container className={classes.root} maxWidth="xs">
+    <Container classN1ame={classes.root} maxWidth="xs">
       <img className={classes.imgTopLeft} src={redEllipse} alt={'ellipses'} />
       <img className={classes.imgBottomRight} src={greenEllipse} alt={'ellipse'} />
       <CssBaseline />
@@ -163,6 +208,8 @@ const SignUp = (props: Props) => {
             name="name"
             autoComplete="name"
             autoFocus
+            error={nameError}
+            helperText={nameError ? 'Name can\'t be empty.' : ''}
           />
           <TextField
             InputProps={{ className: classes.textField }}
@@ -173,6 +220,8 @@ const SignUp = (props: Props) => {
             label="Surname"
             name="surname"
             autoComplete="surname"
+            error={surnameError}
+            helperText={surnameError ? 'Surname can\'t be empty.' : ''}
           />
           <TextField
             InputProps={{ className: classes.textField }}
@@ -253,10 +302,35 @@ const SignUp = (props: Props) => {
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
           >
-            Get Started!
+            {signup.loading ? (
+              <CircularProgress size={20} color="inherit" />
+            ) : (
+              <Typography>GET STARTED</Typography>
+            )}
           </Button>
         </Box>
       </Box>
+      <Snackbar
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'center',
+        }}
+        autoHideDuration={6000}
+        onClose={() => setOpenSnackBar(!openSnackBar)}
+        open={openSnackBar && !signup.loading}
+      >
+        {!signup.error ? (
+          <SnackbarContent
+            className={classes.barContent}
+            message={<span className={classes.message}>Successfully Registered!</span>}
+          />
+        ) : (
+          <SnackbarContent
+            className={classes.error}
+            message={<span className={classes.message}>{signup.signupError.signupErrorMessage}</span>}
+          />
+        )}
+      </Snackbar>
     </Container>
   );
 };

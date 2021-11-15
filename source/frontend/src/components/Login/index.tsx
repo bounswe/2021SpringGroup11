@@ -10,6 +10,7 @@ import {
   Grid,
   InputAdornment,
   IconButton,
+  CircularProgress,
 } from '@mui/material/';
 import { makeStyles } from '@mui/styles';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
@@ -139,8 +140,8 @@ const Login = (props: Props) => {
               name="username"
               autoComplete="username"
               autoFocus
-              error={login.loginErrorMessage}
-              helperText={login.loginErrorMessage}
+              error={login.loginError.usernameError}
+              helperText={login.loginError.usernameError}
             />
             <TextField
               InputProps={{
@@ -165,6 +166,8 @@ const Login = (props: Props) => {
               type={showPassword ? 'text' : 'password'}
               id="password"
               autoComplete="current-password"
+              error={login.loginError.passwordError}
+              helperText={login.loginError.passwordError}
             />
             <Button
               className={classes.button}
@@ -173,7 +176,11 @@ const Login = (props: Props) => {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Sign In
+              {login.loading ? (
+                <CircularProgress size={20} color="inherit" />
+              ) : (
+                <Typography>SIGN IN</Typography>
+              )}
             </Button>
             <Grid container>
               <Grid style={{ marginTop: 'auto' }} item xs>

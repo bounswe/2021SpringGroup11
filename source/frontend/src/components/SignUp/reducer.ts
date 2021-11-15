@@ -1,20 +1,15 @@
 import produce from 'immer';
 
-import {
-  DEFAULT_ACTION,
-  SIGNUP,
-  SIGNUP_FAILURE,
-  SIGNUP_SUCCESS
-} from './constants';
+import { DEFAULT_ACTION, SIGNUP, SIGNUP_FAILURE, SIGNUP_SUCCESS } from './constants';
 
 export const initialState = {
-  loading: true,
+  loading: false,
   name: '',
   surname: '',
   username: '',
   email: '',
   password: '',
-  signupErrorMessage: ''
+  signupError: '',
 };
 
 const signupReducer = (state = initialState, action) =>
@@ -35,7 +30,7 @@ const signupReducer = (state = initialState, action) =>
         break;
       case SIGNUP_FAILURE:
         draft.loading = false;
-        draft.signupErrorMessage = action.res.signupErrorMessage;
+        draft.signupError = action.res;
         break;
     }
   });

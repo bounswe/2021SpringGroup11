@@ -22,7 +22,7 @@ export const initialState = {
   username: '',
   password: '',
   remember: true,
-  loginErrorMessage: '',
+  loginError: {},
   authInfo: JSON.parse(sessionStorage.getItem('authInfo')),
   mail: '',
   mailSentError: '',
@@ -58,11 +58,10 @@ const loginReducer = (state = initialState, action) =>
       case LOGIN_FAILURE:
         draft.loading = false;
         draft.authInfo = {};
-        draft.loginErrorMessage = action.res.loginErrorMessage;
+        draft.loginError = action.res;
         break;
       case LOGOUT:
         draft.redirectFrom = null;
-        draft.loading = true;
         draft.username = '';
         draft.password = '';
         draft.authInfo = {};
