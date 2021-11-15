@@ -6,6 +6,7 @@ import 'dart:convert';
 
 import 'package:portakal/models/login_response.dart';
 import 'package:portakal/token.dart';
+import 'package:jwt_decode/jwt_decode.dart';
 
 class HttpService {
   String baseUrl = "http://35.209.23.51"; // write server ip / url here
@@ -23,7 +24,7 @@ class HttpService {
         headers: headers,
         body: jsonEncode({'username': username, 'password': password}));
     if (res.statusCode == 200) {
-      return LoginResponse.fromJson(json.decode(res.body));
+      return LoginResponse.fromJson(Jwt.parseJwt(res.body));
     } else if (res.statusCode == 400) {
       throw Exception('Banned user');
     } else if (res.statusCode == 401) {
@@ -48,7 +49,7 @@ class HttpService {
     if (res.statusCode == 200) {
       return true;
     } else if (res.statusCode == 406) {
-      throw Exception('User already exists with this username or password.');
+      throw Exception('User already exists with this username.');
     } else {
       throw Exception('UnknownError');
     }
