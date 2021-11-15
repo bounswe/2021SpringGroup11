@@ -28,9 +28,13 @@ class _RegisterPageState extends State<RegisterPage> {
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
-          resizeToAvoidBottomInset: false,
           backgroundColor: Colors.white,
-          body: Container(
+          body:
+          CustomScrollView (scrollDirection: Axis.vertical,
+              slivers:[
+                SliverFillRemaining(
+                hasScrollBody: false,
+                    child:Container(
             child: Column(
               children: <Widget>[
                 Container(
@@ -59,6 +63,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
+
                             _emailTextField(),
                             _usernameTextField(),
                             _firstNameTextField(),
@@ -77,7 +82,8 @@ class _RegisterPageState extends State<RegisterPage> {
                           ],
                         ),
                       ),
-                    )),
+                    )
+                ),
                 Container(
                     width: MediaQuery.of(context).size.width,
                     height: 100,
@@ -100,7 +106,9 @@ class _RegisterPageState extends State<RegisterPage> {
                     ))
               ],
             ),
-          )),
+          ))
+              ]),
+    )
     );
   }
 
