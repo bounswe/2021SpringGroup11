@@ -19,6 +19,8 @@ import {
   Toolbar,
   Typography,
 } from '@mui/material';
+import { get } from '../../utils/axios';
+import { SEARCH_USER_URL } from '../../utils/endpoints';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -57,44 +59,29 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     },
   },
 }));
-const users = [
-  {
-    username: '@john',
-    photo: `https://ui-avatars.com/api/?name=john&background=0D8ABC&color=fff`,
-  },
-  {
-    username: '@emily',
-    photo: `https://ui-avatars.com/api/?name=emily&background=0D8ABC&color=fff`,
-  },
-  {
-    username: '@paris',
-    photo: `https://ui-avatars.com/api/?name=paris&background=0D8ABC&color=fff`,
-  },
-];
 interface Props {}
 
 const SearchBox = (props: Props) => {
   const [searchText, setSearchText] = useState('');
 
-  const [searchResults, setSearchResults] = useState<null | { username: string; photo: string }[]>(
-    null,
-  );
+  const [searchResults, setSearchResults] = useState<null | { username: string }[]>(null);
   useEffect(() => {
     setSearchResults(null);
     if (searchText.trim()) {
       //TODO: fetch search results
-      setTimeout(() => {
-        setSearchResults(users.filter((user) => user.username.includes(searchText)));
-      }, 1000);
+      get(SEARCH_USER_URL + searchText.trim() + '/').then(({ data }) => {
+        console.log('🚀 ~ file: SearchBox.tsx ~ line 89 ~ get ~ res', data);
+        setSearchResults(data);
+      });
     }
   }, [searchText]);
 
   const [placeholder, setplaceholder] = useState('Search');
   const onSearchBoxFocus = () => {
-    setplaceholder('@username to search');
+    setplaceholder('username to search');
   };
   const onSearchBoxBlur = () => {
-    setplaceholder('Seach');
+    setplaceholder('Search');
   };
 
   return (
@@ -112,7 +99,7 @@ const SearchBox = (props: Props) => {
         placeholder={placeholder}
         inputProps={{ 'aria-label': 'search' }}
       />
-      {searchText && (
+      {searchText.trim() && (
         <div style={{ position: 'relative' }}>
           <div style={{ position: 'absolute', zIndex: 9, background: 'gray', width: '100%' }}>
             {searchResults ? (
@@ -130,7 +117,7 @@ const SearchBox = (props: Props) => {
                         style={{
                           height: '100%',
                         }}
-                        src={`https://ui-avatars.com/api/?name=${'R'}&background=0D8ABC&color=fff`}
+                        src={`https://ui-avatars.com/api/?name=${searchItem.username}&background=0D8ABC&color=fff`}
                       />
 
                       <h2>{searchItem.username}</h2>

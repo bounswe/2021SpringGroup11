@@ -24,6 +24,7 @@ import React, { useEffect, useState } from 'react';
 import NavBar from '../NavBar';
 import { getProfileData } from './helper';
 import { BrowserRouter as Router, Switch, Route, Link, useParams } from 'react-router-dom';
+import auth from '../../utils/auth';
 
 interface Props {}
 const Profile = (props: Props) => {
@@ -46,7 +47,7 @@ const Profile = (props: Props) => {
           user: _user,
           stats: _stats,
           favorites: _favorites,
-        } = await getProfileData(username || '@meltemarslan');
+        } = await getProfileData(username || auth.getAuthInfoFromSession()?.username || 'e');
         console.log(_resources);
 
         setResources(_resources);
@@ -83,8 +84,7 @@ const Profile = (props: Props) => {
           justifyContent: 'center',
         }}
       >
-        <div></div>
-        <img src={user.photo} alt="" />
+        <img style={{ height: '80%' }} src={user.photo} alt="" />
       </div>
       <div
         style={{
@@ -194,7 +194,7 @@ const ProfileContent = (props: ProfileContentProps) => {
           padding: '5px',
         }}
       >
-        <h2>Resources Enrolled</h2>
+        <h2>Enrolled Paths</h2>
         <div
           style={{
             alignItems: 'center',
@@ -230,7 +230,7 @@ const ProfileContent = (props: ProfileContentProps) => {
           padding: '5px',
         }}
       >
-        <h2>Resources Following</h2>
+        <h2>Favorite Paths</h2>
         <div
           style={{
             alignItems: 'center',
@@ -248,7 +248,7 @@ const ProfileContent = (props: ProfileContentProps) => {
                 <ResourceCard
                   resource={resource}
                   onClick={() => {}}
-                  buttonText={resource.isFollowed ? 'Unfollow' : 'Follow'}
+                  buttonText={resource.isFollowed ? 'Unfav.' : 'Fav.'}
                   onButtonClick={() => {
                     alert('TODO');
                   }}
@@ -302,6 +302,7 @@ interface Resource {
   rating: number;
   isEnrolled: boolean;
   isFollowed: boolean;
+  photo: string;
 }
 interface ResourceCardProps {
   resource: Resource;
@@ -316,6 +317,7 @@ const ResourceCard = (props: ResourceCardProps) => {
     <>
       <Card onClick={props.onClick} sx={{ width: '140px', background: props.color, margin: '5px' }}>
         <CardContent>
+          <img src={props.resource.photo} style={{ width: '100%', maxHeight: '10rem' }} alt="" />
           <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
             {props.resource.title}
           </Typography>

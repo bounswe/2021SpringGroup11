@@ -1,5 +1,6 @@
 import store from '../store';
 import { loginSuccess } from '../components/Login/actions';
+import { sessionStorageUserData } from '../components/Login/saga';
 
 class Auth {
   isAuthenticated() {
@@ -24,11 +25,11 @@ class Auth {
     localStorage.clear();
   }
 
-  setAuthInfoToSession(authInfo) {
+  setAuthInfoToSession(authInfo: sessionStorageUserData) {
     sessionStorage.setItem('authInfo', JSON.stringify(authInfo));
   }
 
-  getAuthInfoFromSession() {
+  getAuthInfoFromSession(): sessionStorageUserData | null {
     const authInfo = sessionStorage.getItem('authInfo');
     return JSON.parse(authInfo);
   }

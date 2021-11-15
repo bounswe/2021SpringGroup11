@@ -14,7 +14,10 @@ import {
   logoutSuccess,
 } from './actions';
 import auth from '../../utils/auth';
-
+export interface sessionStorageUserData {
+  username: string;
+  token: string;
+}
 export function* doLoginSaga() {
   const loginData = yield select(makeSelectLogin());
   const userData = {
@@ -42,14 +45,15 @@ export function* doLoginSaga() {
       yield put(loginFailure(response));
     }
   } catch (error) {
+    console.log(error.request);
     const usernameError = 'Username is invalid';
     const passwordError = 'Password is invalid';
     switch (error.request.status) {
       case 400:
-        yield put(loginFailure({ usernameError }));
+        yield put(loginFailure({ usernameError: usernameError }));
         break;
       case 401:
-        yield put(loginFailure({ passwordError }));
+        yield put(loginFailure({ passwordError: passwordError }));
         break;
       case 500:
         yield put(loginFailure({ usernameError: 'Try again later.' }));

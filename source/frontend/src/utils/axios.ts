@@ -24,13 +24,14 @@ export function post(url, options, config) {
   return axios.post(url, options, { ...header, ...config }).then(checkStatus);
 }
 
-export function get(url, options) {
+export function get(url, options?) {
   const token = store.getState().login.authInfo && store.getState().login.authInfo.accessToken;
   const header = {
     headers: {
       Authorization: token ? `Bearer ${token}` : '',
       'Content-Type': 'application/json',
       Accept: 'application/json',
+      'Access-Control-Allow-Origin': '*',
       ...options,
     },
   };
