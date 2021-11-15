@@ -41,10 +41,10 @@ class SearchUser(APIView):
             users = db.find(
                 'user', # TODO Create fulltext index on username
                 query={'$or': [{'$text': {'$search': search_text}}, {'username': {'$regex': search_text, '$options': 'i'}}]},
-                projection={'username': 1}
-            )
+                projection={'_id': 0, 'username': 1}
+            ).limit(10)
 
-        return Response(users, status=status.HTTP_200_OK)
+        return Response(list(users), status=status.HTTP_200_OK)
 
 
 class BanUser(APIView):
