@@ -8,6 +8,7 @@ import 'package:portakal/token.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'http_services.dart';
+import 'models/user.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -17,7 +18,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  String email = "";
+  String username = "";
   String password = "";
   bool _passwordVisible = false;
   final _formKey = GlobalKey<FormState>();
@@ -86,15 +87,15 @@ class _LoginPageState extends State<LoginPage> {
                                         EdgeInsets.symmetric(horizontal: 10),
                                     filled: true,
                                     fillColor: Colors.black.withOpacity(0.1)),
-                                validator: (email) {
-                                  //Check if email address is valid here, if invalid, return a message.
-                                  if (email == null || email.length == 0) {
-                                    return "email cannot be empty !";
+                                validator: (username) {
+                                  //Check if username address is valid here, if invalid, return a message.
+                                  if (username == null || username.length == 0) {
+                                    return "username cannot be empty !";
                                   }
                                   return null;
                                 },
                                 onSaved: (value) {
-                                  email = value!.trim();
+                                  username = value!.trim();
                                 },
                               ),
                               TextFormField(
@@ -274,12 +275,10 @@ class _LoginPageState extends State<LoginPage> {
         onPressed: () async {
           if (_formKey.currentState!.validate()) {
             _formKey.currentState!.save();
-            final response = await HttpService.shared.login(email, password);
-            // do something with response.
-
+            final response = await HttpService.shared.login(username, password);
+            User.me = await HttpService.shared.getUser(username);
             SharedPreferences prefs = await SharedPreferences.getInstance();
             prefs.setBool('isLoggedIn', true);
-            Token.shared.setToken("ERFeferferf");
             Navigator.pop(context);
             Navigator.pushNamed(context, "/home");
           }

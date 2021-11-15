@@ -33,6 +33,7 @@ class _ProfilePageState extends State<ProfilePage> {
     {"name": "Araba", "effort": 2, "rating": 10.0},
   ];
   final profilePhotoUrl = String;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -72,7 +73,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'About',
+                         'About',
                           style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                         ),
                         Container(
@@ -105,18 +106,19 @@ class _ProfilePageState extends State<ProfilePage> {
                             ),
                             margin: EdgeInsets.only(top: 10)
                         ),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            shape: StadiumBorder(),
-                            onPrimary: Colors.white,
+                        if (User.me!.username! != widget.user.username)
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              shape: StadiumBorder(),
+                              onPrimary: Colors.white,
+                            ),
+                            child: Text(isFollowed?"Follow":"Unfollow"),
+                            onPressed: (){
+                              setState(() {
+                                isFollowed = !isFollowed;
+                              });
+                            },
                           ),
-                          child: Text(isFollowed?"Follow":"Unfollow"),
-                          onPressed: (){
-                            setState(() {
-                              isFollowed = !isFollowed;
-                            });
-                          },
-                        ),
                       ]
                   ),
                 ],
@@ -162,7 +164,5 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
     );
   }
-
-
 }
 

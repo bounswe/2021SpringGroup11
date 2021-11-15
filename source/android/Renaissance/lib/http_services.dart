@@ -8,6 +8,8 @@ import 'package:portakal/models/login_response.dart';
 import 'package:portakal/token.dart';
 import 'package:jwt_decode/jwt_decode.dart';
 
+import 'models/user.dart';
+
 class HttpService {
   String baseUrl = "http://35.209.23.51"; // write server ip / url here
   static HttpService shared = HttpService();
@@ -24,6 +26,7 @@ class HttpService {
         headers: headers,
         body: jsonEncode({'username': username, 'password': password}));
     if (res.statusCode == 200) {
+      Token.shared.setToken(res.body);
       return LoginResponse.fromJson(Jwt.parseJwt(res.body));
     } else if (res.statusCode == 400) {
       throw Exception('Banned user');
@@ -58,30 +61,40 @@ class HttpService {
   Future<bool> forgotPassword(String username) async {
     String url = baseUrl + '/authentication/forgot-password/';
     Response res =
-        await post(Uri.parse(url), body: jsonEncode({'username': username}));
+        await post(
+            Uri.parse(url),
+            headers: {
+              'Content-Type': 'application/json; charset=UTF-8'
+            },
+            body: jsonEncode({'username': username}
+            )
+        );
     if (res.statusCode == 202) {
       return true;
     }
     return false;
   }
 
-  /* Future<String> refreshToken() async {
-    String url = baseUrl + '/authentication/refresh-token';
-
-    Response res = await post(
-        Uri.parse(url),
-        headers: headers,
-    );
-
-  } */
-
   Future<bool> banUser(String username) async {
-    String url = baseUrl + '/authentication/ban-user';
+    String url = baseUrl + '/authentication/ban-user/';
     Response res = await post(Uri.parse(url),
         headers: headers, body: jsonEncode({'username': username}));
     if (res.statusCode == 200) {
       return true;
     }
     return false;
+  }
+
+  Future<User> getUser(String username) async {
+    String url = baseUrl + '/user/get-profile/$username/';
+    Response res = await get(Uri.parse(url),
+      headers: headers
+    );
+
+    if (res.statusCode == 200) {
+      return User.fromJson(jsonDecode(res.body));
+    } else {
+      throw Exception("An error occurred.");
+    }
   }
 }

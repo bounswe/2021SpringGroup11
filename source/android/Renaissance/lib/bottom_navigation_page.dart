@@ -58,18 +58,13 @@ class _BottomNavigationPageState extends State<BottomNavigationPage> {
           Navigator(
             key: _notificationScreen,
             onGenerateRoute: (route) => MaterialPageRoute(
-                builder: (context) => LoginPage(), settings: route),
+                builder: (context) => ExplorePage(), settings: route),
           ),
           Navigator(
             key: _profileScreen,
             onGenerateRoute: (route) => MaterialPageRoute(
                 builder: (context) => ProfilePage(
-                    user: User(
-                        username: 'ss',
-                        email: 'fefe',
-                        lastname: 'sarf',
-                        firstname: 'rprp',
-                        profilePictureUrl: 'fr4t')),
+                    user: User.me!),
                 settings: route),
           ),
         ],

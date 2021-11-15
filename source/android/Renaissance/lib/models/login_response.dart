@@ -14,5 +14,4 @@ class LoginResponse {
   factory LoginResponse.fromJson(Map<String,dynamic> json) {
     return LoginResponse(username: json['username'], email: json['email'], isAdmin: json['isAdmin'], exp: json['exp']);
   }
-
 }

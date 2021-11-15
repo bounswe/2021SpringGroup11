@@ -193,7 +193,6 @@ class _RegisterPageState extends State<RegisterPage> {
 
   Widget _firstNameTextField() {
     return TextFormField(
-        obscureText: true,
         controller: firstNameController,
         style: TextStyle(
             color: Color(0xff3c3c3c),
@@ -213,7 +212,6 @@ class _RegisterPageState extends State<RegisterPage> {
 
   Widget _lastNameTextField() {
     return TextFormField(
-        obscureText: true,
         controller: lastNameController,
         style: TextStyle(
             color: Color(0xff3c3c3c),
@@ -318,6 +316,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
   Widget _registerButton() => ElevatedButton(
         onPressed: () async {
+          //if (_repeatPasswordTextField().validate)
           try {
             bool result = await HttpService.shared.register(
                 emailController.text,
