@@ -21,18 +21,29 @@ import {
 import React from 'react';
 import logo from '../../images/logo.png';
 import SearchBox from './SearchBox';
+import { logout } from '../Login/actions';
 
 interface Props {
   title?: string;
+  history: any;
+  dispatch: any;
 }
 const NavBar = (props: Props) => {
+  const {history, dispatch} = props;
   const [auth, setAuth] = React.useState(true);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setAuth(event.target.checked);
   };
 
+  const handleLogout = () => {
+    dispatch(logout());
+    console.log("HERE")
+    history.push('/login');
+
+  }
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -113,7 +124,7 @@ const NavBar = (props: Props) => {
                 <MenuItem onClick={handleClose}>View Profile</MenuItem>
                 <MenuItem onClick={handleClose}>Settings</MenuItem>
                 <MenuItem onClick={handleClose}>Help</MenuItem>
-                <MenuItem onClick={handleClose}>Logout</MenuItem>
+                <MenuItem onClick={handleLogout}>Logout</MenuItem>
               </Menu>
             </div>
           )}

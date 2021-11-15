@@ -5,6 +5,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import avatarPlaceholder from '../../../images/avatarPlaceholder.png';
 // @ts-ignore
 import avatar from '../../../images/avatar1.png';
+import auth from '../../../utils/auth';
 
 interface Props {
   user: {
@@ -162,7 +163,7 @@ const ProfileBar = (props: Props) => {
 
 ProfileBar.defaultProps = {
   user: {
-    username: '@bekirtatar',
+    username: auth.getAuthInfoFromSession().username,
     title: 'BEGINNER',
     stats: {
       enrolled: 5,
