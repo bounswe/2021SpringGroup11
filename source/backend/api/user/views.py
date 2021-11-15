@@ -17,6 +17,12 @@ class EditUser(APIView):
     def post(self, request):
         data = request.data
 
+        key_error = check_data_keys(data,forbidden_keys=['isAdmin', 'isBanned', 'createdAt', 'updatedAt', 'lastLogin', 'finishedResourceCount', 'isVerified', '_id'])
+
+        if key_error:
+            return Response({'detail': key_error}, status.HTTP_400_BAD_REQUEST)
+
+
         with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
             user = db.find_one('user', query={'email': data['email'], 'username': data['username']})
 
