@@ -27,42 +27,33 @@ class _HomePageState extends State<HomePage> {
       {
         "name": "Popular",
         "tags": [
-          {"name": "Pop1", "effort": 2, "rating": 1.2},
-          {"name": "Pop2", "effort": 2, "rating": 1.3},
-          {"name": "Pop3", "effort": 2, "rating": 1.4},
-          {"name": "Pop4", "effort": 2, "rating": 1.4},
+          {"name": "Topics", "effort": 3, "rating": 3.2},
+          {"name": "Science", "effort": 7, "rating": 4.3},
+          {"name": "Music", "effort": 6, "rating": 4.4},
+          {"name": "Cooking", "effort": 4, "rating": 3.4},
         ]
       },
       {
         "name": "For You",
         "tags": [
-          {"name": "For1", "effort": 2, "rating": 1.5},
-          {"name": "For2", "effort": 2, "rating": 1.6},
-          {"name": "For3", "effort": 2, "rating": 1.7},
-        ]
+          {"name": "Science", "effort": 7, "rating": 4.3},
+          {"name": "Topics", "effort": 3, "rating": 3.2},
+          {"name": "Music", "effort": 6, "rating": 4.4},
+      ]
       },
       {
         "name": "New",
         "tags": [
-          {"name": "New1", "effort": 2, "rating": 1.8},
-          {"name": "New2", "effort": 2, "rating": 1.8},
-          {"name": "New3", "effort": 2, "rating": 1.9},
+          {"name": "E-Sports", "effort": 3, "rating": 3.8},
+          {"name": "Streaming", "effort": 6, "rating": 2.8},
+          {"name": "Space", "effort": 4, "rating": 2.9},
         ]
       },
     ];
     var paths = [
       {"name": "LEARN MUSIC THEORY WITH A SHADOWING TECHNIQUE", "effort": 2, "rating": 1.8},
-      {"name": "TEDTALKS QUANTUM PHYSICS ESSENTIALS", "effort": 7, "rating": 1.8},
-      {"name": "SUCH A COOL PATH HERE.", "effort": 8, "rating": 1.9},
-      // {"name": "Cam", "effort": 2, "rating": 1.5},
-      // {"name": "Kar", "effort": 2, "rating": 1.6},
-      // {"name": "Araba", "effort": 2, "rating": 1.7},
-      // {"name": "Selam", "effort": 2, "rating": 1.8},
-      // {"name": "Muz", "effort": 2, "rating": 1.8},
-      // {"name": "Ahoy", "effort": 2, "rating": 1.9},
-      // {"name": "Cam", "effort": 2, "rating": 1.5},
-      // {"name": "Kar", "effort": 2, "rating": 1.6},
-      // {"name": "Araba", "effort": 2, "rating": 1.7},
+      {"name": "TEDTALKS QUANTUM PHYSICS ESSENTIALS", "effort": 7, "rating": 4.8},
+      {"name": "SUCH A COOL PATH HERE.", "effort": 6, "rating": 3.9},
     ];
     return Scaffold(
       appBar: AppBar(
