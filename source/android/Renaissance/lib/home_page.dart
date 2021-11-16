@@ -51,9 +51,9 @@ class _HomePageState extends State<HomePage> {
       },
     ];
     var paths = [
-      {"name": "LEARN MUSIC THEORY WITH A SHADOWING TECHNIQUE", "effort": 2, "rating": 1.8},
-      {"name": "TEDTALKS QUANTUM PHYSICS ESSENTIALS", "effort": 7, "rating": 4.8},
-      {"name": "SUCH A COOL PATH HERE.", "effort": 6, "rating": 3.9},
+      {"name": "Learn Music Theory With a Shadowing Technique", "effort": 2, "rating": 1.8,"url":"https://www.mrmaglocci.com/uploads/5/9/2/0/59208011/__9801869_orig.jpg"},
+      {"name": "TEDTALKS Quantum Physics Essentials", "effort": 7, "rating": 4.8, "url":"https://img-cdn.tnwcdn.com/image?fit=1280%2C720&url=https%3A%2F%2Fcdn0.tnwcdn.com%2Fwp-content%2Fblogs.dir%2F1%2Ffiles%2F2021%2F06%2Fschrodingers-cat.jpg&signature=0a120f4487449152b88aefd7df6035e4"},
+      {"name": "Become a Master Chef in a Month.", "effort": 6, "rating": 3.9,"url":"https://m.media-amazon.com/images/S/assets.wholefoodsmarket.com//content/97/06/b8e9829749c587b37d175a282e33/7-tips-for-cooking-seafood-hero.jpg"},
     ];
     return Scaffold(
       appBar: AppBar(
@@ -221,7 +221,7 @@ class _HomePageState extends State<HomePage> {
           ),
           ...paths.map((path) {
             return CourseContainer(path["name"] as String,
-                path["effort"] as int, path["rating"] as double);
+                path["effort"] as int, path["rating"] as double,path["url"] as String);
           }).toList(),
         ],
       ),

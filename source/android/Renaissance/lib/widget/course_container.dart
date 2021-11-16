@@ -5,8 +5,8 @@ import 'package:portakal/my_colors.dart';
 
 
 class CourseContainer extends StatefulWidget {
-  CourseContainer(this.course_name, this.course_effort, this.course_rating);
-
+  CourseContainer(this.course_name, this.course_effort, this.course_rating,this.photo_url);
+  final String photo_url;
   final String course_name;
   final int course_effort;
   final double course_rating;
@@ -17,7 +17,7 @@ class CourseContainer extends StatefulWidget {
 
 /// This is the private State class that goes with MyStatefulWidget.
 class _CourseContainerState extends State<CourseContainer> {
-  bool already_saved = true;
+  bool already_saved = false;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -35,12 +35,16 @@ class _CourseContainerState extends State<CourseContainer> {
               },
               child: Container(
                 width: MediaQuery.of(context).size.width * 0.8,
-                decoration: BoxDecoration(color: Colors.green.shade300),
+                decoration: BoxDecoration(color: Colors.green.shade300, borderRadius:BorderRadius.circular(15)),
                 child: Row(
                   children: [
-                    Image(
-                        image: AssetImage('assets/logoOnly.png'),
-                        width: MediaQuery.of(context).size.width * 0.2),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(15),
+                      child:  Image(
+                          image: NetworkImage(widget.photo_url),
+                          width: MediaQuery.of(context).size.width * 0.2),
+                    )
+                   ,
                     Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -88,12 +92,12 @@ class _CourseContainerState extends State<CourseContainer> {
           ),
           InkWell(
               onTap: () {
-                already_saved = !already_saved;
+                //already_saved = !already_saved;
               },
               child: Container(
                 height: 70,
                 width: MediaQuery.of(context).size.width * 0.15,
-                decoration: BoxDecoration(color: Colors.green.shade300),
+                decoration: BoxDecoration(color: Colors.green.shade300,borderRadius:BorderRadius.circular(15)),
                 alignment: Alignment.center,
                 child:  Icon(   // NEW from here...
                   already_saved ? Icons.favorite : Icons.favorite_border,
