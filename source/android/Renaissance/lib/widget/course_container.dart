@@ -3,9 +3,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:portakal/my_colors.dart';
 
-
 class CourseContainer extends StatefulWidget {
-  CourseContainer(this.course_name, this.course_effort, this.course_rating,this.photo_url);
+  CourseContainer(
+      this.course_name, this.course_effort, this.course_rating, this.photo_url);
   final String photo_url;
   final String course_name;
   final int course_effort;
@@ -35,16 +35,17 @@ class _CourseContainerState extends State<CourseContainer> {
               },
               child: Container(
                 width: MediaQuery.of(context).size.width * 0.8,
-                decoration: BoxDecoration(color: Colors.green.shade300, borderRadius:BorderRadius.circular(15)),
+                decoration: BoxDecoration(
+                    color: MyColors.blue,
+                    borderRadius: BorderRadius.circular(15)),
                 child: Row(
                   children: [
                     ClipRRect(
                       borderRadius: BorderRadius.circular(15),
-                      child:  Image(
+                      child: Image(
                           image: NetworkImage(widget.photo_url),
                           width: MediaQuery.of(context).size.width * 0.2),
-                    )
-                   ,
+                    ),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -97,9 +98,12 @@ class _CourseContainerState extends State<CourseContainer> {
               child: Container(
                 height: 70,
                 width: MediaQuery.of(context).size.width * 0.15,
-                decoration: BoxDecoration(color: Colors.green.shade300,borderRadius:BorderRadius.circular(15)),
+                decoration: BoxDecoration(
+                    color: MyColors.blue,
+                    borderRadius: BorderRadius.circular(15)),
                 alignment: Alignment.center,
-                child:  Icon(   // NEW from here...
+                child: Icon(
+                  // NEW from here...
                   already_saved ? Icons.favorite : Icons.favorite_border,
                   color: already_saved ? Colors.red : null,
                   semanticLabel: already_saved ? 'Remove from saved' : 'Save',

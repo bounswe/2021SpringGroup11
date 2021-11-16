@@ -42,7 +42,7 @@ class TagContainer extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
-                        Text("Follow",
+                        Text("Favourite",
                             style:
                                 TextStyle(fontSize: 12, color: Colors.white)),
                       ],
