@@ -162,9 +162,10 @@ const ProfileBar = (props: Props) => {
 };
 
 ProfileBar.defaultProps = {
+  // eslint-disable-next-line react/default-props-match-prop-types
   user: {
     username: auth.getAuthInfoFromSession().username,
-    title: 'BEGINNER',
+    title: 'GRANDMASTER',
     stats: {
       enrolled: 145,
       done: 103,
