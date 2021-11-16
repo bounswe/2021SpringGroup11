@@ -18,7 +18,7 @@ class EditUser(APIView):
     def post(self, request):
         data = request.data
 
-        key_error = check_data_keys(data,forbidden_keys=['isAdmin', 'isBanned', 'createdAt', 'updatedAt', 'lastLogin', 'finishedResourceCount', 'isVerified', '_id'])
+        key_error = check_data_keys(data,necessary_keys=['email','username'],forbidden_keys=['isAdmin', 'isBanned', 'createdAt', 'updatedAt', 'lastLogin', 'finishedResourceCount', 'isVerified', '_id'])
 
         if key_error:
             return Response({'detail': key_error}, status.HTTP_400_BAD_REQUEST)
@@ -96,7 +96,7 @@ class BanUser(APIView):
 
     def post(self, request):
         data = request.data
-        key_error = check_data_keys(data=data, necessary_keys=['username'])
+        key_error = check_data_keys(data=data, necessary_keys=['username'], forbidden_keys=[])
 
         if key_error:
             return Response({'detail': key_error}, status.HTTP_400_BAD_REQUEST)
@@ -146,7 +146,7 @@ class ChangePassword(APIView):
 
     def post(self, request):
         data = request.data
-        key_error = check_data_keys(data=data, necessary_keys=['password'])
+        key_error = check_data_keys(data=data, necessary_keys=['password', 'email', 'username'], forbidden_keys=[])
 
         if key_error:
             return Response({'detail': key_error}, status.HTTP_400_BAD_REQUEST)

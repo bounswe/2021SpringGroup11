@@ -129,7 +129,7 @@ class ForgotPassword(APIView):
 
     def post(self, request):
         data = request.data
-        key_error = check_data_keys(data=data, necessary_keys=['username'])
+        key_error = check_data_keys(data=data, necessary_keys=['username'], forbidden_keys=[])
         
         if key_error:
             return Response({'detail': key_error}, status.HTTP_400_BAD_REQUEST)
