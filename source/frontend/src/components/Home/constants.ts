@@ -11,6 +11,11 @@ import halloween from '../../images/halloween.png';
 // @ts-ignore
 import dolphin from '../../images/dolphin.png';
 
+export const DEFAULT_ACTION = 'app/Home/DEFAULT_ACTION';
+export const GET_USER = 'app/Home/GET_USER';
+export const GET_USER_SUCCESS = 'app/Home/GET_USER_SUCCESS';
+export const GET_USER_FAILURE = 'app/Home/GET_USER_FAILURE';
+
 export const items = [
   {
     tags: [
@@ -26,38 +31,38 @@ export const items = [
         name: 'The essentials of being fit',
         pic: fit,
         link: '',
-        effort: '75',
+        effort: '5',
         rating: '8.1',
       },
       {
         name: 'Organizing a halloween party',
         pic: halloween,
         link: '',
-        effort: '50',
+        effort: '4',
         rating: '7.2',
       },
       {
         name: 'How to easily make money',
         pic: money,
         link: '',
-        effort: '80',
+        effort: '6',
         rating: '5.8',
       },
       {
         name: 'Learning Quantum Computing',
         pic: quantum,
         link: '',
-        effort: '95',
+        effort: '7',
         rating: '8.4',
       },
       {
         name: 'Communicating with Dolphins',
         pic: dolphin,
         link: '',
-        effort: '90',
+        effort: '6',
         rating: '9.2',
       },
-      { name: 'How to Fly', link: '', pic: fly, effort: '94', rating: '8.1' },
+      { name: 'How to Fly', link: '', pic: fly, effort: '6', rating: '8.1' },
     ],
   },
   {
@@ -74,32 +79,32 @@ export const items = [
         name: 'Communicating with Dolphins',
         pic: dolphin,
         link: '',
-        effort: '90',
+        effort: '6',
         rating: '9.2',
       },
       {
         name: 'The essentials of being fit',
         pic: fit,
         link: '',
-        effort: '75',
+        effort: '5',
         rating: '8.1',
       },
       {
         name: 'How to easily make money',
         pic: money,
         link: '',
-        effort: '80',
+        effort: '6',
         rating: '5.8',
       },
       {
         name: 'Learning Quantum Computing',
         pic: quantum,
         link: '',
-        effort: '95',
+        effort: '7',
         rating: '8.4',
       },
 
-      { name: 'How to Fly', link: '', pic: fly, effort: '94', rating: '8.1' },
+      { name: 'How to Fly', link: '', pic: fly, effort: '6', rating: '8.1' },
     ],
   },
   {
@@ -117,28 +122,28 @@ export const items = [
         name: 'Learning Quantum Computing',
         pic: quantum,
         link: '',
-        effort: '95',
+        effort: '7',
         rating: '8.4',
       },
       {
         name: 'Communicating with Dolphins',
         pic: dolphin,
         link: '',
-        effort: '90',
+        effort: '6',
         rating: '9.2',
       },
       {
         name: 'The essentials of being fit',
         pic: fit,
         link: '',
-        effort: '75',
+        effort: '5',
         rating: '8.1',
       },
       {
         name: 'How to easily make money',
         pic: money,
         link: '',
-        effort: '80',
+        effort: '6',
         rating: '5.8',
       },
     ],

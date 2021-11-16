@@ -2,7 +2,7 @@ import { get } from '../../utils/axios';
 import { GET_USER_URL } from '../../utils/endpoints';
 
 export const getProfileData = async (username: string) => {
-  const profileData = (await get(GET_USER_URL + username + '/')).data;
+  const profileData = (await get(`${GET_USER_URL + username}/`)).data;
   const user = {
     username: profileData.username,
     name: `${profileData.firstname} ${profileData.lastname}`,
@@ -14,7 +14,7 @@ export const getProfileData = async (username: string) => {
   const resources = [
     {
       title: 'Tennis - Beginner',
-      effort: 30,
+      effort: 5,
       rating: 6.1,
       isEnrolled: true,
       isFollowed: false,
@@ -22,7 +22,7 @@ export const getProfileData = async (username: string) => {
     },
     {
       title: 'Discovering the World',
-      effort: 12,
+      effort: 6,
       rating: 3.1,
       isEnrolled: false,
       isFollowed: true,
@@ -38,7 +38,7 @@ export const getProfileData = async (username: string) => {
     },
     {
       title: 'The essentials of quantum',
-      effort: 55,
+      effort: 6,
       rating: 6.5,
       isEnrolled: false,
       isFollowed: true,
@@ -46,7 +46,7 @@ export const getProfileData = async (username: string) => {
     },
     {
       title: 'The Best Version of Me',
-      effort: 34,
+      effort: 4,
       rating: 6.1,
       isEnrolled: true,
       isFollowed: true,
@@ -54,7 +54,7 @@ export const getProfileData = async (username: string) => {
     },
     {
       title: 'Quantum Mechanics',
-      effort: 33,
+      effort: 7,
       rating: 3.5,
       isEnrolled: false,
       isFollowed: true,
@@ -62,14 +62,14 @@ export const getProfileData = async (username: string) => {
     },
   ];
   const favorites = [
-    { text: 'Tags', value: '5' },
-    { text: 'Resources', value: '15' },
+    { text: 'Tags', value: '126' },
+    { text: 'Paths', value: '54' },
   ];
   const stats = [
-    { text: 'Enrolled', value: '28' },
-    { text: 'Done', value: '28' },
-    { text: 'Followings', value: '145' },
-    { text: 'Followers', value: '540' },
+    { text: 'Enrolled', value: '145' },
+    { text: 'Done', value: '103' },
+    { text: 'Followings', value: '254' },
+    { text: 'Followers', value: '645' },
   ];
 
   return {

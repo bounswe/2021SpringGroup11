@@ -7,15 +7,13 @@ import {
   Fade,
   Modal,
   CircularProgress,
+  Box,
+  SnackbarContent,
+  Snackbar,
 } from '@mui/material/';
 import { makeStyles } from '@mui/styles';
 import CloseIcon from '@mui/icons-material/Close';
-// @ts-ignore
-import loginBottomRight from '../../images/login-bottom-right.png';
-// @ts-ignore
-import loginTopLeft from '../../images/login-top-left.png';
-// @ts-ignore
-import logo from '../../images/logo.png';
+import { useState } from 'react';
 
 interface Props {
   handleModalClose: any;
@@ -78,56 +76,101 @@ const useStyles = makeStyles(() => ({
     justifyContent: 'center',
   },
   resetButton: {},
+  barContent: {
+    padding: '40px',
+    background: '#70A9FF',
+  },
+  error: {
+    backgroundColor: '#990000',
+  },
+  message: {
+    display: 'flex',
+    alignItems: 'center',
+  },
 }));
 
 const ForgotPassModal = (props: Props) => {
   const { open, loading, handleModalClose, handleResetButton, error } = props;
   const classes = useStyles();
+  const [openSnackBar, setOpenSnackBar] = useState(false);
+
+  const handleReset = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+
+    handleResetButton(data.get('username'));
+    setOpenSnackBar(true);
+  };
 
   return (
-    <Modal
-      aria-labelledby="modal-title"
-      aria-describedby="modal-description"
-      className={classes.modal}
-      closeAfterTransition
-      BackdropProps={{
-        timeout: 500,
-      }}
-      open={open}
-    >
-      <Fade in={open}>
-        <div className={classes.paper}>
-          <div className={classes.titleContainer}>
-            <Typography variant="h3" align="center" className={classes.title}>
-              Forgot Password
-            </Typography>
-            {<CloseIcon onClick={handleModalClose} className={classes.closeIcon} />}
-          </div>
-          <Divider className={classes.divider} />
-          <TextField
-            InputProps={{ className: classes.textField }}
-            margin="normal"
-            required
-            fullWidth
-            id="username"
-            label="Username"
-            name="username"
-            autoComplete="username"
-            autoFocus
-            error={error}
+    <>
+      <Modal
+        aria-labelledby="modal-title"
+        aria-describedby="modal-description"
+        className={classes.modal}
+        closeAfterTransition
+        BackdropProps={{
+          timeout: 500,
+        }}
+        open={open}
+      >
+        <Fade in={open}>
+          <Box component="form" onSubmit={handleReset} noValidate>
+            <div className={classes.paper}>
+              <div className={classes.titleContainer}>
+                <Typography variant="h3" align="center" className={classes.title}>
+                  Forgot Password
+                </Typography>
+                <CloseIcon onClick={handleModalClose} className={classes.closeIcon} />
+              </div>
+              <Divider className={classes.divider} />
+              <TextField
+                InputProps={{ className: classes.textField }}
+                margin="normal"
+                required
+                fullWidth
+                id="username"
+                label="Username"
+                name="username"
+                autoComplete="username"
+                autoFocus
+                error={error}
+              />
+              <div className={classes.buttonContainer}>
+                <Button className={classes.resetButton} type="submit" variant="contained">
+                  {loading ? (
+                    <CircularProgress size={20} color="inherit" />
+                  ) : (
+                    <Typography>RESET PASSWORD</Typography>
+                  )}
+                </Button>
+              </div>
+            </div>
+          </Box>
+        </Fade>
+      </Modal>
+      <Snackbar
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'center',
+        }}
+        autoHideDuration={6000}
+        onClose={() => setOpenSnackBar(!openSnackBar)}
+        open={openSnackBar && !loading}
+      >
+        {!loading && (
+          <SnackbarContent
+            className={classes.barContent}
+            message={<span className={classes.message}>A new password is sent to your e-mail</span>}
+            action={
+              <Button variant="contained" color="success" size="large">
+                SIGN IN
+              </Button>
+            }
           />
-          <div className={classes.buttonContainer}>
-            <Button className={classes.resetButton} variant="contained" onClick={handleResetButton}>
-              {loading ? (
-                <CircularProgress size={20} color="inherit" />
-              ) : (
-                <Typography>RESET PASSWORD</Typography>
-              )}
-            </Button>
-          </div>
-        </div>
-      </Fade>
-    </Modal>
+        )}
+      </Snackbar>
+    </>
   );
 };
 

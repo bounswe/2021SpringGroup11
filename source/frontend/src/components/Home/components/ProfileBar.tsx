@@ -79,13 +79,13 @@ const ProfileBar = (props: Props) => {
     <Grid container className={classes.root}>
       <Grid container className={classes.username}>
         <div className={classes.imageContainer}>
-          <img className={classes.profilePic} src={avatar} alt={'profile-pic'} />
+          <img className={classes.profilePic} src={avatar} alt="profile-pic" />
         </div>
-        <Typography variant="h5" align={'center'}>
+        <Typography variant="h5" align="center">
           {user.username}
         </Typography>
         <Grid item xs={12} className={classes.title}>
-          <Typography variant="h5" align={'center'}>
+          <Typography variant="h5" align="center">
             {user.title}
           </Typography>
         </Grid>
@@ -93,34 +93,34 @@ const ProfileBar = (props: Props) => {
 
       <Grid container justifyContent="center" alignItems="center">
         <Grid item xs={5} className={classes.info}>
-          <Typography variant="h5" align={'center'}>
+          <Typography variant="h5" align="center">
             Enrolled
           </Typography>
-          <Typography variant="h5" align={'center'}>
+          <Typography variant="h5" align="center">
             {user.stats.enrolled}
           </Typography>
         </Grid>
         <Grid item xs={5} className={classes.info}>
-          <Typography variant="h5" align={'center'}>
+          <Typography variant="h5" align="center">
             Done
           </Typography>
-          <Typography variant="h5" align={'center'}>
+          <Typography variant="h5" align="center">
             {user.stats.done}
           </Typography>
         </Grid>
         <Grid item xs={5} className={classes.info}>
-          <Typography variant="h5" align={'center'}>
+          <Typography variant="h5" align="center">
             Followings
           </Typography>
-          <Typography variant="h5" align={'center'}>
+          <Typography variant="h5" align="center">
             {user.stats.followings}
           </Typography>
         </Grid>
         <Grid item xs={5} className={classes.info}>
-          <Typography variant="h5" align={'center'}>
+          <Typography variant="h5" align="center">
             Followers
           </Typography>
-          <Typography variant="h5" align={'center'}>
+          <Typography variant="h5" align="center">
             {user.stats.followers}
           </Typography>
         </Grid>
@@ -136,23 +136,23 @@ const ProfileBar = (props: Props) => {
           }}
         >
           <FavoriteIcon />
-          <Typography variant="h5" align={'center'}>
+          <Typography variant="h5" align="center">
             Favorites
           </Typography>
         </Grid>
         <Grid item xs={5} className={classes.fav}>
-          <Typography variant="h5" align={'center'}>
+          <Typography variant="h5" align="center">
             Tags
           </Typography>
-          <Typography variant="h5" align={'center'}>
+          <Typography variant="h5" align="center">
             {user.stats.tags}
           </Typography>
         </Grid>
         <Grid item xs={5} className={classes.fav}>
-          <Typography variant="h5" align={'center'}>
-            Resources
+          <Typography variant="h5" align="center">
+            Paths
           </Typography>
-          <Typography variant="h5" align={'center'}>
+          <Typography variant="h5" align="center">
             {user.stats.resources}
           </Typography>
         </Grid>
@@ -166,12 +166,12 @@ ProfileBar.defaultProps = {
     username: auth.getAuthInfoFromSession().username,
     title: 'BEGINNER',
     stats: {
-      enrolled: 5,
-      done: 0,
-      followings: 90,
-      followers: 2,
-      tags: 13,
-      resources: 23,
+      enrolled: 145,
+      done: 103,
+      followings: 254,
+      followers: 645,
+      tags: 126,
+      resources: 54,
     },
   },
 };

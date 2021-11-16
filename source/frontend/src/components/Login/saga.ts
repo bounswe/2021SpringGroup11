@@ -50,10 +50,10 @@ export function* doLoginSaga() {
     const passwordError = 'Password is invalid';
     switch (error.request.status) {
       case 400:
-        yield put(loginFailure({ usernameError: usernameError }));
+        yield put(loginFailure({ usernameError }));
         break;
       case 401:
-        yield put(loginFailure({ passwordError: passwordError }));
+        yield put(loginFailure({ passwordError }));
         break;
       case 500:
         yield put(loginFailure({ usernameError: 'Try again later.' }));
@@ -98,15 +98,18 @@ export function* forgotPasswordSaga() {
   const userData = {
     username: selectedData.username,
   };
+  console.log(userData);
   try {
     // @ts-ignore
     const response = yield call(post, FORGOT_PASSWORD_URL, userData);
-    if (response.code === 200) {
+    console.log(response);
+    if (response) {
       yield put(forgotPasswordSuccess(response));
     } else {
       yield put(loginFailure(response));
     }
   } catch (error) {
+    console.log(error);
     yield put(loginFailure({ loginErrorMessage: error }));
   }
 }

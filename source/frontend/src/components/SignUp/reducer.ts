@@ -9,7 +9,9 @@ export const initialState = {
   username: '',
   email: '',
   password: '',
-  signupError: '',
+  signupError: {
+    error: false,
+  },
 };
 
 const signupReducer = (state = initialState, action) =>
@@ -19,6 +21,9 @@ const signupReducer = (state = initialState, action) =>
         break;
       case SIGNUP:
         draft.loading = true;
+        draft.signupError = {
+          error: false,
+        };
         draft.name = action.userInfo.name;
         draft.surname = action.userInfo.surname;
         draft.username = action.userInfo.username;
@@ -27,11 +32,15 @@ const signupReducer = (state = initialState, action) =>
         break;
       case SIGNUP_SUCCESS:
         draft.loading = false;
+        draft.signupError = {
+          error: false,
+        };
         break;
       case SIGNUP_FAILURE:
         draft.loading = false;
         draft.signupError = action.res;
         break;
+      default:
     }
   });
 

@@ -21,13 +21,18 @@ import {
   Typography,
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
+import { BrowserRouter as Router, Switch, Route, Link, useParams } from 'react-router-dom';
+import avatar from '../../images/avatar1.png';
+
 import NavBar from '../NavBar';
 import { getProfileData } from './helper';
-import { BrowserRouter as Router, Switch, Route, Link, useParams } from 'react-router-dom';
 import auth from '../../utils/auth';
 
-interface Props {}
+interface Props {
+  history: any;
+}
 const Profile = (props: Props) => {
+  const { history } = props;
   const { username } = useParams();
 
   const [resources, setResources] = useState(null);
@@ -62,7 +67,7 @@ const Profile = (props: Props) => {
   if (loading) {
     return (
       <div>
-        <NavBar title="Profile"></NavBar>
+        <NavBar history={history} title="Profile"></NavBar>
         <Box
           sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '90vh' }}
         >
@@ -73,7 +78,7 @@ const Profile = (props: Props) => {
   }
   return (
     <div>
-      <NavBar title="Profile"></NavBar>
+      <NavBar title="Profile" history={history}></NavBar>
 
       <div
         style={{
@@ -84,7 +89,7 @@ const Profile = (props: Props) => {
           justifyContent: 'center',
         }}
       >
-        <img style={{ height: '80%' }} src={user.photo} alt="" />
+        <img style={{ height: '80%' }} src={avatar} alt="" />
       </div>
       <div
         style={{
@@ -107,21 +112,19 @@ const Profile = (props: Props) => {
             padding: '5px',
           }}
         >
-          {stats.map((item) => {
-            return (
-              <div
-                style={{
-                  alignItems: 'center',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'space-around',
-                }}
-              >
-                <div style={{ color: 'green' }}>{item.text}</div>
-                <div>{item.value}</div>
-              </div>
-            );
-          })}
+          {stats.map((item) => (
+            <div
+              style={{
+                alignItems: 'center',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-around',
+              }}
+            >
+              <div style={{ color: 'green' }}>{item.text}</div>
+              <div>{item.value}</div>
+            </div>
+          ))}
         </div>
         <div
           style={{
@@ -142,8 +145,10 @@ const Profile = (props: Props) => {
         </div>
         <Button
           style={{
-            flex: 1,
             color: 'white',
+            marginLeft: 'auto',
+            // padding: '0 20px',
+            flex: 1,
           }}
         >
           Edit Your Profile
@@ -159,142 +164,134 @@ interface ProfileContentProps {
   favorites: { text: string; value: string }[];
   user: any;
 }
-const ProfileContent = (props: ProfileContentProps) => {
-  return (
+const ProfileContent = (props: ProfileContentProps) => (
+  <div
+    style={{
+      background: '#E5E5EE',
+      // alignItems: 'center',
+      display: 'flex',
+      justifyContent: 'space-around',
+    }}
+  >
     <div
       style={{
-        background: '#E5E5EE',
-        // alignItems: 'center',
-        display: 'flex',
-        justifyContent: 'space-around',
+        flex: 2,
       }}
     >
       <div
         style={{
-          flex: 2,
+          alignItems: 'center',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-around',
         }}
       >
-        <div
-          style={{
-            alignItems: 'center',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'space-around',
-          }}
-        >
-          <div style={{ color: 'red' }}>{props.user.name}</div>
-          <div style={{ background: 'white', borderRadius: '5px' }}>{props.user.bio}</div>
-        </div>
-      </div>
-
-      <div
-        style={{
-          flex: 3,
-
-          padding: '5px',
-        }}
-      >
-        <h2>Enrolled Paths</h2>
-        <div
-          style={{
-            alignItems: 'center',
-            display: 'flex',
-
-            justifyContent: 'space-evenly',
-            padding: '5px',
-            flexWrap: 'wrap',
-          }}
-        >
-          {props.resources
-            .filter((r) => r.isEnrolled)
-            .map((resource) => {
-              return (
-                <ResourceCard
-                  resource={resource}
-                  onClick={() => {}}
-                  buttonText={resource.isEnrolled ? 'Unenroll' : 'Enroll'}
-                  onButtonClick={() => {
-                    alert('TODO');
-                  }}
-                  color="#9EE97A"
-                />
-              );
-            })}
-        </div>
-      </div>
-
-      <div
-        style={{
-          flex: 3,
-
-          padding: '5px',
-        }}
-      >
-        <h2>Favorite Paths</h2>
-        <div
-          style={{
-            alignItems: 'center',
-            display: 'flex',
-
-            justifyContent: 'space-evenly',
-            padding: '5px',
-            flexWrap: 'wrap',
-          }}
-        >
-          {props.resources
-            .filter((r) => r.isFollowed)
-            .map((resource) => {
-              return (
-                <ResourceCard
-                  resource={resource}
-                  onClick={() => {}}
-                  buttonText={resource.isFollowed ? 'Unfav.' : 'Fav.'}
-                  onButtonClick={() => {
-                    alert('TODO');
-                  }}
-                  color="#70A9FF"
-                />
-              );
-            })}
-        </div>
-      </div>
-
-      <div>
-        <h2>Favorites</h2>
-        <div
-          style={{
-            alignItems: 'center',
-            display: 'flex',
-            flex: 1,
-
-            justifyContent: 'space-around',
-            padding: '5px',
-            flexDirection: 'column',
-          }}
-        >
-          {props.favorites.map((item) => {
-            return (
-              <div
-                style={{
-                  alignItems: 'center',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'space-around',
-                  borderRadius: '10px',
-                  background: 'white',
-                  margin: '10px',
-                }}
-              >
-                <div style={{ color: 'green' }}>{item.text}</div>
-                <div>{item.value}</div>
-              </div>
-            );
-          })}
-        </div>
+        <div style={{ color: 'red' }}>{props.user.name}</div>
+        <div style={{ background: 'white', borderRadius: '5px' }}>{props.user.bio}</div>
       </div>
     </div>
-  );
-};
+
+    <div
+      style={{
+        flex: 3,
+
+        padding: '5px',
+      }}
+    >
+      <h2>Enrolled Paths</h2>
+      <div
+        style={{
+          alignItems: 'center',
+          display: 'flex',
+
+          justifyContent: 'space-evenly',
+          padding: '5px',
+          flexWrap: 'wrap',
+        }}
+      >
+        {props.resources
+          .filter((r) => r.isEnrolled)
+          .map((resource) => (
+            <ResourceCard
+              resource={resource}
+              onClick={() => {}}
+              buttonText={resource.isEnrolled ? 'Unenroll' : 'Enroll'}
+              onButtonClick={() => {
+                alert('TODO');
+              }}
+              color="#9EE97A"
+            />
+          ))}
+      </div>
+    </div>
+
+    <div
+      style={{
+        flex: 3,
+
+        padding: '5px',
+      }}
+    >
+      <h2>Favorite Paths</h2>
+      <div
+        style={{
+          alignItems: 'center',
+          display: 'flex',
+
+          justifyContent: 'space-evenly',
+          padding: '5px',
+          flexWrap: 'wrap',
+        }}
+      >
+        {props.resources
+          .filter((r) => r.isFollowed)
+          .map((resource) => (
+            <ResourceCard
+              resource={resource}
+              onClick={() => {}}
+              buttonText={resource.isFollowed ? 'Unfav.' : 'Fav.'}
+              onButtonClick={() => {
+                alert('TODO');
+              }}
+              color="#70A9FF"
+            />
+          ))}
+      </div>
+    </div>
+
+    <div>
+      <h2>Favorites</h2>
+      <div
+        style={{
+          alignItems: 'center',
+          display: 'flex',
+          flex: 1,
+
+          justifyContent: 'space-around',
+          padding: '5px',
+          flexDirection: 'column',
+        }}
+      >
+        {props.favorites.map((item) => (
+          <div
+            style={{
+              alignItems: 'center',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-around',
+              borderRadius: '10px',
+              background: 'white',
+              margin: '10px',
+            }}
+          >
+            <div style={{ color: 'green' }}>{item.text}</div>
+            <div>{item.value}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+);
 
 interface Resource {
   title: string;
@@ -312,59 +309,55 @@ interface ResourceCardProps {
   color: string;
 }
 
-const ResourceCard = (props: ResourceCardProps) => {
-  return (
-    <>
-      <Card onClick={props.onClick} sx={{ width: '140px', background: props.color, margin: '5px' }}>
-        <CardContent>
-          <img src={props.resource.photo} style={{ width: '100%', maxHeight: '10rem' }} alt="" />
-          <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-            {props.resource.title}
-          </Typography>
-          <div
-            style={{
-              alignItems: 'center',
-              display: 'flex',
-              flex: 1,
+const ResourceCard = (props: ResourceCardProps) => (
+  <>
+    <Card onClick={props.onClick} sx={{ width: '200px', background: props.color, margin: '5px' }}>
+      <CardContent>
+        <img src={props.resource.photo} style={{ width: '100%', height: '150px' }} alt="" />
+        <Typography sx={{ fontSize: 14, whiteSpace: 'nowrap' }} color="text.secondary" gutterBottom>
+          {props.resource.title}
+        </Typography>
+        <div
+          style={{
+            alignItems: 'center',
+            display: 'flex',
+            flex: 1,
 
-              justifyContent: 'space-evenly',
-              borderRadius: '10px',
-              background: 'white',
-              padding: '5px',
-            }}
-          >
-            {[
-              { text: 'Effort', value: props.resource.effort },
-              { text: 'Rating', value: props.resource.rating },
-            ].map((item) => {
-              return (
-                <div
-                  style={{
-                    alignItems: 'center',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'space-around',
-                  }}
-                >
-                  <div style={{ color: 'green' }}>{item.text}</div>
-                  <div>{item.value}</div>
-                </div>
-              );
-            })}
-          </div>
-        </CardContent>
-        <CardActions>
-          <Button
-            sx={{ backgroundColor: 'rgba(255,255,255,0.7)', color: 'black' }}
-            fullWidth
-            size="medium"
-            onClick={props.onButtonClick}
-          >
-            {props.buttonText}
-          </Button>
-        </CardActions>
-      </Card>
-    </>
-  );
-};
+            justifyContent: 'space-evenly',
+            borderRadius: '10px',
+            background: 'white',
+            padding: '5px',
+          }}
+        >
+          {[
+            { text: 'Effort', value: props.resource.effort },
+            { text: 'Rating', value: props.resource.rating },
+          ].map((item) => (
+            <div
+              style={{
+                alignItems: 'center',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-around',
+              }}
+            >
+              <div style={{ color: 'green' }}>{item.text}</div>
+              <div>{item.value}</div>
+            </div>
+          ))}
+        </div>
+      </CardContent>
+      <CardActions>
+        <Button
+          sx={{ backgroundColor: 'rgba(255,255,255,0.7)', color: 'black' }}
+          fullWidth
+          size="medium"
+          onClick={props.onButtonClick}
+        >
+          {props.buttonText}
+        </Button>
+      </CardActions>
+    </Card>
+  </>
+);
 export default Profile;

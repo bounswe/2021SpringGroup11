@@ -18,15 +18,14 @@ export function* doSignUp() {
   try {
     // @ts-ignore
     const response = yield call(post, SIGNUP_URL, userData);
-    if (response.isSuccess) {
+    if (response) {
       yield put(signupSuccess());
-      put(history.push('/login'));
     } else {
-      yield put(signupFailure('SIGN UP ERROR MESSAGE WILL BE WRITTEN HERE'));
+      yield put(signupFailure({ error: true }));
     }
   } catch (error) {
-    const singupError = 'This username or e-mail is already exists. Please choose another one.'
-    yield put(signupFailure({ signupErrorMessage: singupError }));
+    const signupError = 'This username or e-mail is already exists. Please choose another one.';
+    yield put(signupFailure({ error: true, signupErrorMessage: signupError }));
   }
 }
 export default function* signupSaga() {
