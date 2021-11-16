@@ -219,10 +219,12 @@ class _HomePageState extends State<HomePage> {
                       color: Colors.white,
                       fontStyle: FontStyle.italic,
                     ),
-                    border: InputBorder.none),
+                    border: InputBorder.none
+                ),
               ),
             ),
-          )),
+          )
+      ),
       body: ListView(
         physics: BouncingScrollPhysics(),
         children: [

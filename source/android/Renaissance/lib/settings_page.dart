@@ -14,9 +14,9 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   bool _allowNotifications = true;
-  bool _followedResources = true;
-  bool _enrolledResources = true;
-  bool _followedTopics = true;
+  bool _favoritePaths = true;
+  bool _enrolledPaths = true;
+  bool _favoriteTopics = true;
   TextEditingController _passwordController = TextEditingController();
   TextEditingController _repeatController = TextEditingController();
   TextEditingController _oldPasswordController = TextEditingController();
@@ -77,15 +77,15 @@ class _SettingsPageState extends State<SettingsPage> {
                                 Row(
                                   children: [
                                     Text(
-                                      "Followed Resources",
+                                      "Favorite Paths",
                                       style: TextStyle(fontSize: 15),
                                     ),
                                     Spacer(),
                                     CupertinoSwitch(
-                                        value: _followedResources,
+                                        value: _favoritePaths,
                                         onChanged: (value) {
                                           setState(() {
-                                            _followedResources = value;
+                                            _favoritePaths = value;
                                           });
                                         })
                                   ],
@@ -105,14 +105,14 @@ class _SettingsPageState extends State<SettingsPage> {
                             children: [
                               Row(
                                 children: [
-                                  Text("Enrolled Resources",
+                                  Text("Enrolled Paths",
                                       style: TextStyle(fontSize: 15)),
                                   Spacer(),
                                   CupertinoSwitch(
-                                      value: _enrolledResources,
+                                      value: _enrolledPaths,
                                       onChanged: (value) {
                                         setState(() {
-                                          _enrolledResources = value;
+                                          _enrolledPaths = value;
                                         });
                                       })
                                 ],
@@ -136,14 +136,14 @@ class _SettingsPageState extends State<SettingsPage> {
                             children: [
                               Row(
                                 children: [
-                                  Text("Followed Topics",
+                                  Text("Favorite Topics",
                                       style: TextStyle(fontSize: 15)),
                                   Spacer(),
                                   CupertinoSwitch(
-                                      value: _followedTopics,
+                                      value: _favoriteTopics,
                                       onChanged: (value) {
                                         setState(() {
-                                          _followedTopics = value;
+                                          _favoriteTopics = value;
                                         });
                                       })
                                 ],
@@ -166,7 +166,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 children: [
                   Icon(Icons.access_time_outlined, color: MyColors.blue),
                   SizedBox(width: 20),
-                  Text("My Resources",
+                  Text("My Paths",
                       style: TextStyle(
                           fontSize: 20, fontWeight: FontWeight.normal))
                 ],

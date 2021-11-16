@@ -325,7 +325,7 @@ class _RegisterPageState extends State<RegisterPage> {
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Succesful Register'),
+          title: const Text('Successful Register'),
           content: SingleChildScrollView(
             child: ListBody(
               children: const <Widget>[
