@@ -83,7 +83,7 @@ const Profile = (props: Props) => {
       <div
         style={{
           height: '15rem',
-          background: 'cyan',
+          background: `url('https://i.snipboard.io/sTKFNH.jpg') 0px 0px/100% auto, #6DB3F2`,
           alignItems: 'center',
           display: 'flex',
           justifyContent: 'center',

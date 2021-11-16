@@ -3,6 +3,7 @@ import { GET_USER_URL } from '../../utils/endpoints';
 
 export const getProfileData = async (username: string) => {
   const profileData = (await get(`${GET_USER_URL + username}/`)).data;
+  console.log('🚀 ~ file: helper.ts ~ line 6 ~ getProfileData ~ profileData', profileData);
   const user = {
     username: profileData.username,
     name: `${profileData.firstname} ${profileData.lastname}`,
