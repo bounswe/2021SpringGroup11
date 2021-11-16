@@ -26,90 +26,90 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-      child: Scaffold(
+        onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+        child: Scaffold(
           backgroundColor: Colors.white,
-          body:
-          CustomScrollView (scrollDirection: Axis.vertical,
-              slivers:[
-                SliverFillRemaining(
+          body: CustomScrollView(scrollDirection: Axis.vertical, slivers: [
+            SliverFillRemaining(
                 hasScrollBody: false,
-                    child:Container(
-            child: Column(
-              children: <Widget>[
-                Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height / 4.1,
-                    decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [MyColors.red, MyColors.red],
-                        ),
-                        borderRadius: BorderRadius.only(
-                            bottomLeft: Radius.circular(90),
-                            bottomRight: Radius.circular(70))),
-                    child: Image(image: AssetImage('assets/logo.png'))),
-                SizedBox(
-                  height: 30,
-                ),
-                Expanded(
-                    flex: 2,
-                    child: Form(
-                      key: _formKey,
-                      child: Padding(
-                        padding: const EdgeInsets.all(15.0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-
-                            _emailTextField(),
-                            _usernameTextField(),
-                            _firstNameTextField(),
-                            _lastNameTextField(),
-                            _passwordTextField(),
-                            _repeatPasswordTextField(),
-                            SizedBox(height: 10),
-                            Align(
-                                alignment: Alignment.centerRight,
-                                child: Container(
-                                  width: 200,
-                                  height: 45,
-                                  padding: EdgeInsets.only(left: 20, right: 30),
-                                  child: _registerButton(),
-                                ))
-                          ],
-                        ),
+                child: Container(
+                  child: Column(
+                    children: <Widget>[
+                      Container(
+                          width: MediaQuery.of(context).size.width,
+                          height: MediaQuery.of(context).size.height / 4.1,
+                          decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                colors: [MyColors.red, MyColors.red],
+                              ),
+                              borderRadius: BorderRadius.only(
+                                  bottomLeft: Radius.circular(90),
+                                  bottomRight: Radius.circular(70))),
+                          child: Image(image: AssetImage('assets/logo.png'))),
+                      SizedBox(
+                        height: 30,
                       ),
-                    )
-                ),
-                Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: 100,
-                    //padding: EdgeInsets.only(top: 40),
-                    margin: EdgeInsets.only(top: 30),
-                    decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [MyColors.lightGreen, MyColors.lightGreen],
-                        ),
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(50),
-                            topRight: Radius.circular(50))),
-                    child: Container(
-                      width: MediaQuery.of(context).size.width / 1.5,
-                      padding: EdgeInsets.symmetric(vertical: 20.0),
-                      child: _loginButton(),
-                      alignment: Alignment.center,
-                    ))
-              ],
-            ),
-          ))
-              ]),
-    )
-    );
+                      Expanded(
+                          flex: 2,
+                          child: Form(
+                            key: _formKey,
+                            child: Padding(
+                              padding: const EdgeInsets.all(15.0),
+                              child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  _emailTextField(),
+                                  _usernameTextField(),
+                                  _firstNameTextField(),
+                                  _lastNameTextField(),
+                                  _passwordTextField(),
+                                  _repeatPasswordTextField(),
+                                  SizedBox(height: 10),
+                                  Align(
+                                      alignment: Alignment.centerRight,
+                                      child: Container(
+                                        width: 200,
+                                        height: 45,
+                                        padding: EdgeInsets.only(
+                                            left: 20, right: 30),
+                                        child: _registerButton(),
+                                      ))
+                                ],
+                              ),
+                            ),
+                          )),
+                      Container(
+                          width: MediaQuery.of(context).size.width,
+                          height: 100,
+                          //padding: EdgeInsets.only(top: 40),
+                          margin: EdgeInsets.only(top: 30),
+                          decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                colors: [
+                                  MyColors.lightGreen,
+                                  MyColors.lightGreen
+                                ],
+                              ),
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(50),
+                                  topRight: Radius.circular(50))),
+                          child: Container(
+                            width: MediaQuery.of(context).size.width / 1.5,
+                            padding: EdgeInsets.symmetric(vertical: 20.0),
+                            child: _loginButton(),
+                            alignment: Alignment.center,
+                          ))
+                    ],
+                  ),
+                ))
+          ]),
+        ));
   }
 
   Widget _loginButton() => ElevatedButton(
@@ -147,11 +147,12 @@ class _RegisterPageState extends State<RegisterPage> {
           hintText: 'E-mail',
           filled: true,
           fillColor: Colors.black.withOpacity(0.1),
-          contentPadding: EdgeInsets.symmetric(horizontal: 10)
-      ),
+          contentPadding: EdgeInsets.symmetric(horizontal: 10)),
       validator: (email) {
-        if (email == null || email.length < 5 || !email.contains('@') || !email.contains('.'))
-          return 'Email format incorrect';
+        if (email == null ||
+            email.length < 5 ||
+            !email.contains('@') ||
+            !email.contains('.')) return 'Email format incorrect';
         return null;
       },
     );
@@ -162,14 +163,12 @@ class _RegisterPageState extends State<RegisterPage> {
       style: TextStyle(
           color: Color(0xff3c3c3c),
           fontSize: 18.0,
-          fontWeight: FontWeight.w700
-      ),
+          fontWeight: FontWeight.w700),
       controller: usernameController,
       decoration: InputDecoration(
         border: OutlineInputBorder(
             borderSide: BorderSide(color: Colors.black54),
-            borderRadius: BorderRadius.circular(40)
-        ),
+            borderRadius: BorderRadius.circular(40)),
         icon: Icon(
           Icons.alternate_email,
           color: Colors.black,
@@ -214,51 +213,50 @@ class _RegisterPageState extends State<RegisterPage> {
 
   Widget _firstNameTextField() {
     return TextFormField(
-        controller: firstNameController,
-        style: TextStyle(
-            color: Color(0xff3c3c3c),
-            fontSize: 18.0,
-            fontWeight: FontWeight.w700),
-        decoration: InputDecoration(
-          border: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.black54),
-              borderRadius: BorderRadius.circular(40)),
-          icon: Icon(Icons.person, color: Colors.black),
-          hintText: 'First Name',
-          contentPadding: EdgeInsets.symmetric(horizontal: 10),
-          filled: true,
-          fillColor: Colors.black.withOpacity(0.1),
-        ),
+      controller: firstNameController,
+      style: TextStyle(
+          color: Color(0xff3c3c3c),
+          fontSize: 18.0,
+          fontWeight: FontWeight.w700),
+      decoration: InputDecoration(
+        border: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.black54),
+            borderRadius: BorderRadius.circular(40)),
+        icon: Icon(Icons.person, color: Colors.black),
+        hintText: 'First Name',
+        contentPadding: EdgeInsets.symmetric(horizontal: 10),
+        filled: true,
+        fillColor: Colors.black.withOpacity(0.1),
+      ),
       validator: (name) {
-          if (name == null || name.isEmpty) {
-            return 'Please enter your name';
-          }
-          return null;
+        if (name == null || name.isEmpty) {
+          return 'Please enter your name';
+        }
+        return null;
       },
     );
   }
 
   Widget _lastNameTextField() {
     return TextFormField(
-        controller: lastNameController,
-        style: TextStyle(
-            color: Color(0xff3c3c3c),
-            fontSize: 18.0,
-            fontWeight: FontWeight.w700),
-        decoration: InputDecoration(
-          border: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.black54),
-              borderRadius: BorderRadius.circular(40)),
-          icon: Icon(Icons.person, color: Colors.black),
-          hintText: 'Last Name',
-          contentPadding: EdgeInsets.symmetric(horizontal: 10),
-          filled: true,
-          fillColor: Colors.black.withOpacity(0.1),
-        ),
+      controller: lastNameController,
+      style: TextStyle(
+          color: Color(0xff3c3c3c),
+          fontSize: 18.0,
+          fontWeight: FontWeight.w700),
+      decoration: InputDecoration(
+        border: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.black54),
+            borderRadius: BorderRadius.circular(40)),
+        icon: Icon(Icons.person, color: Colors.black),
+        hintText: 'Last Name',
+        contentPadding: EdgeInsets.symmetric(horizontal: 10),
+        filled: true,
+        fillColor: Colors.black.withOpacity(0.1),
+      ),
       validator: (name) {
-          if(name == null || name.isEmpty)
-            return 'Please enter your last name';
-          return null;
+        if (name == null || name.isEmpty) return 'Please enter your last name';
+        return null;
       },
     );
   }
@@ -298,12 +296,13 @@ class _RegisterPageState extends State<RegisterPage> {
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(error.toString()),
+          title: Text(error.toString().substring(11, error.toString().length)),
           content: SingleChildScrollView(
             child: ListBody(
               children: const <Widget>[
                 Text("Error!"),
-                Text('Press back button to direct to the register page.'),
+                Text(
+                    'Press back button to direct to the register page and try again.'),
               ],
             ),
           ),
@@ -350,7 +349,9 @@ class _RegisterPageState extends State<RegisterPage> {
 
   Widget _registerButton() => ElevatedButton(
         onPressed: () async {
-          if (_formKey.currentState!.validate() == false || _isLoading) { return; }
+          if (_formKey.currentState!.validate() == false || _isLoading) {
+            return;
+          }
           try {
             setState(() {
               _isLoading = true;
@@ -384,15 +385,17 @@ class _RegisterPageState extends State<RegisterPage> {
                   color: Colors.white,
                   fontWeight: FontWeight.w400),
             ),
-            _isLoading ? Container(
-              width: 24,
-              height: 24,
-              padding: const EdgeInsets.all(2.0),
-              child: const CircularProgressIndicator(
-                color: Colors.white,
-                strokeWidth: 3,
-              ),
-            ) : Icon(Icons.arrow_forward_sharp, color: Colors.white),
+            _isLoading
+                ? Container(
+                    width: 24,
+                    height: 24,
+                    padding: const EdgeInsets.all(2.0),
+                    child: const CircularProgressIndicator(
+                      color: Colors.white,
+                      strokeWidth: 3,
+                    ),
+                  )
+                : Icon(Icons.arrow_forward_sharp, color: Colors.white),
           ],
         ),
         style: ElevatedButton.styleFrom(
