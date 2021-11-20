@@ -13,7 +13,8 @@ class SignUp(APIView):
     
     def post(self, request):
         data = request.data
-        key_error = check_data_keys(data=data, necessary_keys=['email', 'username', 'firstname', 'lastname', 'password'])
+        key_error = check_data_keys(data=data, necessary_keys=['email', 'username', 'firstname', 'lastname', 'password'],
+                                    forbidden_keys=['isAdmin', 'isBanned', 'isDeleted', 'isVerified', 'createdAt', 'updatedAt', 'lastLogin', 'finishedResourceCount', '_id'])
 
         if key_error:
             return Response({'detail': key_error}, status.HTTP_400_BAD_REQUEST)
@@ -23,6 +24,10 @@ class SignUp(APIView):
                 return Response({'detail': 'USERNAME_ALREADY_EXISTS'}, status=status.HTTP_406_NOT_ACCEPTABLE)
         
         user = User(**data)
+
+        user.updatedAt = int(time.time())
+        user.createdAt = int(time.time())
+
         user.hash_password()
         user.insert()
 
@@ -35,7 +40,8 @@ class LogIn(APIView):
     
     def post(self, request):
         data = request.data
-        key_error = check_data_keys(data=data, necessary_keys=['username', 'password'])
+        key_error = check_data_keys(data=data, necessary_keys=['username', 'password'],
+                                    forbidden_keys=['firstname', 'lastname', 'isAdmin', 'isBanned', 'isDeleted', 'createdAt', 'updatedAt', 'lastLogin', 'finishedResourceCount', 'isVerified', 'bio', 'photo', '_id'])
 
         if key_error:
             return Response({'detail': key_error}, status.HTTP_400_BAD_REQUEST)
@@ -43,8 +49,11 @@ class LogIn(APIView):
         with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
             user = db.find_one('user', query={'username': data['username']})
             
-        if not user or user['isBanned']:
+        if not user or user['isDeleted']:
             return Response({'detail': 'NO_USER'}, status=status.HTTP_400_BAD_REQUEST)
+
+        if user['isBanned']:
+            return Response({'detail': 'USER_IS_BANNED'}, status=status.HTTP_400_BAD_REQUEST)
 
         user = User(**user)
         
@@ -77,6 +86,12 @@ class RefreshToken(APIView):
                 user = db.find_one('user', query=token_info)
 
             if user:
+                if user.get('isDeleted'):
+                    return Response({'detail': 'USER_NOT_FOUND'}, status=status.HTTP_404_NOT_FOUND)
+
+                if user.get('isBanned'):
+                    return Response({'detail': 'USER_IS_BANNED'}, status=status.HTTP_400_BAD_REQUEST)
+
                 token_info['exp'] = int(time.time()) + 60*60
                 token_info['isAdmin'] = user['isAdmin']
 
@@ -114,7 +129,7 @@ class ForgotPassword(APIView):
 
     def post(self, request):
         data = request.data
-        key_error = check_data_keys(data=data, necessary_keys=['username'])
+        key_error = check_data_keys(data=data, necessary_keys=['username'], forbidden_keys=[])
         
         if key_error:
             return Response({'detail': key_error}, status.HTTP_400_BAD_REQUEST)
@@ -125,7 +140,7 @@ class ForgotPassword(APIView):
         if not user or user.get('isDeleted'):
             return Response({'detail': 'USER_NOT_FOUND'}, status=status.HTTP_404_NOT_FOUND)
 
-        if user['isBanned']:
+        if user.get('isBanned'):
             return Response({'detail': 'USER_IS_BANNED'}, status=status.HTTP_400_BAD_REQUEST)
 
         link = create_forgot_password_link(jwt=create_jwt(

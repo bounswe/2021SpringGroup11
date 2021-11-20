@@ -19,6 +19,7 @@ class User:
         # Non-required params
         self.isAdmin = kwargs.get('isAdmin', False)
         self.isBanned = kwargs.get('isBanned', False)
+        self.isDeleted = kwargs.get('isDeleted', False)
         self.createdAt = kwargs.get('createdAt', int(time.time()))
         self.updatedAt = kwargs.get('updatedAt', self.createdAt)
         self.lastLogin = kwargs.get('lastLogin')
@@ -28,9 +29,9 @@ class User:
         # self.followedResources = kwargs.get('followedResources', [])
         # self.followedResources = kwargs.get('followedResources', [])
         # self.followedResources = kwargs.get('followedResources', [])
-
-        self.bio = kwargs.get('bio', '')
         self.rememberMe = kwargs.get('rememberMe', True)
+        self.bio = kwargs.get('bio', '')
+        self.photo = kwargs.get('photo', '')
 
         # ObjectID is not JSON serializable
         if kwargs.get('_id'):
