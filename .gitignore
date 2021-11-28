@@ -16,3 +16,13 @@ __pycache__/
 
 **/.venv/**
 **/__pycache__
+
+# Environments
+.env.yaml
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
