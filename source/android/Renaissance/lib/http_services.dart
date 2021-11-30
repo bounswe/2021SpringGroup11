@@ -60,15 +60,9 @@ class HttpService {
 
   Future<bool> forgotPassword(String username) async {
     String url = baseUrl + '/authentication/forgot-password/';
-    Response res =
-        await post(
-            Uri.parse(url),
-            headers: {
-              'Content-Type': 'application/json; charset=UTF-8'
-            },
-            body: jsonEncode({'username': username}
-            )
-        );
+    Response res = await post(Uri.parse(url),
+        headers: {'Content-Type': 'application/json; charset=UTF-8'},
+        body: jsonEncode({'username': username}));
     if (res.statusCode == 202) {
       return true;
     }
@@ -87,12 +81,22 @@ class HttpService {
 
   Future<User> getUser(String username) async {
     String url = baseUrl + '/user/get-profile/$username/';
-    Response res = await get(Uri.parse(url),
-      headers: headers
-    );
+    Response res = await get(Uri.parse(url), headers: headers);
 
     if (res.statusCode == 200) {
       return User.fromJson(jsonDecode(res.body));
+    } else {
+      throw Exception(res.body);
+    }
+  }
+
+  Future<List<Object>> searchUser(String username) async {
+    String url = baseUrl + '/user/search-user/$username/';
+    Response res = await get(Uri.parse(url), headers: headers);
+
+    if (res.statusCode == 200) {
+      print(jsonDecode(res.body));
+      return (jsonDecode(res.body));
     } else {
       throw Exception(res.body);
     }
