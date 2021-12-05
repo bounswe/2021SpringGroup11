@@ -1,6 +1,0 @@
-psycopg2-binary
-Django
-djangorestframework
-requests
-django-dotenv
-django-cors-headers
