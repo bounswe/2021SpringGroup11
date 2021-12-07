@@ -33,6 +33,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
+WIKIDATA_URL = 'http://www.wikidata.org/w/api.php'
+
 # CORS Configuration
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
