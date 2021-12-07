@@ -114,7 +114,6 @@ class SearchTopic(APIView):
         
         return Response(list(topics), status=status.HTTP_200_OK)
 
-
 class GetFollow(APIView):
     permission_classes = [IsAuthenticated]
     
@@ -163,7 +162,6 @@ class UnfollowUser(APIView):
 
     def post(request):
         data = request.data
-
         username = data['username']
         target = data['target']
 
@@ -180,3 +178,51 @@ class UnfollowUser(APIView):
 
         return Response('SUCCESSFUL')
 
+class EnrollPath(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(request):
+        data = request.data
+        username = data['username']
+        target = data['path_id']
+
+        with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
+            relation = db.find_one('enroll', {
+                'username': username,
+                'path_id': target,
+            })
+
+            if relation:
+                return Response('ALREADY_ENROLLED', status=status.HTTP_409_CONFLICT)
+
+            db.insert_one('enroll', {
+                'username': username,
+                'path_id': target,
+            })
+        
+        return Response('SUCCESSFUL')
+
+
+class UnEnrollPath(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(request):
+        data = request.data
+        username = data['username']
+        target = data['path_id']
+
+        with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
+            relation = db.find_one('enroll', {
+                'username': username,
+                'path_id': target,
+            })
+
+            if not relation:
+                return Response('NOT_ENROLLED', status=status.HTTP_409_CONFLICT)
+
+            db.delete_one('enroll', {
+                'username': username,
+                'path_id': target,
+            })
+        
+        return Response('SUCCESSFUL')
