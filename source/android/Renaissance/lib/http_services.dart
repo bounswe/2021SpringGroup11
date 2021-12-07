@@ -12,6 +12,7 @@ import 'models/user.dart';
 
 class HttpService {
   String baseUrl = "http://35.209.23.51"; // write server ip / url here
+  String invalidToken = 'Token is not valid';
   static HttpService shared = HttpService();
   String? token = Token.shared.token;
   late Map<String, String> headers = {
@@ -34,6 +35,20 @@ class HttpService {
       throw Exception('Wrong password');
     } else {
       throw Exception('UnknownError');
+    }
+  }
+
+  Future<LoginResponse> refreshToken() async {
+    String url = baseUrl + '/authentication/refresh-token/';
+    Response res = await post(Uri.parse(url),
+        headers: headers,
+        body: jsonEncode({ 'jwt': Token.shared.token})
+    );
+    if (res.statusCode == 200) {
+      await Token.shared.setToken(res.body);
+      return LoginResponse.fromJson(Jwt.parseJwt(res.body));
+    } else {
+      throw Exception(res.statusCode);
     }
   }
 
@@ -93,6 +108,62 @@ class HttpService {
 
     if (res.statusCode == 200) {
       return User.fromJson(jsonDecode(res.body));
+    } else {
+      throw Exception(res.body);
+    }
+  }
+
+  Future<User> editUser(String firstName, String lastName, String bio) async {
+    String url = baseUrl + '/user/edit-user/';
+    var body = jsonEncode({
+      'firstName': firstName,
+      'lastName': lastName,
+      'bio': bio,
+    });
+    Response res = await post(Uri.parse(url), headers: headers, body: body);
+    if (res.statusCode == 200) {
+      return User.fromJson(jsonDecode(res.body));
+    } else {
+      throw Exception(headers[HttpHeaders.authorizationHeader]); // token not valid donuyor anlamsizca. token da set edili normalde.
+    }
+  }
+
+  Future<User> changePassword(String password) async {
+    String url = baseUrl + 'user/change-password/';
+    var body = jsonEncode({
+      'password': password
+    });
+    Response res = await post(Uri.parse(url), headers: headers, body: body);
+    if (res.statusCode == 200) {
+      return User.fromJson(jsonDecode(res.body));
+    } else {
+      throw Exception(res.body);
+    }
+  }
+
+  Future<String> followUser(String username, String targetUsername) async {
+    String url = baseUrl + 'user/follow-user/';
+    var body = jsonEncode({
+      'username': username,
+      'target': targetUsername
+    });
+    Response res = await post(Uri.parse(url), headers: headers, body: body);
+    if (res.statusCode == 200) {
+      return res.body;
+    } else {
+      throw Exception(res.body);
+    }
+  }
+
+  Future<String> unfollowUser(String username, String targetUsername) async {
+    String url = baseUrl + 'user/unfollow-user/';
+    var body = jsonEncode({
+      'username': username,
+      'target': targetUsername
+    });
+    Response res = await post(Uri.parse(url), headers: headers, body: body);
+    if (res.statusCode == 200) {
+      return res.body;
     } else {
       throw Exception(res.body);
     }

@@ -13,7 +13,9 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
-
+  if (isLoggedIn) {
+    Token.shared.initializeToken();
+  }
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
     initialRoute: "/",
@@ -21,8 +23,5 @@ Future<void> main() async {
       "/": (context) => const LoginPage(),
       "/home": (context) => const BottomNavigationPage(),
     },
-    //home: isLoggedIn
-    //    ? BottomNavigationPage()
-    //    : LoginPage(), // MUST BE SET TO HOMEPAGE IF LOGGED IN.
   ));
 }

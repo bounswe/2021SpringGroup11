@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:portakal/http_services.dart';
 import 'package:portakal/my_colors.dart';
 import 'package:portakal/widget/profile_appbar_widget.dart';
 import 'package:portakal/models/user.dart';
@@ -114,7 +115,19 @@ class _ProfilePageState extends State<ProfilePage> {
                               onPrimary: Colors.white,
                             ),
                             child: Text(isFollowed?"Follow":"Unfollow"),
-                            onPressed: (){
+                            onPressed: () async {
+                              if (isFollowed) {
+                                try {
+                                  var response = await HttpService.shared.unfollowUser(User.me!.username!, widget.user.username!);
+                                } on Exception catch (error) {
+
+                                }
+                              } else {
+                                try {
+                                  var response = await HttpService.shared.followUser(User.me!.username!, widget.user.username!);
+                                } on Exception catch (error) {
+                                }
+                              }
                               setState(() {
                                 isFollowed = !isFollowed;
                               });
@@ -161,16 +174,6 @@ class _ProfilePageState extends State<ProfilePage> {
           child:Text('No Enrolled Paths Yet.',
               style: TextStyle(fontSize: 14, fontStyle: FontStyle.italic))
           ),
-          /*SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: [
-                CourseContainer("hello hello hello hge",1,2.0),
-                CourseContainer("hello hello hello hge",1,2.0),
-                CourseContainer("hello hello hello hge",1,2.0)
-              ],
-            ),
-          ),*/
         ],
       ),
     );
