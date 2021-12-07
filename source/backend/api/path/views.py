@@ -115,3 +115,68 @@ class SearchTopic(APIView):
         return Response(list(topics), status=status.HTTP_200_OK)
 
 
+class GetFollow(APIView):
+    permission_classes = [IsAuthenticated]
+    
+    def get(request):
+        data = request.data
+
+        username = data['username']
+
+        with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
+            followers = list(db.find('follow', query={'followed_username': username}))
+            followed = list(db.find('follow', query={'follower_username': username}))
+
+        return Response(
+            {
+                'followers': [follower['follower_username'] for follower in followers],
+                'followed': [followe['followed_username'] for followe in followed]
+            },
+            status=status.HTTP_200_OK
+        )
+
+
+class FollowUser(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(request):
+        data = request.data
+
+        username = data['username']
+        target = data['target']
+
+        with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
+            follow = db.find('follow', query={'follower_username': username, 'followed_username': target})
+            
+            if follow:
+                return Response('ALREADY_FOLLOWED', status=status.HTTP_409_CONFLICT)
+
+            db.insert_one('follow', {
+                'follower_username': username,
+                'followed_username': target,
+            })
+
+        return Response('SUCCESSFULL')
+
+class UnfollowUser(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(request):
+        data = request.data
+
+        username = data['username']
+        target = data['target']
+
+        with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
+            follow = db.find('follow', query={'follower_username': username, 'followed_username': target})
+            
+            if not follow:
+                return Response('NOT_FOLLOWED', status=status.HTTP_409_CONFLICT)
+
+            db.delete_one('follow', { # TODO CHECK
+                'follower_username': username,
+                'followed_username': target,
+            })
+
+        return Response('SUCCESSFUL')
+
