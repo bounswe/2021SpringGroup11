@@ -1,6 +1,8 @@
-import { get } from '../../utils/axios';
-import { SEARCH_TOPIC_URL, SEARCH_USER_URL } from '../../utils/endpoints';
 import faker from 'faker';
+import { get } from '../../utils/axios';
+import { SEARCH_TOPIC_URL, SEARCH_USER_URL, SEARCH_PATH_URL } from '../../utils/endpoints';
+import { getFakePaths, getFakeTopics } from '../Topic/fakeData';
+import { IPath, ITopic } from '../Topic/helper';
 interface ISearchResult {
   type: 'user' | 'topic' | 'path';
 }
@@ -10,22 +12,12 @@ interface IUserSearchResult extends ISearchResult {
   username: string;
   userImageURL: string;
 }
-interface ITopicSearchResult extends ISearchResult {
+interface ITopicSearchResult extends ISearchResult, ITopic {
   type: 'topic';
-  ID: number;
-  name: string;
-  isFav: boolean;
 }
 
-interface IPathSearchResult extends ISearchResult {
+interface IPathSearchResult extends ISearchResult, IPath {
   type: 'path';
-  ID: number;
-  title: string;
-  photo: string;
-  effort: number;
-  rating: number;
-  isEnrolled: boolean;
-  isFav: boolean;
 }
 
 const searchUser = async ({ searchText }: { searchText: string }) => {
@@ -39,43 +31,21 @@ const searchUser = async ({ searchText }: { searchText: string }) => {
   })) as IUserSearchResult[];
 };
 
-const mocktopicdata: Omit<ITopicSearchResult, 'type'>[] = [];
-for (let index = 0; index < 1000; index += 1) {
-  mocktopicdata.push({
-    ID: faker.datatype.number(),
-    name: Math.random() < 0.5 ? faker.random.words(1) : faker.random.words(2),
-    isFav: faker.datatype.boolean(),
-  });
-}
-
 const searchTopic = async ({ searchText }: { searchText: string }) => {
   // TODO backend connection
   //   const { data } = await get(`${SEARCH_TOPIC_URL + searchText.trim()}/`);
   //   console.log('🚀 ~ file: search.util.ts ~ line 13 ~ searchTopic ~ data', data);
 
-  const data = mocktopicdata.filter((d) => d.name.includes(searchText));
+  const data = getFakeTopics().filter((d) => d.name.includes(searchText));
   return data.map((t) => ({ ...t, type: 'topic' })) as ITopicSearchResult[];
 };
-
-const mockpathdata: Omit<IPathSearchResult, 'type'>[] = [];
-for (let index = 0; index < 1000; index += 1) {
-  mockpathdata.push({
-    ID: faker.datatype.number(),
-    title: Math.random() < 0.5 ? faker.random.words(1) : faker.random.words(2),
-    photo: faker.image.imageUrl(64, 64, undefined, true),
-    effort: faker.datatype.number(10),
-    rating: faker.datatype.number(10),
-    isEnrolled: faker.datatype.boolean(),
-    isFav: faker.datatype.boolean(),
-  });
-}
 
 const searchPath = async ({ searchText }: { searchText: string }) => {
   // TODO backend connection
   //   const { data } = await get(`${SEARCH_PATH_URL + searchText.trim()}/`);
   //   console.log('🚀 ~ file: search.util.ts ~ line 13 ~ searchPath ~ data', data);
 
-  const data = mockpathdata.filter((d) => d.title.includes(searchText));
+  const data = getFakePaths().filter((d) => d.title.includes(searchText));
   return data.map((t) => ({ ...t, type: 'path' })) as IPathSearchResult[];
 };
 

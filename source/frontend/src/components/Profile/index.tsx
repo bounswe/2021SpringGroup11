@@ -309,7 +309,7 @@ interface ResourceCardProps {
   color: string;
 }
 
-const ResourceCard = (props: ResourceCardProps) => (
+export const ResourceCard = (props: ResourceCardProps) => (
   <>
     <Card onClick={props.onClick} sx={{ width: '200px', background: props.color, margin: '5px' }}>
       <CardContent>

@@ -158,7 +158,7 @@ const SearchBox = (props: Props) => {
                     return (
                       <div
                         onClick={() => {
-                          history.push(`/topic/${pathSearchItem.ID}`);
+                          history.push(`/path/${pathSearchItem.ID}`);
                           setSearchText('');
                         }}
                         style={{ display: 'flex', flexDirection: 'row' }}
@@ -171,7 +171,7 @@ const SearchBox = (props: Props) => {
                           src={`${pathSearchItem.photo}`}
                         />
                         <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-                          <h2>{pathSearchItem.title}</h2>
+                          <h3>{pathSearchItem.title}</h3>
                           <h5>
                             Rating:{pathSearchItem.rating}
                             Effort:{pathSearchItem.effort}
