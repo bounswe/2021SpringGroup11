@@ -7,5 +7,6 @@ export const REFRESH_TOKEN_URL = `${baseUrl}authentication/refresh-token/`;
 export const GET_USER_URL = `${baseUrl}user/get-profile/`; /// /get-profile/<username>
 export const SEARCH_USER_URL = `${baseUrl}user/search-user/`; // /search-user/<search_text>
 export const SEARCH_TOPIC_URL = `${baseUrl}topic/search-topic/`; // /search-topic/<search_text>
+export const SEARCH_PATH_URL = `${baseUrl}topic/search-path/`; // /search-path/<search_text>
 export const EDIT_USER_URL = `${baseUrl}user/edit-user/`;
 export const BAN_USER_URL = `${baseUrl}user/ban-user/`;

@@ -25,6 +25,7 @@ import {
 import { get } from '../../utils/axios';
 import { SEARCH_USER_URL } from '../../utils/endpoints';
 import {
+  IPathSearchResult,
   ISearchResult,
   ITopicSearchResult,
   IUserSearchResult,
@@ -137,19 +138,45 @@ const SearchBox = (props: Props) => {
                     );
                   }
                   if (searchItem.type === 'topic') {
-                    const userTopicItem = searchItem as ITopicSearchResult;
+                    const topicSearchItem = searchItem as ITopicSearchResult;
 
                     return (
                       <div
                         onClick={() => {
-                          history.push(`/topic/${userTopicItem.ID}`);
+                          history.push(`/topic/${topicSearchItem.ID}`);
                           setSearchText('');
                         }}
                         style={{ display: 'flex', flexDirection: 'row' }}
                       >
-                        <h2>
-                          {userTopicItem.name} ({userTopicItem.ID})
-                        </h2>
+                        <h2>#{topicSearchItem.name}</h2>
+                      </div>
+                    );
+                  }
+                  if (searchItem.type === 'path') {
+                    const pathSearchItem = searchItem as IPathSearchResult;
+
+                    return (
+                      <div
+                        onClick={() => {
+                          history.push(`/topic/${pathSearchItem.ID}`);
+                          setSearchText('');
+                        }}
+                        style={{ display: 'flex', flexDirection: 'row' }}
+                      >
+                        {' '}
+                        <img
+                          style={{
+                            height: '100%',
+                          }}
+                          src={`${pathSearchItem.photo}`}
+                        />
+                        <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+                          <h2>{pathSearchItem.title}</h2>
+                          <h5>
+                            Rating:{pathSearchItem.rating}
+                            Effort:{pathSearchItem.effort}
+                          </h5>
+                        </div>
                       </div>
                     );
                   }
