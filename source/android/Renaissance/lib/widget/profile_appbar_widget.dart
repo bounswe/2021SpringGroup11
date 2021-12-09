@@ -5,7 +5,7 @@ import 'package:portakal/settings_page.dart';
 
 import '../my_colors.dart';
 
-AppBar buildAppBar(BuildContext context, String username){
+AppBar buildAppBar(BuildContext context, String username, EditProfileDelegate delegate){
   return AppBar(
     backgroundColor: MyColors.blue,
     flexibleSpace: Row(
@@ -37,7 +37,7 @@ AppBar buildAppBar(BuildContext context, String username){
       IconButton(
         icon:  FaIcon(FontAwesomeIcons.userEdit),
         onPressed: (){
-          Navigator.push(context, MaterialPageRoute(builder: (context) => EditProfilePage()));
+          Navigator.push(context, MaterialPageRoute(builder: (context) => EditProfilePage(delegate: delegate,)));
         },
       ),
     ],
