@@ -21,7 +21,7 @@
     "@typescript-eslint/eslint-plugin": "^5.3.1",
     "all": "^0.0.0",
     "axios": "^0.24.0",
-    "faker": "^5.5.3",
+    "faker": "ashsearle/faker.js#utf-8",
     "parcel": "^2.0.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
