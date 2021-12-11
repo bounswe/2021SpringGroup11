@@ -163,7 +163,7 @@ class HttpService {
   Future<User> createPath(
       String title,
       String description,
-      List<List<Map<String, String>>> milestones,
+      List<Map<String, String>> milestones,
       String? photo,
       List<int> topics) async {
     String url = baseUrl + '/path/create-path/';
@@ -181,8 +181,7 @@ class HttpService {
       //await refreshToken();
       throw Exception("403.");
     } else {
-      throw Exception(headers[HttpHeaders
-          .authorizationHeader]); // token not valid donuyor anlamsizca. token da set edili normalde.
+      throw Exception(headers[HttpHeaders.authorizationHeader]);
     }
   }
 }
