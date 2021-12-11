@@ -11,7 +11,7 @@ function checkStatus(response) {
   throw new Error(response.statusText);
 }
 
-export function post(url, options, config) {
+export function post(url, options, config = {}) {
   const token = store.getState().login.authInfo && store.getState().login.authInfo.accessToken;
   const header = {
     headers: {

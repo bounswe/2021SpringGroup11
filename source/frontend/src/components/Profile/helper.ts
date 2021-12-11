@@ -1,8 +1,18 @@
-import { get } from '../../utils/axios';
-import { GET_USER_URL } from '../../utils/endpoints';
+import { get, post } from '../../utils/axios';
+import { EDIT_USER_URL, GET_USER_URL } from '../../utils/endpoints';
+
+export const getUserData = async (username: string) => {
+  const userData = (await get(`${GET_USER_URL + username}/`)).data;
+  return userData;
+};
+export const updateUserData = async (data: any) => {
+  const result = (await post(`${EDIT_USER_URL}`, data)).data;
+  console.log('🚀 ~ file: helper.ts ~ line 10 ~ updateUserData ~ result', result);
+  return result;
+};
 
 export const getProfileData = async (username: string) => {
-  const profileData = (await get(`${GET_USER_URL + username}/`)).data;
+  const profileData = await getUserData(username);
   console.log('🚀 ~ file: helper.ts ~ line 6 ~ getProfileData ~ profileData', profileData);
   const user = {
     username: profileData.username,
