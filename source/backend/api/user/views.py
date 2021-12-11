@@ -167,15 +167,21 @@ class GetRatings(APIView):
 class FollowUser(APIView):
     permission_classes = [IsAuthenticated]
 
-    def post(request):
+    def post(self, request):
+        """
+            Endpoint for following a user
+        """
         data = request.data
 
         username = data['username']
-        target = data['target']
+        try:
+            target = data['target']
+        except:
+            return Response('MISSING_KEY', status=status.HTTP_400_BAD_REQUEST)
 
         with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
-            follow = db.find('follow', query={'follower_username': username, 'followed_username': target})
-            
+            follow = db.find_one('follow', query={'follower_username': username, 'followed_username': target})
+            print(follow)
             if follow:
                 return Response('ALREADY_FOLLOWED', status=status.HTTP_409_CONFLICT)
 
@@ -184,19 +190,25 @@ class FollowUser(APIView):
                 'followed_username': target,
             })
 
-        return Response('SUCCESSFULL')
+        return Response('SUCCESSFUL')
 
 class UnfollowUser(APIView):
     permission_classes = [IsAuthenticated]
 
-    def post(request):
+    def post(self, request):
+        """
+            Endpoint for unfollowing a user
+        """
         data = request.data
 
         username = data['username']
-        target = data['target']
+        try:
+            target = data['target']
+        except:
+            return Response('MISSING_KEY', status=status.HTTP_400_BAD_REQUEST)
 
         with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
-            follow = db.find('follow', query={'follower_username': username, 'followed_username': target})
+            follow = db.find_one('follow', query={'follower_username': username, 'followed_username': target})
             
             if not follow:
                 return Response('NOT_FOLLOWED', status=status.HTTP_409_CONFLICT)
