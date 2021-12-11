@@ -126,7 +126,10 @@ class ChangePassword(APIView):
 class GetFollow(APIView):
     permission_classes = [IsAuthenticated]
     
-    def get(request):
+    def get(self, request):
+        """
+            Returns follower and followed user list
+        """
         data = request.data
 
         username = data['username']
