@@ -1,3 +1,6 @@
+/* eslint-disable jsx-a11y/alt-text */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useEffect, useState } from 'react';
 import ExploreIcon from '@mui/icons-material/Explore';
 import NotificationsIcon from '@mui/icons-material/Notifications';
@@ -21,6 +24,15 @@ import {
 } from '@mui/material';
 import { get } from '../../utils/axios';
 import { SEARCH_USER_URL } from '../../utils/endpoints';
+import {
+  IPathSearchResult,
+  ISearchResult,
+  ITopicSearchResult,
+  IUserSearchResult,
+  search,
+  searchTopic,
+  searchUser,
+} from './search.util';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -64,16 +76,15 @@ interface Props {}
 const SearchBox = (props: Props) => {
   const [searchText, setSearchText] = useState('');
 
-  const [searchResults, setSearchResults] = useState<null | { username: string }[]>(null);
+  const [searchResults, setSearchResults] = useState<null | ISearchResult[]>(null);
   useEffect(() => {
-    setSearchResults(null);
-    if (searchText.trim()) {
-      //TODO: fetch search results
-      get(SEARCH_USER_URL + searchText.trim() + '/').then(({ data }) => {
-        console.log('🚀 ~ file: SearchBox.tsx ~ line 89 ~ get ~ res', data);
-        setSearchResults(data);
-      });
-    }
+    (async () => {
+      setSearchResults(null);
+      if (searchText.trim()) {
+        const results = await search({ searchText: searchText.trim() });
+        setSearchResults(results);
+      }
+    })();
   }, [searchText]);
 
   const [placeholder, setplaceholder] = useState('Search');
@@ -105,24 +116,71 @@ const SearchBox = (props: Props) => {
             {searchResults ? (
               <>
                 {searchResults.map((searchItem) => {
-                  return (
-                    <div
-                      onClick={() => {
-                        history.push(`/profile/${searchItem.username}`);
-                        setSearchText('');
-                      }}
-                      style={{ display: 'flex', flexDirection: 'row' }}
-                    >
-                      <img
-                        style={{
-                          height: '100%',
+                  if (searchItem.type === 'user') {
+                    const userSearchItem = searchItem as IUserSearchResult;
+                    return (
+                      <div
+                        onClick={() => {
+                          history.push(`/profile/${userSearchItem.username}`);
+                          setSearchText('');
                         }}
-                        src={`https://ui-avatars.com/api/?name=${searchItem.username}&background=0D8ABC&color=fff`}
-                      />
+                        style={{ display: 'flex', flexDirection: 'row' }}
+                      >
+                        <img
+                          style={{
+                            height: '100%',
+                          }}
+                          src={`${userSearchItem.userImageURL}`}
+                        />
 
-                      <h2>{searchItem.username}</h2>
-                    </div>
-                  );
+                        <h2>{userSearchItem.username}</h2>
+                      </div>
+                    );
+                  }
+                  if (searchItem.type === 'topic') {
+                    const topicSearchItem = searchItem as ITopicSearchResult;
+
+                    return (
+                      <div
+                        onClick={() => {
+                          history.push(`/topic/${topicSearchItem.ID}`);
+                          setSearchText('');
+                        }}
+                        style={{ display: 'flex', flexDirection: 'row' }}
+                      >
+                        <h2>#{topicSearchItem.name}</h2>
+                      </div>
+                    );
+                  }
+                  if (searchItem.type === 'path') {
+                    const pathSearchItem = searchItem as IPathSearchResult;
+
+                    return (
+                      <div
+                        onClick={() => {
+                          history.push(`/path/${pathSearchItem.ID}`);
+                          setSearchText('');
+                        }}
+                        style={{ display: 'flex', flexDirection: 'row' }}
+                      >
+                        {' '}
+                        <img
+                          style={{
+                            height: '100%',
+                          }}
+                          src={`${pathSearchItem.photo}`}
+                        />
+                        <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+                          <h3>{pathSearchItem.title}</h3>
+                          <h5>
+                            Rating:{pathSearchItem.rating}
+                            Effort:{pathSearchItem.effort}
+                          </h5>
+                        </div>
+                      </div>
+                    );
+                  }
+                  return <></>;
                 })}
               </>
             ) : (

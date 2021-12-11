@@ -43,6 +43,12 @@ const routes: {
     component: lazy(() => import('./components/Profile')),
     requestAuth: true,
   },
+  {
+    path: '/topic/:topicID',
+    exact: true,
+    component: lazy(() => import('./components/Topic')),
+    requestAuth: true,
+  },
 ];
 
 export default routes;
