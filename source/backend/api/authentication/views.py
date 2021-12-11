@@ -59,7 +59,7 @@ class LogIn(APIView):
                 'username': user.username,
                 'email': user.email,
                 'isAdmin': user.isAdmin,
-                'exp': int(time.time()) + 60*60
+                'exp': int(time.time()) + 60*60*24*7*30
                 })
         , status=status.HTTP_200_OK)
 
@@ -100,7 +100,7 @@ class RefreshToken(APIView):
                             'username': user['username'],
                             'email': user['email'],
                             'isAdmin': user['isAdmin'],
-                            'exp': int(time.time()) + 60*60
+                            'exp': int(time.time()) + 60*60*24*7*30
                             })
                     , status=status.HTTP_200_OK)
         
@@ -133,7 +133,7 @@ class ForgotPassword(APIView):
                 'username': user['username'],
                 'email': user['email'],
                 'isAdmin': user['isAdmin'],
-                'exp': int(time.time()) + 60*60
+                'exp': int(time.time()) + 60*60*24*7*30
             }
         ))
         send_email(receiver=user['email'], username=user['username'], forgot_password_link=link)
