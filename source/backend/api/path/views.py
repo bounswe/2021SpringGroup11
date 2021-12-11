@@ -194,7 +194,6 @@ class UnfollowUser(APIView):
 
         return Response('SUCCESSFUL')
 
-
 class EnrollPath(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -245,3 +244,4 @@ class UnEnrollPath(APIView):
             })
         
         return Response('SUCCESSFUL')
+
