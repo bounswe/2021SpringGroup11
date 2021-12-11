@@ -11,7 +11,7 @@ from common.data_check import check_data_keys
 
 
 class CreatePath(APIView):
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
     
     def post(self, request):
         data = request.data
@@ -247,3 +247,20 @@ class UnEnrollPath(APIView):
         
         return Response('SUCCESSFUL')
 
+class GetEnrolledPaths(APIView):
+    permission_classes = [IsAuthenticated]
+
+    # requests username and returns all enrolled paths of the given username, tested
+    def post(self, request):
+        data = request.data
+        username = data['username']
+
+        with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
+            enrolledPaths = list(db.find('enroll', query={'username': username}))
+
+        return Response(
+            {
+                'enrolledPaths': [path['path_id'] for path in enrolledPaths]
+            },
+            status=status.HTTP_200_OK
+        )
