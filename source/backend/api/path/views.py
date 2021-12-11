@@ -65,9 +65,9 @@ class RatePath(APIView):
                 'rating': rating,
             })
         
-        return Response('Successful')
+        return Response('SUCCESSFUL')
 
-class EffortPath(APIView):
+class EffortPath(APIView): #this endpoint is tested
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
@@ -85,7 +85,7 @@ class EffortPath(APIView):
                 'effort': effort,
             })
     
-        return Response('Successful')
+        return Response('SUCCESSFUL')
 
 class GetPathDetail(APIView):
     permission_classes = [IsAuthenticated]
@@ -282,4 +282,4 @@ class FinishPath(APIView): #Caution: this endpoint marks the whole path as finis
                               'path_id': path_id,
                           })
 
-        return Response('Successful')
+        return Response('SUCCESSFUL')
