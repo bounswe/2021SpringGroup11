@@ -195,6 +195,7 @@ class UnfollowUser(APIView):
         return Response('SUCCESSFUL')
 
 class EnrollPath(APIView):
+
     permission_classes = [IsAuthenticated]
 
     # requests username and path_id and responses success or fail message, tested
@@ -225,6 +226,7 @@ class UnEnrollPath(APIView):
 
     # requests username and path_id and responses success or fail message, tested
     def post(self, request):
+
         data = request.data
         username = data['username']
         target = data['path_id']
