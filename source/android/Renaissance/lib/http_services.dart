@@ -24,9 +24,7 @@ class HttpService {
     // only JWT strings return from this endpoint.
     String url = baseUrl + "/authentication/login/";
     Response res = await post(Uri.parse(url),
-        headers: {
-        'Content-Type': 'application/json; charset=UTF-8'
-        },
+        headers: {'Content-Type': 'application/json; charset=UTF-8'},
         body: jsonEncode({'username': username, 'password': password}));
     if (res.statusCode == 200) {
       await Token.shared.setToken(res.body.replaceAll('"', ''));
@@ -44,11 +42,8 @@ class HttpService {
   Future<LoginResponse> refreshToken() async {
     String url = baseUrl + '/authentication/refresh-token/';
     Response res = await post(Uri.parse(url),
-        headers: {
-          'Content-Type': 'application/json; charset=UTF-8'
-        },
-        body: jsonEncode({ 'jwt': token!.replaceAll('"', '') })
-    );
+        headers: {'Content-Type': 'application/json; charset=UTF-8'},
+        body: jsonEncode({'jwt': token!.replaceAll('"', '')}));
     if (res.statusCode == 200) {
       await Token.shared.setToken(res.body.replaceAll('"', ''));
       token = Token.shared.token;
@@ -62,9 +57,7 @@ class HttpService {
       String lastname, String password) async {
     String url = baseUrl + '/authentication/signup/';
     Response res = await post(Uri.parse(url),
-        headers: {
-        'Content-Type': 'application/json; charset=UTF-8'
-        },
+        headers: {'Content-Type': 'application/json; charset=UTF-8'},
         body: jsonEncode({
           'email': email,
           'username': username,
@@ -83,15 +76,9 @@ class HttpService {
 
   Future<bool> forgotPassword(String username) async {
     String url = baseUrl + '/authentication/forgot-password/';
-    Response res =
-        await post(
-            Uri.parse(url),
-            headers: {
-              'Content-Type': 'application/json; charset=UTF-8'
-            },
-            body: jsonEncode({'username': username}
-            )
-        );
+    Response res = await post(Uri.parse(url),
+        headers: {'Content-Type': 'application/json; charset=UTF-8'},
+        body: jsonEncode({'username': username}));
     if (res.statusCode == 202) {
       return true;
     }
@@ -110,9 +97,7 @@ class HttpService {
 
   Future<User> getUser(String username) async {
     String url = baseUrl + '/user/get-profile/$username/';
-    Response res = await get(Uri.parse(url),
-      headers: headers
-    );
+    Response res = await get(Uri.parse(url), headers: headers);
 
     if (res.statusCode == 200) {
       return User.fromJson(jsonDecode(res.body));
@@ -121,7 +106,8 @@ class HttpService {
     }
   }
 
-  Future<User> editUser(String firstName, String lastName, String bio, String? photo) async {
+  Future<User> editUser(
+      String firstName, String lastName, String bio, String? photo) async {
     String url = baseUrl + '/user/edit-user/';
     var body = jsonEncode({
       'firstname': firstName,
@@ -135,17 +121,15 @@ class HttpService {
     } else if (res.statusCode == 403) {
       //await refreshToken();
       throw Exception("403.");
-    }
-    else {
-      throw Exception(headers[HttpHeaders.authorizationHeader]); // token not valid donuyor anlamsizca. token da set edili normalde.
+    } else {
+      throw Exception(headers[HttpHeaders
+          .authorizationHeader]); // token not valid donuyor anlamsizca. token da set edili normalde.
     }
   }
 
   Future<User> changePassword(String password) async {
     String url = baseUrl + 'user/change-password/';
-    var body = jsonEncode({
-      'password': password
-    });
+    var body = jsonEncode({'password': password});
     Response res = await post(Uri.parse(url), headers: headers, body: body);
     if (res.statusCode == 200) {
       return User.fromJson(jsonDecode(res.body));
@@ -156,10 +140,7 @@ class HttpService {
 
   Future<String> followUser(String username, String targetUsername) async {
     String url = baseUrl + 'user/follow-user/';
-    var body = jsonEncode({
-      'username': username,
-      'target': targetUsername
-    });
+    var body = jsonEncode({'username': username, 'target': targetUsername});
     Response res = await post(Uri.parse(url), headers: headers, body: body);
     if (res.statusCode == 200) {
       return res.body;
@@ -170,15 +151,38 @@ class HttpService {
 
   Future<String> unfollowUser(String username, String targetUsername) async {
     String url = baseUrl + 'user/unfollow-user/';
-    var body = jsonEncode({
-      'username': username,
-      'target': targetUsername
-    });
+    var body = jsonEncode({'username': username, 'target': targetUsername});
     Response res = await post(Uri.parse(url), headers: headers, body: body);
     if (res.statusCode == 200) {
       return res.body;
     } else {
       throw Exception(res.body);
+    }
+  }
+
+  Future<User> createPath(
+      String title,
+      String description,
+      List<List<Map<String, String>>> milestones,
+      String? photo,
+      List<int> topics) async {
+    String url = baseUrl + '/path/create-path/';
+    var body = jsonEncode({
+      'title': title,
+      'description': description,
+      'milestones': milestones,
+      'photo': photo,
+      'topics': topics
+    });
+    Response res = await post(Uri.parse(url), headers: headers, body: body);
+    if (res.statusCode == 200) {
+      return User.fromJson(jsonDecode(res.body));
+    } else if (res.statusCode == 403) {
+      //await refreshToken();
+      throw Exception("403.");
+    } else {
+      throw Exception(headers[HttpHeaders
+          .authorizationHeader]); // token not valid donuyor anlamsizca. token da set edili normalde.
     }
   }
 }
