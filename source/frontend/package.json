@@ -19,6 +19,7 @@
     "@types/faker": "^5.5.9",
     "@types/react-redux": "^7.1.20",
     "@typescript-eslint/eslint-plugin": "^5.3.1",
+    "@uiw/react-md-editor": "^3.8.4",
     "all": "^0.0.0",
     "axios": "^0.24.0",
     "faker": "ashsearle/faker.js#utf-8",

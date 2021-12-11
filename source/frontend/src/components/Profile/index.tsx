@@ -16,16 +16,20 @@ import {
   InputBase,
   Menu,
   MenuItem,
+  Modal,
   styled,
+  TextField,
   Toolbar,
   Typography,
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Switch, Route, Link, useParams } from 'react-router-dom';
 import avatar from '../../images/avatar1.png';
+import MDEditor from '@uiw/react-md-editor';
+import PhotoCamera from '@mui/icons-material/PhotoCamera';
 
 import NavBar from '../NavBar';
-import { getProfileData } from './helper';
+import { getProfileData, getUserData, updateUserData } from './helper';
 import auth from '../../utils/auth';
 
 interface Props {
@@ -60,9 +64,11 @@ const Profile = (props: Props) => {
         setStats(_stats);
         setFavorites(_favorites);
         setLoading(false);
-      }, 1000);
+      }, 100);
     })();
   }, [username]);
+
+  const [editProfilePopup, seteditProfilePopup] = useState(false);
 
   if (loading) {
     return (
@@ -150,12 +156,123 @@ const Profile = (props: Props) => {
             // padding: '0 20px',
             flex: 1,
           }}
+          onClick={() => seteditProfilePopup(true)}
         >
           Edit Your Profile
         </Button>
       </div>
       <ProfileContent user={user} resources={resources} favorites={favorites} />
+      <Modal
+        open={editProfilePopup}
+        onClose={() => seteditProfilePopup(false)}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box
+          sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            // width: 400,
+            bgcolor: 'background.paper',
+            border: '2px solid #000',
+            boxShadow: 24,
+            p: 4,
+            overflow: 'scroll',
+            height: '90vh',
+          }}
+        >
+          <EditProfile username={username} />{' '}
+        </Box>
+      </Modal>
     </div>
+  );
+};
+
+const EditProfile = ({ username }: { username: string }) => {
+  const [loading, setLoading] = useState(true);
+
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    setLoading(true);
+    (async () => {
+      // simulate api request waiting
+      setTimeout(async () => {
+        const data = await getUserData(username || auth.getAuthInfoFromSession()?.username || 'e');
+
+        setUser(data);
+        setLoading(false);
+      }, 100);
+    })();
+  }, [username]);
+  if (loading) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
+  return (
+    <>
+      <div>
+        <h2>Edit Profile</h2>
+        {[
+          { label: 'Username', key: 'username' },
+          { label: 'Email', key: 'email' },
+          { label: 'First Name', key: 'firstname' },
+          { label: 'Last Name', key: 'lastname' },
+        ].map(({ key, label }) => (
+          <TextField
+            style={{ margin: '1rem' }}
+            key={key}
+            fullWidth
+            id={key}
+            label={label}
+            name={key}
+            autoComplete={key}
+            value={user[key]}
+            onChange={(e) => setUser({ ...user, [key]: e.target.value })}
+          />
+        ))}
+        <h3>Bio</h3>
+        <MDEditor
+          style={{ margin: '1rem' }}
+          value={user.bio}
+          onChange={(val) => {
+            setUser({ ...user, bio: val });
+          }}
+        />
+        {user.photo ? <img width="100%" src={user.photo} alt="" /> : <h3></h3>}
+        <label style={{ margin: '1rem' }} htmlFor="icon-button-file">
+          <input
+            onChange={(e) => {
+              const reader = new FileReader();
+              reader.readAsDataURL(e.target.files[0]);
+              reader.onloadend = () => {
+                setUser({ ...user, photo: reader.result });
+              };
+            }}
+            style={{ display: 'none' }}
+            accept="image/*"
+            id="icon-button-file"
+            type="file"
+          />
+          <IconButton color="primary" aria-label="upload picture" component="span">
+            <PhotoCamera />
+          </IconButton>
+        </label>
+        <br />
+        <Button
+          onClick={() => {
+            updateUserData(user);
+          }}
+        >
+          Save
+        </Button>
+      </div>
+    </>
   );
 };
 
