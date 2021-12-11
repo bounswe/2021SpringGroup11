@@ -50,7 +50,7 @@ class CreatePath(APIView):
 class RatePath(APIView):
     permission_classes = [IsAuthenticated]
 
-    def post(request):
+    def post(self, request):
         data = request.data
 
         rating = data['rating']
@@ -70,7 +70,7 @@ class RatePath(APIView):
 class EffortPath(APIView):
     permission_classes = [IsAuthenticated]
 
-    def post(request):
+    def post(self, request):
         data = request.data
 
         effort = data['effort']
@@ -90,7 +90,7 @@ class EffortPath(APIView):
 class GetPathDetail(APIView):
     permission_classes = [IsAuthenticated]
 
-    def post(request):
+    def post(self, request):
         data = request.data 
 
         path_id = data['path_id']
@@ -120,7 +120,7 @@ class GetPathDetail(APIView):
 
 class SearchTopic(APIView):
 
-    def post(request):
+    def post(self, request):
         data = request.data
 
         search = data['search']
@@ -133,7 +133,7 @@ class SearchTopic(APIView):
 class GetFollow(APIView):
     permission_classes = [IsAuthenticated]
     
-    def get(request):
+    def get(self, request):
         data = request.data
 
         username = data['username']
@@ -154,7 +154,7 @@ class GetFollow(APIView):
 class FollowUser(APIView):
     permission_classes = [IsAuthenticated]
 
-    def post(request):
+    def post(self, request):
         data = request.data
 
         username = data['username']
@@ -176,7 +176,7 @@ class FollowUser(APIView):
 class UnfollowUser(APIView):
     permission_classes = [IsAuthenticated]
 
-    def post(request):
+    def post(self, request):
         data = request.data
         username = data['username']
         target = data['target']
@@ -264,3 +264,22 @@ class GetEnrolledPaths(APIView):
             },
             status=status.HTTP_200_OK
         )
+
+
+class FinishPath(APIView): #Caution: this endpoint marks the whole path as finished, not a single milestone
+    #permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        data = request.data
+
+        username = data['username']
+        path_id = data['path_id']
+
+        with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
+            db.insert_one('pathFinished',
+                          {
+                              'username': username,
+                              'path_id': path_id,
+                          })
+
+        return Response('Successful')

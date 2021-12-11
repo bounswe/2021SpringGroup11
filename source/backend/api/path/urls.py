@@ -9,5 +9,6 @@ urlpatterns = [
     path('enroll-path/', views.EnrollPath.as_view(), name='enroll_path'),
     path('unenroll-path/', views.UnEnrollPath.as_view(), name='unenroll_path'),
     path('get-enrolled-paths/', views.GetEnrolledPaths.as_view(), name='get-enrolled_paths'),
-    #path('search-topic')
+    path('finish-path/', views.FinishPath.as_view(), name='finish_path'),
+
 ]
