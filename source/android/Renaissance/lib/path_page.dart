@@ -229,52 +229,24 @@ class _PathPageState extends State<PathPage> {
                 ],
               )
           ),
-          InkWell(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text('Favourite Paths',
-                  style: TextStyle(fontSize: 14,decoration: TextDecoration.underline, fontWeight: FontWeight.bold, color: Colors.lightBlue)),
-            ),
-            onTap: () {},
+          CheckboxListTile(
+            title: const Text('Start Slowly'),
+            value: true,
+            onChanged: (bool? value) {
+            },
           ),
-          Padding(
-              padding: const EdgeInsets.symmetric(vertical:0,horizontal:10),
-              child:Text('No Favourite Paths Yet.',
-                  style: TextStyle(fontSize: 14, fontStyle: FontStyle.italic))
+          CheckboxListTile(
+            title: const Text('Continue Slowly'),
+            value: true,
+            onChanged: (bool? value) {
+            },
           ),
-          /*SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children:
-                paths.map((path) {
-                  return CourseContainer(path["name"] as String,
-                      path["effort"] as int, path["rating"] as double);
-                }).toList(),
-            ),
-          ),*/
-          InkWell(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text('Enrolled Paths',
-                    style: TextStyle(fontSize: 14,decoration: TextDecoration.underline, fontWeight: FontWeight.bold, color: Colors.lightBlue)),
-              ),
-              onTap: () {}
+          CheckboxListTile(
+            title: const Text('Finish Slowly'),
+            value: true,
+            onChanged: (bool? value) {
+            },
           ),
-          Padding(
-              padding: const EdgeInsets.symmetric(vertical:0,horizontal:10),
-              child:Text('No Enrolled Paths Yet.',
-                  style: TextStyle(fontSize: 14, fontStyle: FontStyle.italic))
-          ),
-          /*SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: [
-                CourseContainer("hello hello hello hge",1,2.0),
-                CourseContainer("hello hello hello hge",1,2.0),
-                CourseContainer("hello hello hello hge",1,2.0)
-              ],
-            ),
-          ),*/
         ],
       ),
     );
