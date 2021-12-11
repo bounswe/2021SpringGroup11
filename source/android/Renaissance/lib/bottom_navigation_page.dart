@@ -5,6 +5,7 @@ import 'package:portakal/models/user.dart';
 import 'package:portakal/my_colors.dart';
 import 'explore_page.dart';
 import 'profile_page.dart';
+import 'path_page.dart';
 
 class BottomNavigationPage extends StatefulWidget {
   const BottomNavigationPage({Key? key}) : super(key: key);
@@ -58,7 +59,8 @@ class _BottomNavigationPageState extends State<BottomNavigationPage> {
           Navigator(
             key: _notificationScreen,
             onGenerateRoute: (route) => MaterialPageRoute(
-                builder: (context) => ExplorePage(), settings: route),
+                builder: (context) => PathPage(),
+                settings: route),
           ),
           Navigator(
             key: _profileScreen,
