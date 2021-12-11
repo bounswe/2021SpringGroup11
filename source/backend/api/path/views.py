@@ -283,3 +283,4 @@ class FinishPath(APIView): #Caution: this endpoint marks the whole path as finis
                           })
 
         return Response('SUCCESSFUL')
+
