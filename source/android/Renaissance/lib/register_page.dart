@@ -133,7 +133,7 @@ class _RegisterPageState extends State<RegisterPage> {
       keyboardType: TextInputType.emailAddress,
       controller: emailController,
       style: TextStyle(
-          color: Color(0xff3c3c3c),
+          color: MyColors.coolGray,
           fontSize: 18.0,
           fontWeight: FontWeight.w700),
       decoration: InputDecoration(
@@ -161,7 +161,7 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget _usernameTextField() {
     return TextFormField(
       style: TextStyle(
-          color: Color(0xff3c3c3c),
+          color: MyColors.coolGray,
           fontSize: 18.0,
           fontWeight: FontWeight.w700),
       controller: usernameController,
@@ -190,7 +190,7 @@ class _RegisterPageState extends State<RegisterPage> {
     return TextFormField(
       obscureText: true,
       style: TextStyle(
-          color: Color(0xff3c3c3c),
+          color: MyColors.coolGray,
           fontSize: 18.0,
           fontWeight: FontWeight.w700),
       decoration: InputDecoration(
@@ -215,7 +215,7 @@ class _RegisterPageState extends State<RegisterPage> {
     return TextFormField(
       controller: firstNameController,
       style: TextStyle(
-          color: Color(0xff3c3c3c),
+          color: MyColors.coolGray,
           fontSize: 18.0,
           fontWeight: FontWeight.w700),
       decoration: InputDecoration(
@@ -241,7 +241,7 @@ class _RegisterPageState extends State<RegisterPage> {
     return TextFormField(
       controller: lastNameController,
       style: TextStyle(
-          color: Color(0xff3c3c3c),
+          color: MyColors.coolGray,
           fontSize: 18.0,
           fontWeight: FontWeight.w700),
       decoration: InputDecoration(
@@ -265,7 +265,7 @@ class _RegisterPageState extends State<RegisterPage> {
     return TextFormField(
       obscureText: true,
       style: TextStyle(
-          color: Color(0xff3c3c3c),
+          color: MyColors.coolGray,
           fontSize: 18.0,
           fontWeight: FontWeight.w700),
       decoration: InputDecoration(

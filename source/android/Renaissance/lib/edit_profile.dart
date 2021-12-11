@@ -114,7 +114,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                               ),
                               controller: firstNameController..text = User.me!.firstname!,
                             style: TextStyle(
-                                color: Color(0xff3c3c3c),
+                                color: MyColors.coolGray,
                                 fontSize: 14.0,
                                 fontWeight: FontWeight.w400),
                           ),
@@ -129,7 +129,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                             ),
                             controller: lastNameController..text = User.me!.lastname!,
                             style: TextStyle(
-                                color: Color(0xff3c3c3c),
+                                color: MyColors.coolGray,
                                 fontSize: 14.0,
                                 fontWeight: FontWeight.w400),
                           ),
@@ -145,7 +145,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                               ),
                               controller: bioController..text = User.me!.bio!,
                               style: TextStyle(
-                                  color: Color(0xff3c3c3c),
+                                  color: MyColors.coolGray,
                                   fontSize: 14.0,
                                   fontWeight: FontWeight.w400)
                           ),
