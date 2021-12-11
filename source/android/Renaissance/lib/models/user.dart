@@ -6,8 +6,11 @@ class User {
   final String? bio;
   final bool? isAdmin;
   final bool? isBanned;
+  final int? finishedResourceCount;
+  final String? photo;
+  final bool? rememberMe;
   const User({
-    this.username, this.email, this.firstname, this.lastname, this.bio, this.isAdmin, this.isBanned
+    this.username, this.email, this.firstname, this.lastname, this.bio, this.isAdmin, this.isBanned, this.finishedResourceCount, this.photo, this.rememberMe
   });
 
   static User? me;
@@ -19,7 +22,10 @@ class User {
         lastname: json['lastname'] as String?,
         bio: json['bio'] as String?,
         isAdmin: json['isAdmin'] as bool?,
-        isBanned: json['isBanned'] as bool?
+        isBanned: json['isBanned'] as bool?,
+        finishedResourceCount: json['finishedResourceCount'] as int?,
+        photo: json['photo'] as String?,
+        rememberMe: json['rememberMe'] as bool?
     );
   }
 }

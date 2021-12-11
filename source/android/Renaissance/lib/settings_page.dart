@@ -205,8 +205,7 @@ class _SettingsPageState extends State<SettingsPage> {
             MaterialButton(
               onPressed: () async {
                 SharedPreferences prefs = await SharedPreferences.getInstance();
-                await prefs.remove('isLoggedIn');
-
+                await Future.wait([prefs.remove('isLoggedIn'), prefs.remove('token')]);
                 Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
                     PageRouteBuilder(pageBuilder: (
                       BuildContext context,

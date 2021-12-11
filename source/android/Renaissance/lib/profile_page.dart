@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:portakal/edit_profile.dart';
+import 'package:portakal/file_converter.dart';
+import 'package:portakal/http_services.dart';
+import 'dart:io';
 import 'package:portakal/my_colors.dart';
 import 'package:portakal/widget/profile_appbar_widget.dart';
 import 'package:portakal/models/user.dart';
@@ -16,7 +20,7 @@ class ProfilePage extends StatefulWidget {
 }
 bool isFollowed = true;
 
-class _ProfilePageState extends State<ProfilePage> {
+class _ProfilePageState extends State<ProfilePage> with EditProfileDelegate {
 
   var paths = [
     {"name": "Selam", "effort": 2, "rating": 10.0},
@@ -32,12 +36,27 @@ class _ProfilePageState extends State<ProfilePage> {
     {"name": "Kar", "effort": 2, "rating": 10.0},
     {"name": "Araba", "effort": 2, "rating": 10.0},
   ];
-  final profilePhotoUrl = String;
+  bool loadingImage = false;
+  File? profileImg;
+  // https://stackoverflow.com/questions/62156996/how-to-decode-base64-string-to-image-file-with-flutter?rq=1 profil fotosu yukleme yap.
 
+  void loadPhoto() async {
+    if (User.me!.photo == null) { return ; }
+    setState(() {
+      loadingImage = true;
+    });
+    profileImg = await FileConverter.getImageFromBase64(User.me!.photo!);
+    setState(() {
+      loadingImage = false;
+    });
+  }
   @override
   Widget build(BuildContext context) {
+    if (!loadingImage && profileImg == null) {
+      loadPhoto();
+    }
     return Scaffold(
-      appBar: buildAppBar(context, widget.user.username!),
+      appBar: buildAppBar(context, widget.user.username!, this),
       body: ListView(
         physics: BouncingScrollPhysics(),
         children: [
@@ -54,10 +73,14 @@ class _ProfilePageState extends State<ProfilePage> {
                   Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
+                        User.me!.photo == null ?
                         CircleAvatar(
                             backgroundColor: Colors.blueAccent,
                             child: Text(widget.user.username![0].toUpperCase()),
                             radius: 32
+                        ) : loadingImage ? CircularProgressIndicator() : ClipRRect(
+                          child: Image.file(profileImg!, width: 64, height: 64, fit: BoxFit.fitHeight,),
+                          borderRadius: BorderRadius.circular(32.0),
                         ),
                         StatsWidget(0,0,0)
                       ]
@@ -84,7 +107,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             // for Vertical scrolling
                             scrollDirection: Axis.vertical,
                             child: Text(
-                              '''No Info Yet.''',
+                              User.me!.bio ?? "No info yet.",
                               style: TextStyle(fontSize: 14, height: 1.2,  fontStyle: FontStyle.italic),
                             ),
                           ),
@@ -114,7 +137,19 @@ class _ProfilePageState extends State<ProfilePage> {
                               onPrimary: Colors.white,
                             ),
                             child: Text(isFollowed?"Follow":"Unfollow"),
-                            onPressed: (){
+                            onPressed: () async {
+                              if (isFollowed) {
+                                try {
+                                  var response = await HttpService.shared.unfollowUser(User.me!.username!, widget.user.username!);
+                                } on Exception catch (error) {
+
+                                }
+                              } else {
+                                try {
+                                  var response = await HttpService.shared.followUser(User.me!.username!, widget.user.username!);
+                                } on Exception catch (error) {
+                                }
+                              }
                               setState(() {
                                 isFollowed = !isFollowed;
                               });
@@ -161,19 +196,16 @@ class _ProfilePageState extends State<ProfilePage> {
           child:Text('No Enrolled Paths Yet.',
               style: TextStyle(fontSize: 14, fontStyle: FontStyle.italic))
           ),
-          /*SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: [
-                CourseContainer("hello hello hello hge",1,2.0),
-                CourseContainer("hello hello hello hge",1,2.0),
-                CourseContainer("hello hello hello hge",1,2.0)
-              ],
-            ),
-          ),*/
         ],
       ),
     );
+  }
+
+  @override
+  void onSuccessfulSave() async {
+    loadPhoto();
+    setState(() {
+    });
   }
 }
 
