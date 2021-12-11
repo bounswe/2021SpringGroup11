@@ -12,8 +12,9 @@ import 'models/user.dart';
 
 class HttpService {
   String baseUrl = "http://35.209.23.51"; // write server ip / url here
+  String invalidToken = 'Token is not valid';
   static HttpService shared = HttpService();
-  String? token = Token.shared.token;
+  late String? token = Token.shared.token;
   late Map<String, String> headers = {
     'Content-Type': 'application/json; charset=UTF-8',
     HttpHeaders.authorizationHeader: 'Bearer $token'
@@ -23,10 +24,13 @@ class HttpService {
     // only JWT strings return from this endpoint.
     String url = baseUrl + "/authentication/login/";
     Response res = await post(Uri.parse(url),
-        headers: headers,
+        headers: {
+        'Content-Type': 'application/json; charset=UTF-8'
+        },
         body: jsonEncode({'username': username, 'password': password}));
     if (res.statusCode == 200) {
-      await Token.shared.setToken(res.body);
+      await Token.shared.setToken(res.body.replaceAll('"', ''));
+      token = Token.shared.token;
       return LoginResponse.fromJson(Jwt.parseJwt(res.body));
     } else if (res.statusCode == 400) {
       throw Exception('No user exists for given username');
@@ -37,11 +41,30 @@ class HttpService {
     }
   }
 
+  Future<LoginResponse> refreshToken() async {
+    String url = baseUrl + '/authentication/refresh-token/';
+    Response res = await post(Uri.parse(url),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8'
+        },
+        body: jsonEncode({ 'jwt': token!.replaceAll('"', '') })
+    );
+    if (res.statusCode == 200) {
+      await Token.shared.setToken(res.body.replaceAll('"', ''));
+      token = Token.shared.token;
+      return LoginResponse.fromJson(Jwt.parseJwt(res.body));
+    } else {
+      throw Exception(res.statusCode);
+    }
+  }
+
   Future<bool> register(String email, String username, String firstname,
       String lastname, String password) async {
     String url = baseUrl + '/authentication/signup/';
     Response res = await post(Uri.parse(url),
-        headers: headers,
+        headers: {
+        'Content-Type': 'application/json; charset=UTF-8'
+        },
         body: jsonEncode({
           'email': email,
           'username': username,
@@ -93,6 +116,67 @@ class HttpService {
 
     if (res.statusCode == 200) {
       return User.fromJson(jsonDecode(res.body));
+    } else {
+      throw Exception(res.body);
+    }
+  }
+
+  Future<User> editUser(String firstName, String lastName, String bio, String? photo) async {
+    String url = baseUrl + '/user/edit-user/';
+    var body = jsonEncode({
+      'firstname': firstName,
+      'lastname': lastName,
+      'bio': bio,
+      'photo': photo
+    });
+    Response res = await post(Uri.parse(url), headers: headers, body: body);
+    if (res.statusCode == 200) {
+      return User.fromJson(jsonDecode(res.body));
+    } else if (res.statusCode == 403) {
+      //await refreshToken();
+      throw Exception("403.");
+    }
+    else {
+      throw Exception(headers[HttpHeaders.authorizationHeader]); // token not valid donuyor anlamsizca. token da set edili normalde.
+    }
+  }
+
+  Future<User> changePassword(String password) async {
+    String url = baseUrl + 'user/change-password/';
+    var body = jsonEncode({
+      'password': password
+    });
+    Response res = await post(Uri.parse(url), headers: headers, body: body);
+    if (res.statusCode == 200) {
+      return User.fromJson(jsonDecode(res.body));
+    } else {
+      throw Exception(res.body);
+    }
+  }
+
+  Future<String> followUser(String username, String targetUsername) async {
+    String url = baseUrl + 'user/follow-user/';
+    var body = jsonEncode({
+      'username': username,
+      'target': targetUsername
+    });
+    Response res = await post(Uri.parse(url), headers: headers, body: body);
+    if (res.statusCode == 200) {
+      return res.body;
+    } else {
+      throw Exception(res.body);
+    }
+  }
+
+  Future<String> unfollowUser(String username, String targetUsername) async {
+    String url = baseUrl + 'user/unfollow-user/';
+    var body = jsonEncode({
+      'username': username,
+      'target': targetUsername
+    });
+    Response res = await post(Uri.parse(url), headers: headers, body: body);
+    if (res.statusCode == 200) {
+      return res.body;
     } else {
       throw Exception(res.body);
     }

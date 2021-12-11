@@ -68,5 +68,17 @@ class MyColors {
         500: Color(0xffffbbbb)
       }
   );
+
+  static const MaterialColor coolGray = MaterialColor(
+      0xff3c3c3c,
+      <int, Color> {
+        50: Color(0xff3c3c3c),
+        100: Color(0xff3c3c3c),
+        200: Color(0xff3c3c3c),
+        300: Color(0xff3c3c3c),
+        400: Color(0xff3c3c3c),
+        500: Color(0xff3c3c3c)
+      }
+  );
 }
 
