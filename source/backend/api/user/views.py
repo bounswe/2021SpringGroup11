@@ -1,3 +1,4 @@
+from django.db.models import query
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -121,30 +122,47 @@ class ChangePassword(APIView):
 
         return Response(user.get_dict(), status=status.HTTP_200_OK)
 
-class GetDetails(APIView):
-    permission_classes = [IsAuthenticated]
 
+class GetFollow(APIView):
+    permission_classes = [IsAuthenticated]
+    
     def get(request):
         data = request.data
 
-        email = data['email']
         username = data['username']
 
         with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
-            rates = list(db.find('pathRating', query={'username': username}))
-            efforts = list(db.find('pathEffort', query={'username': username}))
             followers = list(db.find('follow', query={'followed_username': username}))
             followed = list(db.find('follow', query={'follower_username': username}))
 
         return Response(
             {
-                'rates': rates,
-                'efforts': efforts,
-                'followers': followers,
-                'followed': followed
+                'followers': [follower['follower_username'] for follower in followers],
+                'followed': [followe['followed_username'] for followe in followed]
             },
             status=status.HTTP_200_OK
         )
+
+class GetRatings(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(request):
+        data = request.data
+        
+        username = data['username']
+
+        with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
+            rates = list(db.find('pathRating', query={'username': username}))
+            efforts = list(db.find('pathEffort', query={'username': username}))
+
+        return Response(
+            {
+                'rates': rates,
+                'efforts': efforts,
+            },
+            status=status.HTTP_200_OK
+        )
+
 
 class FollowUser(APIView):
     permission_classes = [IsAuthenticated]
@@ -189,3 +207,39 @@ class UnfollowUser(APIView):
             })
 
         return Response('SUCCESSFUL')
+
+
+class GetEnrolledPaths(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(request):
+        data = request.data
+        
+        username = data['username']
+
+        with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
+            path_ids = list(db.find('enroll', query={'username': username}, projection={'_id': 1}))
+        
+        return Response(
+            {
+                'path_ids': [path_id['_id'] for path_id in path_ids]
+            },
+            status=status.HTTP_200_OK
+        )
+
+class GetFavouritePaths(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(request):
+        data = request.data
+        
+        username = data['username']
+
+        with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
+            path_ids = list(db.find('favourite_path', query={'username': username}, projection={'_id': 1}))
+
+        return Response(
+            {
+                'path_ids': [path_id['_id'] for path_id in path_ids]
+            }
+        )
