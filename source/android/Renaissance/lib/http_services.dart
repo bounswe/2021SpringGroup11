@@ -106,18 +106,6 @@ class HttpService {
     }
   }
 
-  Future<List<Object>> searchUser(String username) async {
-    String url = baseUrl + '/user/search-user/$username/';
-    Response res = await get(Uri.parse(url), headers: headers);
-
-    if (res.statusCode == 200) {
-      print(jsonDecode(res.body));
-      return (jsonDecode(res.body));
-    } else {
-      throw Exception(res.body);
-    }
-  }
-
   Future<User> editUser(
       String firstName, String lastName, String bio, String? photo) async {
     String url = baseUrl + '/user/edit-user/';
@@ -167,6 +155,48 @@ class HttpService {
     Response res = await post(Uri.parse(url), headers: headers, body: body);
     if (res.statusCode == 200) {
       return res.body;
+    } else {
+      throw Exception(res.body);
+    }
+  }
+
+/*
+  Future<List<Object>> search(String name) async {
+    return (searchUser(name).concat(searchPath(name).concat(searchUser(name))));
+  }
+  */
+
+  Future<List<Object>> searchUser(String username) async {
+    String url = baseUrl + '/user/search-user/$username/';
+    Response res = await get(Uri.parse(url), headers: headers);
+
+    if (res.statusCode == 200) {
+      print(jsonDecode(res.body));
+      return (jsonDecode(res.body));
+    } else {
+      throw Exception(res.body);
+    }
+  }
+
+  Future<List<Object>> searchPath(String pathName) async {
+    String url = baseUrl + '/user/search-path/$pathName/';
+    Response res = await get(Uri.parse(url), headers: headers);
+
+    if (res.statusCode == 200) {
+      print(jsonDecode(res.body));
+      return (jsonDecode(res.body));
+    } else {
+      throw Exception(res.body);
+    }
+  }
+
+  Future<List<Object>> searchTag(String topicName) async {
+    String url = baseUrl + '/user/search-topic/$topicName/';
+    Response res = await get(Uri.parse(url), headers: headers);
+
+    if (res.statusCode == 200) {
+      print(jsonDecode(res.body));
+      return (jsonDecode(res.body));
     } else {
       throw Exception(res.body);
     }

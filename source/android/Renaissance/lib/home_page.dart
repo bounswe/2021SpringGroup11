@@ -206,6 +206,12 @@ class _HomePageState extends State<HomePage> {
             ),
             child: Center(
               child: TextField(
+                onTap: () {
+                  showSearch(
+                    context: context,
+                    delegate: CustomSearchDelegate(),
+                  );
+                },
                 style: TextStyle(
                   color: Colors.white,
                 ),
@@ -219,12 +225,10 @@ class _HomePageState extends State<HomePage> {
                       color: Colors.white,
                       fontStyle: FontStyle.italic,
                     ),
-                    border: InputBorder.none
-                ),
+                    border: InputBorder.none),
               ),
             ),
-          )
-      ),
+          )),
       body: ListView(
         physics: BouncingScrollPhysics(),
         children: [
@@ -357,5 +361,41 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
     );
+  }
+}
+
+class CustomSearchDelegate extends SearchDelegate {
+  @override
+  List<Widget> buildActions(BuildContext context) {
+    return [
+      IconButton(
+        icon: Icon(Icons.clear),
+        onPressed: () {
+          query = '';
+        },
+      ),
+    ];
+  }
+
+  @override
+  Widget buildLeading(BuildContext context) {
+    return IconButton(
+      icon: Icon(Icons.arrow_back),
+      onPressed: () {
+        close(context, null);
+      },
+    );
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    // TODO: implement buildResults
+    return Scaffold();
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    // TODO: implement buildSuggestions
+    return Scaffold();
   }
 }
