@@ -2,7 +2,7 @@ djangorestframework
 pyyaml
 heybooster_toolkit
 PyJWT
-pymongo[srv]
+pymongo[srv]==3.10.1
 google-api-python-client
 google-auth-httplib2
 google-auth-oauthlib

@@ -1,0 +1,120 @@
+{
+    "searchinfo": {
+        "search": "earth"
+    },
+    "search": [
+        {
+            "id": "Q2",
+            "title": "Q2",
+            "pageid": 130,
+            "repository": "wikidata",
+            "url": "//www.wikidata.org/wiki/Q2",
+            "concepturi": "http://www.wikidata.org/entity/Q2",
+            "label": "Earth",
+            "description": "third planet from the Sun in the Solar System",
+            "match": {
+                "type": "label",
+                "language": "en",
+                "text": "Earth"
+            }
+        },
+        {
+            "id": "Q21152267",
+            "title": "Q21152267",
+            "pageid": 23199641,
+            "repository": "wikidata",
+            "url": "//www.wikidata.org/wiki/Q21152267",
+            "concepturi": "http://www.wikidata.org/entity/Q21152267",
+            "label": "dirt",
+            "description": "natural surface of the ground",
+            "match": {
+                "type": "alias",
+                "language": "en",
+                "text": "earth"
+            },
+            "aliases": [
+                "earth"
+            ]
+        },
+        {
+            "id": "Q83697636",
+            "title": "Q83697636",
+            "pageid": 83007423,
+            "repository": "wikidata",
+            "url": "//www.wikidata.org/wiki/Q83697636",
+            "concepturi": "http://www.wikidata.org/entity/Q83697636",
+            "label": "Earth",
+            "description": "planet Earth as depicted in the 1987–1996 Teenage Mutant Ninja Turtles animated television series",
+            "match": {
+                "type": "label",
+                "language": "en",
+                "text": "Earth"
+            }
+        },
+        {
+            "id": "Q6501125",
+            "title": "Q6501125",
+            "pageid": 6320105,
+            "repository": "wikidata",
+            "url": "//www.wikidata.org/wiki/Q6501125",
+            "concepturi": "http://www.wikidata.org/entity/Q6501125",
+            "label": "ground",
+            "description": "reference point in an electrical circuit from which voltages are measure",
+            "match": {
+                "type": "alias",
+                "language": "en",
+                "text": "earth"
+            },
+            "aliases": [
+                "earth"
+            ]
+        },
+        {
+            "id": "Q83697695",
+            "title": "Q83697695",
+            "pageid": 83007483,
+            "repository": "wikidata",
+            "url": "//www.wikidata.org/wiki/Q83697695",
+            "concepturi": "http://www.wikidata.org/entity/Q83697695",
+            "label": "Earth",
+            "description": "planet Earth as depicted in the 2003–2009 Teenage Mutant Ninja Turtles animated television series",
+            "match": {
+                "type": "label",
+                "language": "en",
+                "text": "Earth"
+            }
+        },
+        {
+            "id": "Q83698907",
+            "title": "Q83698907",
+            "pageid": 83008730,
+            "repository": "wikidata",
+            "url": "//www.wikidata.org/wiki/Q83698907",
+            "concepturi": "http://www.wikidata.org/entity/Q83698907",
+            "label": "Earth",
+            "description": "planet Earth as depicted in the Teenage Mutant Ninja Turtles Adventures and Mutanimals Comics",
+            "match": {
+                "type": "label",
+                "language": "en",
+                "text": "Earth"
+            }
+        },
+        {
+            "id": "Q73634409",
+            "title": "Q73634409",
+            "pageid": 73270821,
+            "repository": "wikidata",
+            "url": "//www.wikidata.org/wiki/Q73634409",
+            "concepturi": "http://www.wikidata.org/entity/Q73634409",
+            "label": "Earth",
+            "description": "planet Earth as depicted in Teenage Mutant Ninja Turtles",
+            "match": {
+                "type": "label",
+                "language": "en",
+                "text": "Earth"
+            }
+        }
+    ],
+    "search-continue": 7,
+    "success": 1
+}
