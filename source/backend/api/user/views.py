@@ -7,7 +7,6 @@ from heybooster.helpers.database.mongodb import MongoDBHelper
 from django.conf import settings
 from common.models import User
 from common.data_check import check_data_keys
-from source.backend.api import path
 
 class EditUser(APIView):
     """

@@ -11,9 +11,9 @@ from common.data_check import check_data_keys
 
 
 class CreatePath(APIView):
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
     
-    def post(request):
+    def post(self, request):
         data = request.data
 
         title = data['title']
@@ -22,14 +22,30 @@ class CreatePath(APIView):
         creator_username = data['username']
         creator_email = data['email']
         created_at = time.time()
-        images = data['images']
-        thumbnail = data['thumbnail']
+        #images = data['images']
+        #thumbnail = data['thumbnail']
+        photo = data['photo']
         milestones = data['milestones'] # title and body
-        comments = data['comments']
+        # comments = data['comments']
         is_banned = False
-        
+        is_deleted = False
 
-        return Response('')
+        with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
+            id = db.insert_one('path',
+            {
+                'title': title,
+                'description': description,
+                'topics': topics,
+                'creator_username': creator_username,
+                'creator_email': creator_email,
+                'created_at': created_at,
+                'photo': photo,
+                'milestones': milestones,
+                'is_banned': is_banned,
+                'is_deleted': is_deleted
+            }).inserted_id
+
+        return Response({'pathID': str(id)}, status=status.HTTP_200_OK)
 
 class RatePath(APIView):
     permission_classes = [IsAuthenticated]
