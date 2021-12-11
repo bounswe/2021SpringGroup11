@@ -34,7 +34,7 @@ class _CreatePathPageState extends State<CreatePathPage> {
           resizeToAvoidBottomInset: false,
           appBar: AppBar(
             backgroundColor: MyColors.blue,
-            title: Text("Edit Profile"),
+            title: Text("Create a New Path"),
             centerTitle: true,
           ),
           body: CustomScrollView(
@@ -49,27 +49,22 @@ class _CreatePathPageState extends State<CreatePathPage> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       ClipRRect(
-                          borderRadius: BorderRadius.circular(40.0),
-                          child: _image != ""
+                          borderRadius: BorderRadius.circular(32.0),
+                          child: _image != null
                               ? Image.file(
                                   _image,
                                   width: 80,
                                   height: 80,
                                   fit: BoxFit.fitHeight,
                                 )
-                              : User.me!.photo == ""
-                                  ? CircleAvatar(
-                                      backgroundColor: Colors.blueAccent,
-                                      child: Text(
-                                          User.me!.username![0].toUpperCase()),
-                                      radius: 32)
-                                  : CircleAvatar(
-                                      backgroundColor: Colors.blueAccent,
-                                      child: Text(
-                                          User.me!.username![0].toUpperCase()),
-                                      radius: 32)),
+                              : Image(
+                                  image: AssetImage('assets/placeHolder.jpg'),
+                                  width: 80,
+                                  height: 80,
+                                  fit: BoxFit.fitHeight,
+                                )),
                       Text(
-                        '@${User.me!.username}',
+                        'Your Path...',
                         style: TextStyle(
                             fontSize: 24, fontWeight: FontWeight.w500),
                       ),
@@ -87,7 +82,7 @@ class _CreatePathPageState extends State<CreatePathPage> {
                         textColor: Colors.white70,
                         shape: StadiumBorder(),
                         child: Text(
-                          'Change profile picture',
+                          'Change Path Image',
                         ),
                         color: MyColors.blue,
                       ),
@@ -96,7 +91,7 @@ class _CreatePathPageState extends State<CreatePathPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'First Name',
+                            'Title',
                             style: TextStyle(
                                 fontSize: 22, fontWeight: FontWeight.bold),
                           ),
@@ -104,67 +99,55 @@ class _CreatePathPageState extends State<CreatePathPage> {
                             maxLength: 20,
                             decoration: InputDecoration(
                                 border: OutlineInputBorder(),
+                                hintText: "Your title",
                                 contentPadding:
                                     EdgeInsets.symmetric(horizontal: 10)),
-                            controller: titleController
-                              ..text = User.me!.firstname!,
+                            controller: titleController,
                             style: TextStyle(
                                 color: MyColors.coolGray,
                                 fontSize: 14.0,
                                 fontWeight: FontWeight.w400),
                           ),
                           Text(
-                            'Last Name',
+                            'Description',
                             style: TextStyle(
                                 fontSize: 22, fontWeight: FontWeight.bold),
                           ),
                           TextField(
-                            maxLength: 20,
+                            maxLength: 200,
+                            maxLines: 5,
                             decoration: InputDecoration(
                                 border: OutlineInputBorder(),
-                                contentPadding:
-                                    EdgeInsets.symmetric(horizontal: 10)),
-                            controller: descriptionController
-                              ..text = User.me!.lastname!,
+                                hintText: "Your description...",
+                                contentPadding: EdgeInsets.all(10.0)),
+                            controller: descriptionController,
                             style: TextStyle(
                                 color: MyColors.coolGray,
                                 fontSize: 14.0,
                                 fontWeight: FontWeight.w400),
                           ),
-                          Text('About',
-                              style: TextStyle(
-                                  fontSize: 22, fontWeight: FontWeight.bold)),
-                          TextField(
-                              maxLength: 200,
-                              maxLines: 5,
-                              decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  contentPadding: EdgeInsets.all(10.0)),
-                              controller: titleController,
-                              style: TextStyle(
-                                  color: MyColors.coolGray,
-                                  fontSize: 14.0,
-                                  fontWeight: FontWeight.w400)),
                           MaterialButton(
                             onPressed: () async {
                               try {
                                 setState(() {
                                   _isLoading = true;
                                 });
-                                User response = await HttpService.shared
-                                    .createPath(
-                                        titleController.text,
-                                        descriptionController.text,
-                                        _milestones,
-                                        _image == null
-                                            ? (User.me!.photo)
-                                            : FileConverter.getBase64StringFile(
-                                                _image),
-                                        [1]);
+
+                                // User response = await HttpService.shared
+                                //     .createPath(
+                                //         titleController.text,
+                                //         descriptionController.text,
+                                //         _milestones,
+                                //         _image == null
+                                //             ? FileConverter.getBase64StringPath(
+                                //                 "assets/placeHolder.jpg")
+                                //             : FileConverter.getBase64StringFile(
+                                //                 _image),
+                                //         [1]);
                                 ScaffoldMessenger.of(context)
                                     .showSnackBar(SnackBar(
                                   content: Text(
-                                    'Successfully edited ${response.username}',
+                                    'Successfully created ${titleController.text}',
                                     style: TextStyle(
                                         decorationColor: Colors.greenAccent,
                                         fontSize: 25,
