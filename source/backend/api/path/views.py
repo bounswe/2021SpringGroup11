@@ -180,3 +180,7 @@ class UnfollowUser(APIView):
 
         return Response('SUCCESSFUL')
 
+class SearchTopic(APIView):
+    permission_classes = [IsAuthenticated]
+
+    
