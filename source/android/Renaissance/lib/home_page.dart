@@ -1,7 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:portakal/http_services.dart';
+import 'package:portakal/models/search_result.dart';
 
 import 'package:portakal/my_colors.dart';
+import 'package:portakal/search_page.dart';
 import 'package:portakal/widget/course_container.dart';
 import 'package:portakal/widget/tag_container.dart';
 
@@ -14,7 +17,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   var _pageIndex = 0;
-
+  var _results;
   void changePage(int num) {
     setState(() {
       _pageIndex = num;
@@ -206,12 +209,34 @@ class _HomePageState extends State<HomePage> {
             ),
             child: Center(
               child: TextField(
-                onTap: () {
-                  showSearch(
-                    context: context,
-                    delegate: CustomSearchDelegate(),
-                  );
+                // onTap: () {
+                //   showSearch(
+                //     context: context,
+                //     delegate: CustomSearchDelegate(),
+                //   );
+                // },
+                onSubmitted: (value) async {
+                  try {
+                    print(value);
+                    _results = await HttpService.shared.searchUser(value);
+                    print(_results);
+                    Navigator.pushNamed(context, "/search",
+                        arguments: _results);
+                  } on Exception catch (error) {
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text(
+                        '$error',
+                        style: TextStyle(
+                            decorationColor: Colors.greenAccent,
+                            fontSize: 25,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ));
+                  }
                 },
+
+                //onSubmitted: (value) =>
+                //    {_results = HttpService.shared.searchUser(value)},
                 style: TextStyle(
                   color: Colors.white,
                 ),
@@ -364,6 +389,11 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
+Future<List<String>> fetch(String query) async {
+  final results = await HttpService.shared.searchUser(query);
+  return results;
+}
+
 class CustomSearchDelegate extends SearchDelegate {
   @override
   List<Widget> buildActions(BuildContext context) {
@@ -390,7 +420,13 @@ class CustomSearchDelegate extends SearchDelegate {
   @override
   Widget buildResults(BuildContext context) {
     // TODO: implement buildResults
-    return Scaffold();
+    var page = SearchPage();
+
+    fetch(query).then((value) => {page.usernames = value});
+    //final results = "";
+    //Navigator.pushNamed(context, "/search", arguments: results);
+
+    return SearchPage();
   }
 
   @override

@@ -5,6 +5,7 @@ import 'package:http/http.dart';
 import 'dart:convert';
 
 import 'package:portakal/models/login_response.dart';
+import 'package:portakal/models/search_result.dart';
 import 'package:portakal/token.dart';
 import 'package:jwt_decode/jwt_decode.dart';
 
@@ -166,25 +167,31 @@ class HttpService {
   }
   */
 
-  Future<List<Object>> searchUser(String username) async {
+  Future<List<String>> searchUser(String username) async {
     String url = baseUrl + '/user/search-user/$username/';
     Response res = await get(Uri.parse(url), headers: headers);
 
     if (res.statusCode == 200) {
-      print(jsonDecode(res.body));
-      return (jsonDecode(res.body));
+      List<String> result = [];
+      for (var item in jsonDecode(res.body)) {
+        result.add(item["username"]);
+      }
+      return result;
     } else {
       throw Exception(res.body);
     }
   }
 
-  Future<List<Object>> searchPath(String pathName) async {
+  Future<List<String>> searchPath(String pathName) async {
     String url = baseUrl + '/user/search-path/$pathName/';
     Response res = await get(Uri.parse(url), headers: headers);
 
     if (res.statusCode == 200) {
-      print(jsonDecode(res.body));
-      return (jsonDecode(res.body));
+      List<String> result = [];
+      for (var item in jsonDecode(res.body)) {
+        result.add(item["username"]);
+      }
+      return result;
     } else {
       throw Exception(res.body);
     }
@@ -195,7 +202,9 @@ class HttpService {
     Response res = await get(Uri.parse(url), headers: headers);
 
     if (res.statusCode == 200) {
-      print(jsonDecode(res.body));
+      return (jsonDecode(res.body) as List<Map<String, Object>>).map((tag) {
+        return tag["username"] as String;
+      }).toList();
       return (jsonDecode(res.body));
     } else {
       throw Exception(res.body);
