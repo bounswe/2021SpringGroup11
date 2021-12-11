@@ -267,7 +267,7 @@ class GetEnrolledPaths(APIView):
 
 
 class FinishPath(APIView): #Caution: this endpoint marks the whole path as finished, not a single milestone
-    #permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def post(self, request):
         data = request.data
