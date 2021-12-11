@@ -11,7 +11,7 @@ from common.data_check import check_data_keys
 
 
 class CreatePath(APIView):
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
     
     def post(self, request):
         data = request.data
@@ -194,8 +194,8 @@ class UnfollowUser(APIView):
 
         return Response('SUCCESSFUL')
 
-
 class EnrollPath(APIView):
+
     permission_classes = [IsAuthenticated]
 
     # requests username and path_id and responses success or fail message, tested
@@ -226,6 +226,7 @@ class UnEnrollPath(APIView):
 
     # requests username and path_id and responses success or fail message, tested
     def post(self, request):
+
         data = request.data
         username = data['username']
         target = data['path_id']
@@ -245,7 +246,6 @@ class UnEnrollPath(APIView):
             })
         
         return Response('SUCCESSFUL')
-
 
 class GetEnrolledPaths(APIView):
     permission_classes = [IsAuthenticated]
