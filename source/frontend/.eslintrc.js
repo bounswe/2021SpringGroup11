@@ -9,8 +9,9 @@ module.exports = {
     es2021: true,
     node: true,
     es6: true,
+    'jest/globals': true,
   },
-  extends: ['plugin:react/recommended', 'airbnb', 'prettier'],
+  extends: ['plugin:react/recommended', 'airbnb', 'prettier', 'plugin:jest/all'],
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaFeatures: {
@@ -19,7 +20,7 @@ module.exports = {
     ecmaVersion: 12,
     sourceType: 'module',
   },
-  plugins: ['prettier', 'react', '@typescript-eslint', 'redux-saga', 'react-hooks'],
+  plugins: ['prettier', 'react', '@typescript-eslint', 'redux-saga', 'react-hooks', 'jest'],
   rules: {
     'prettier/prettier': [1, prettierOptions],
     'arrow-body-style': [2, 'as-needed'],
@@ -78,5 +79,10 @@ module.exports = {
     'require-yield': 0,
     'react/prop-types': 1,
     'no-underscore-dangle': 0,
+    'jest/no-disabled-tests': 'warn',
+    'jest/no-focused-tests': 'error',
+    'jest/no-identical-title': 'error',
+    'jest/prefer-to-have-length': 'warn',
+    'jest/valid-expect': 'error',
   },
 };
