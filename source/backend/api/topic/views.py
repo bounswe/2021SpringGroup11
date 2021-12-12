@@ -62,13 +62,12 @@ class UnFavoriteTopic(APIView):
 
 
 class SearchTopics(APIView):
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
 
-    def post(self, request):
+    def get(self, request, search_text):
         data = request.data
 
         username = data['username']
-        search_text = data['search_text']
 
         topics = get_topics(search_text)
         for topic in topics:
