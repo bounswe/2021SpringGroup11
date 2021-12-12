@@ -19,7 +19,7 @@ RUN apk add gcc python3-dev musl-dev
 
 COPY requirements.txt requirements.txt
 RUN python3 -m pip install --upgrade pip
-RUN pip3 install -r requirements.txt --no-cache-dir
+RUN pip3 install -r requirements.txt
 
 # copy project
 COPY . .
