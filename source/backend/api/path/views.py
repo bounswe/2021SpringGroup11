@@ -8,6 +8,7 @@ from heybooster.helpers.database.mongodb import MongoDBHelper
 from django.conf import settings
 from common.models import User
 from common.data_check import check_data_keys
+from bson.objectid import ObjectId
 
 
 class CreatePath(APIView):
@@ -251,16 +252,19 @@ class GetEnrolledPaths(APIView):
     permission_classes = [IsAuthenticated]
 
     """ requests username and returns all enrolled paths of the given username, tested """
-    def post(self, request):
+    def get(self, request):
         data = request.data
         username = data['username']
 
         with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
-            enrolledPaths = list(db.find('enroll', query={'username': username}))
+            enrolledPaths = list(db.find('enroll', query={'username': username},  projection={'_id': 0}))
+            allPaths = list(
+                db.find('path', query={'_id': {'$in': [ObjectId(path['path_id']) for path in enrolledPaths]}},
+                        projection={'_id': 0}))
 
         return Response(
             {
-                'enrolledPaths': [path['path_id'] for path in enrolledPaths]
+                'enrolledPaths': [path for path in zip(enrolledPaths, allPaths)]
             },
             status=status.HTTP_200_OK
         )
@@ -339,17 +343,18 @@ class UnfollowPath(APIView):
 class GetFollowedPaths(APIView):
     permission_classes = [IsAuthenticated]
 
-    """ requests username and returns all enrolled paths of the given username, tested """
-    def post(self, request):
+    """ requests username and returns all followed paths of the given username, tested """
+    def get(self, request):
         data = request.data
         username = data['username']
 
         with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
-            followedPaths = list(db.find('follow_path', query={'username': username}))
+            followedPaths = list(db.find('follow_path', query={'username': username}, projection={'_id': 0}))
+            allPaths = list(db.find('path', query={'_id': {'$in': [ObjectId(path['path_id']) for path in followedPaths]}}, projection={'_id': 0}))
 
         return Response(
             {
-                'enrolledPaths': [path['path_id'] for path in followedPaths]
+                'enrolledPaths': [path for path in zip(followedPaths, allPaths)]
             },
             status=status.HTTP_200_OK
         )
