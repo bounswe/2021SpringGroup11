@@ -369,7 +369,8 @@ class GetRelatedPath(APIView):
         topics = get_related_topics(topic_id)
         
         with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
-            paths = list(db.find('path', query={'topic': {'$not': {'$q': {'$nin': topics}}}})) # check
+            paths = list(db.find('path', query={'topic': {'$not': {'$elemMatch': {'$nin': topics}}}})) # check
+            # 'topics.0': {$exists: true}
             followedPaths = list(db.find('follow_path', query={'username': username}, projection={'_id': 0}))
             enrolledPaths = list(db.find('enroll', query={'username': username},  projection={'_id': 0}))
 
