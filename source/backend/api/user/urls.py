@@ -14,5 +14,7 @@ urlpatterns = [
     path('get-follow/', views.GetFollow.as_view(), name='get_follow'),
     path('get-ratings/', views.GetRatings.as_view(), name='get_ratings'),
     path('get-enrolls/', views.GetEnrolledPaths.as_view(), name='get_enrolls'),
-    path('get-favourite-paths/', views.GetFavouritePaths.as_view(), name='get_favourite_paths')
+    path('get-favourite-paths/', views.GetFavouritePaths.as_view(), name='get_favourite_paths'),
+    path('wordcloud/', views.Wordcloud.as_view(), name='wordcloud'),
+
 ]
