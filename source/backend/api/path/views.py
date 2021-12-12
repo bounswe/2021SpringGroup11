@@ -15,7 +15,7 @@ from bson.objectid import ObjectId
 import base64
 
 class CreatePath(APIView):
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
     
     def post(self, request):
         data = request.data
@@ -24,7 +24,7 @@ class CreatePath(APIView):
         description = data['description']
         topics = data['topics']
         creator_username = data['username']
-        #creator_email = data['email']
+        creator_email = data['email']
         created_at = int(time.time())
         #images = data['images']
         #thumbnail = data['thumbnail']
@@ -35,11 +35,23 @@ class CreatePath(APIView):
         is_deleted = False
 
         with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
+            topic_ids = []
+
+            for topic in topics:
+                if not db.find_one('topic', {'ID': topic['ID']}):
+                    db.insert_one('topic', {
+                        'ID': topic['ID'],
+                        'name': topic['name'],
+                        'description': topic['description']
+                    })
+                
+                topic_ids.append(topic['ID'])
+
             id = db.insert_one('path',
             {
                 'title': title,
                 'description': description,
-                'topics': topics,
+                'topics': topic_ids,
                 'creator_username': creator_username,
                 #'creator_email': creator_email,
                 'created_at': created_at,
@@ -48,14 +60,6 @@ class CreatePath(APIView):
                 'is_banned': is_banned,
                 'is_deleted': is_deleted
             }).inserted_id
-
-            for topic in topics:
-                if not db.find_one('topic', {'id': topic['ID']}):
-                    db.insert_one('topic', {
-                        'id': topic['ID'],
-                        'name': topic['name'],
-                        'description': topic['description']
-                    })
 
         return Response({'pathID': str(id)}, status=status.HTTP_200_OK)
 
@@ -352,16 +356,16 @@ class GetPath(APIView):
         return Response(path)
 
 class GetRelatedPath(APIView):
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request, topic_id):
         data = request.data
         username = data['username']
 
         topics = get_related_topics(topic_id)
-        print(topics)
+        
         with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
-            paths = list(db.find('path', query={'topics': {'$not': {'$elemMatch': {'$nin': topics}}}})) # check
+            paths = list(db.find('path', query={'topic': {'$not': {'$q': {'$nin': topics}}}})) # check
             followedPaths = list(db.find('follow_path', query={'username': username}, projection={'_id': 0}))
             enrolledPaths = list(db.find('enroll', query={'username': username},  projection={'_id': 0}))
 
