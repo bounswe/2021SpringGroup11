@@ -54,7 +54,7 @@ class CreatePath(APIView):
                 'description': description,
                 'topics': topic_ids,
                 'creator_username': creator_username,
-                #'creator_email': creator_email,
+                'creator_email': creator_email,
                 'created_at': created_at,
                 'photo': photo,
                 'milestones': milestones,
