@@ -10,11 +10,12 @@ from common.models import User
 from common.data_check import check_data_keys
 from common.wordcloudgen import wordcloudgen
 from common.topicname import topicname
+from path.utils import get_related_topics
 from bson.objectid import ObjectId
 import base64
 
 class CreatePath(APIView):
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
     
     def post(self, request):
         data = request.data
@@ -23,8 +24,8 @@ class CreatePath(APIView):
         description = data['description']
         topics = data['topics']
         creator_username = data['username']
-        creator_email = data['email']
-        created_at = time.time()
+        #creator_email = data['email']
+        created_at = int(time.time())
         #images = data['images']
         #thumbnail = data['thumbnail']
         photo = data['photo']
@@ -40,13 +41,21 @@ class CreatePath(APIView):
                 'description': description,
                 'topics': topics,
                 'creator_username': creator_username,
-                'creator_email': creator_email,
+                #'creator_email': creator_email,
                 'created_at': created_at,
                 'photo': photo,
                 'milestones': milestones,
                 'is_banned': is_banned,
                 'is_deleted': is_deleted
             }).inserted_id
+
+            for topic in topics:
+                if not db.find_one('topic', {'id': topic['ID']}):
+                    db.insert_one('topic', {
+                        'id': topic['ID'],
+                        'name': topic['name'],
+                        'description': topic['description']
+                    })
 
         return Response({'pathID': str(id)}, status=status.HTTP_200_OK)
 
@@ -341,3 +350,34 @@ class GetPath(APIView):
         path['isEnrolled'] = enroll is not None
 
         return Response(path)
+
+class GetRelatedPath(APIView):
+    # permission_classes = [IsAuthenticated]
+
+    def get(self, request, topic_id):
+        data = request.data
+        username = data['username']
+
+        topics = get_related_topics(topic_id)
+        print(topics)
+        with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
+            paths = list(db.find('path', query={'topics': {'$not': {'$elemMatch': {'$nin': topics}}}})) # check
+            followedPaths = list(db.find('follow_path', query={'username': username}, projection={'_id': 0}))
+            enrolledPaths = list(db.find('enroll', query={'username': username},  projection={'_id': 0}))
+
+        for path in paths:
+            path['_id'] = str(path['_id'])
+            path['isFollowed'] = False
+            path['isEnrolled'] = False
+
+        for followed_path in followedPaths:
+            for path in paths:
+                if path['_id'] == followed_path['path_id']:
+                    path['isFollowed'] = True
+
+        for enrolled_path in enrolledPaths:
+            for path in paths:
+                if path['_id'] == enrolled_path['path_id']:
+                    path['isEnrolled'] = True
+
+        return Response(paths, status=status.HTTP_200_OK)

@@ -62,7 +62,7 @@ class UnFavoriteTopic(APIView):
 
 
 class SearchTopics(APIView):
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request, search_text):
         data = request.data

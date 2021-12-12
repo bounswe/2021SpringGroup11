@@ -35,7 +35,7 @@ def get_topics(text: str):
         ret.append(
             {
                 'name': entity['label'],
-                'id': entity['id'][1:],
+                'id': int(entity['id'][1:]),
                 'description': entity['description']
             })
 

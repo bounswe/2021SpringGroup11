@@ -12,5 +12,6 @@ urlpatterns = [
     path('finish-path/', views.FinishPath.as_view(), name='finish_path'),
     path('rate-path/', views.RatePath.as_view(), name='rate_path'),
     path('wordcloud/', views.Wordcloud.as_view(), name='wordcloud'),
-    path('get-path/<slug:path_id>/', views.GetPath.as_view(), name='get_path')
+    path('get-path/<slug:path_id>/', views.GetPath.as_view(), name='get_path'),
+    path('related-path/<slug:topic_id>/', views.GetRelatedPath.as_view(), name='get_related_path')
 ]
