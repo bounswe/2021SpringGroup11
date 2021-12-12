@@ -131,7 +131,7 @@ class ChangePassword(APIView):
 class GetFollow(APIView):
     permission_classes = [IsAuthenticated]
     
-    def get(request):
+    def get(self, request):
         data = request.data
 
 
@@ -153,7 +153,7 @@ class GetFollow(APIView):
 class GetRatings(APIView):
     permission_classes = [IsAuthenticated]
 
-    def get(request):
+    def get(self, request):
         data = request.data
         
         username = data['username']
@@ -231,7 +231,7 @@ class UnfollowUser(APIView):
 class GetEnrolledPaths(APIView):
     permission_classes = [IsAuthenticated]
 
-    def get(request):
+    def get(self, request):
         data = request.data
         
         username = data['username']
@@ -249,7 +249,7 @@ class GetEnrolledPaths(APIView):
 class GetFavouritePaths(APIView):
     permission_classes = [IsAuthenticated]
 
-    def get(request):
+    def get(self, request):
         data = request.data
         
         username = data['username']

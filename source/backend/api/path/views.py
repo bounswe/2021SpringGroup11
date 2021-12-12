@@ -13,6 +13,7 @@ from common.topicname import topicname
 from path.utils import get_related_topics
 from bson.objectid import ObjectId
 import base64
+from bson.objectid import ObjectId
 
 class CreatePath(APIView):
     permission_classes = [IsAuthenticated]
@@ -214,7 +215,7 @@ class EnrollPath(APIView):
 
     permission_classes = [IsAuthenticated]
 
-    # requests username and path_id and responses success or fail message, tested
+    """ requests username and path_id and responses success or fail message, tested"""
     def post(self, request):
         data = request.data
         username = data['username']
@@ -240,7 +241,7 @@ class EnrollPath(APIView):
 class UnEnrollPath(APIView):
     permission_classes = [IsAuthenticated]
 
-    # requests username and path_id and responses success or fail message, tested
+    """ requests username and path_id and responses success or fail message, tested"""
     def post(self, request):
 
         data = request.data
@@ -266,17 +267,20 @@ class UnEnrollPath(APIView):
 class GetEnrolledPaths(APIView):
     permission_classes = [IsAuthenticated]
 
-    # requests username and returns all enrolled paths of the given username, tested
-    def post(self, request):
+    """ requests username and returns all enrolled paths of the given username, tested """
+    def get(self, request):
         data = request.data
         username = data['username']
 
         with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
-            enrolledPaths = list(db.find('enroll', query={'username': username}))
+            enrolledPaths = list(db.find('enroll', query={'username': username},  projection={'_id': 0}))
+            allPaths = list(
+                db.find('path', query={'_id': {'$in': [ObjectId(path['path_id']) for path in enrolledPaths]}},
+                        projection={'_id': 0}))
 
         return Response(
             {
-                'enrolledPaths': [path['path_id'] for path in enrolledPaths]
+                'enrolledPaths': [path for path in zip(enrolledPaths, allPaths)]
             },
             status=status.HTTP_200_OK
         )
@@ -385,3 +389,111 @@ class GetRelatedPath(APIView):
                     path['isEnrolled'] = True
 
         return Response(paths, status=status.HTTP_200_OK)
+
+class FollowPath(APIView):
+    permission_classes = [IsAuthenticated]
+
+    """ requests username and path_id and responses success or fail message, tested"""
+    def post(self, request):
+        data = request.data
+        username = data['username']
+        target = data['path_id']
+
+        with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
+            relation = db.find_one('follow_path', {
+                'username': username,
+                'path_id': target,
+            })
+
+            if relation:
+                return Response('ALREADY_FOLLOWED', status=status.HTTP_409_CONFLICT)
+
+            db.insert_one('follow_path', {
+                'username': username,
+                'path_id': target,
+            })
+
+        return Response('SUCCESSFUL')
+
+
+class UnfollowPath(APIView):
+    permission_classes = [IsAuthenticated]
+
+    """ requests username and path_id and responses success or fail message, tested"""
+    def post(self, request):
+        data = request.data
+        username = data['username']
+        target = data['path_id']
+
+        with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
+            relation = db.find_one('follow_path', {
+                'username': username,
+                'path_id': target,
+            })
+
+            if not relation:
+                return Response('NOT_FOLLOWED', status=status.HTTP_409_CONFLICT)
+
+            db.delete_one('follow_path', {
+                'username': username,
+                'path_id': target,
+            })
+
+        return Response('SUCCESSFUL')
+
+
+class GetFollowedPaths(APIView):
+    permission_classes = [IsAuthenticated]
+
+    """ requests username and returns all followed paths of the given username, tested """
+    def get(self, request):
+        data = request.data
+        username = data['username']
+
+        with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
+            followedPaths = list(db.find('follow_path', query={'username': username}, projection={'_id': 0}))
+            allPaths = list(db.find('path', query={'_id': {'$in': [ObjectId(path['path_id']) for path in followedPaths]}}, projection={'_id': 0}))
+
+        return Response(
+            {
+                'enrolledPaths': [path for path in zip(followedPaths, allPaths)]
+            },
+            status=status.HTTP_200_OK
+        )
+
+
+class SearchPath(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, search_text):
+        data = request.data
+        username = data['username']
+                
+        with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
+            paths = list(db.find(
+                'path',  # TODO Create fulltext index on subtexts
+                query={'$or': [{'$text': {'$search': search_text}},
+                               {'title': {'$regex': search_text, '$options': 'i'}}]},
+                projection={}
+            ).limit(10))
+
+            followedPaths = list(db.find('follow_path', query={'username': username}, projection={'_id': 0}))
+            enrolledPaths = list(db.find('enroll', query={'username': username},  projection={'_id': 0}))
+
+        for path in paths:
+            path['_id'] = str(path['_id'])
+            path['isFollowed'] = False
+            path['isEnrolled'] = False
+
+        for followed_path in followedPaths:
+            for path in paths:
+                if path['_id'] == followed_path['path_id']:
+                    path['isFollowed'] = True
+
+        for enrolled_path in enrolledPaths:
+            for path in paths:
+                if path['_id'] == enrolled_path['path_id']:
+                    path['isEnrolled'] = True
+
+        return Response(paths, status=status.HTTP_200_OK)
+
