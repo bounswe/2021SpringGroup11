@@ -7,6 +7,10 @@ from heybooster.helpers.database.mongodb import MongoDBHelper
 from django.conf import settings
 from common.models import User
 from common.data_check import check_data_keys
+from common.wordcloudgen import wordcloudgen
+from common.topicname import topicname
+from bson.objectid import ObjectId
+import base64
 
 class EditUser(APIView):
     """
@@ -258,3 +262,74 @@ class GetFavouritePaths(APIView):
                 'path_ids': [path_id['_id'] for path_id in path_ids]
             }
         )
+
+
+
+class Wordcloud(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        data=request.data
+
+        user=data['user']
+        try:
+            width=data['width']
+        except:
+            width=600
+        try:
+            height=data['height']
+        except:
+            height=400
+
+        paths=set()
+        with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
+            res = list(db.find('enroll', query={'username': user}))
+            for i in res:
+                paths.add(i["path_id"])
+        with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
+            res = list(db.find('follow_path', query={'username': user}))
+            for i in res:
+                paths.add(i["path_id"])
+        with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
+            res = list(db.find('pathFinished', query={'username': user}))
+            for i in res:
+                paths.add(i["path_id"])
+
+        text=""
+        topics=list()
+
+        with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
+            res = db.find_one('user', query={'username': user})
+            if not res:
+                return Response({'detail': 'NO_USER'}, status=status.HTTP_400_BAD_REQUEST)
+            text+=(res["bio"]+"\n")*5
+
+        with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
+            res = list(db.find('favorite', query={'username': user}))
+            for i in res:
+                topics.append(i["ID"])
+
+
+
+        for path_id in paths:
+            with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
+                path = db.find_one('path', query={'_id': ObjectId(path_id)})
+            if not path:
+                continue
+            text+=path["description"]+"\n"
+            text+=path["description"]+"\n" #intentionally added twice to make it more important
+            for m in path["milestones"]:
+                text+=m["title"]+"\n"
+                text+=m["title"]+"\n" # included twice to emphasize
+                text+=m["body"]+"\n"
+
+            topics+=path["topics"]
+
+
+        topicnames=[topicname(t) for t in topics]
+
+        res=wordcloudgen(text,topicnames,width=width,height=height)
+        res=base64.b64encode(res)
+        #res="data:image/png;base64"+res.decode()
+        res = res.decode()
+        return Response(res,status=status.HTTP_200_OK)

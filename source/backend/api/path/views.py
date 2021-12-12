@@ -8,8 +8,12 @@ from heybooster.helpers.database.mongodb import MongoDBHelper
 from django.conf import settings
 from common.models import User
 from common.data_check import check_data_keys
+from common.wordcloudgen import wordcloudgen
+from common.topicname import topicname
+from path.utils import get_related_topics
 from bson.objectid import ObjectId
-
+import base64
+from bson.objectid import ObjectId
 
 class CreatePath(APIView):
     permission_classes = [IsAuthenticated]
@@ -22,7 +26,7 @@ class CreatePath(APIView):
         topics = data['topics']
         creator_username = data['username']
         creator_email = data['email']
-        created_at = time.time()
+        created_at = int(time.time())
         #images = data['images']
         #thumbnail = data['thumbnail']
         photo = data['photo']
@@ -32,13 +36,25 @@ class CreatePath(APIView):
         is_deleted = False
 
         with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
+            topic_ids = []
+
+            for topic in topics:
+                if not db.find_one('topic', {'ID': topic['ID']}):
+                    db.insert_one('topic', {
+                        'ID': topic['ID'],
+                        'name': topic['name'],
+                        'description': topic['description']
+                    })
+                
+                topic_ids.append(topic['ID'])
+
             id = db.insert_one('path',
             {
                 'title': title,
                 'description': description,
-                'topics': topics,
+                'topics': topic_ids,
                 'creator_username': creator_username,
-                'creator_email': creator_email,
+                #'creator_email': creator_email,
                 'created_at': created_at,
                 'photo': photo,
                 'milestones': milestones,
@@ -287,6 +303,92 @@ class FinishPath(APIView): #Caution: this endpoint marks the whole path as finis
 
         return Response('SUCCESSFUL')
 
+class Wordcloud(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        data=request.data
+
+        path_id=data['path_id']
+        try:
+            width=data['width']
+        except:
+            width=600
+        try:
+            height=data['height']
+        except:
+            height=400
+
+        with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
+            path = db.find_one('path', query={'_id': ObjectId(path_id)})
+
+        if not path:
+            return Response('PATH_NOT_FOUND', status=status.HTTP_404_NOT_FOUND)
+
+        text=""
+        text+=path["description"]+"\n"
+        text+=path["description"]+"\n" #intentionally added twice to make it more important
+        for m in path["milestones"]:
+            text+=m["title"]+"\n"
+            text+=m["title"]+"\n" # included twice to emphasize
+            text+=m["body"]+"\n"
+
+        topics=path["topics"]
+        topicnames=[topicname(t) for t in topics]
+
+        res=wordcloudgen(text,topicnames,width=width,height=height)
+        res=base64.b64encode(res)
+        #res="data:image/png;base64"+res.decode()
+        res=res.decode()
+        return Response(res,status=status.HTTP_200_OK)
+
+class GetPath(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, path_id):
+        data = request.data
+        username = data['username']
+
+        with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
+            path = db.find_one('path', query={'_id': ObjectId(path_id)}, projection={'_id': 0})
+            follow = db.find_one('follow_path', query={'username': username, 'path_id': path_id})
+            enroll = db.find_one('enroll', query={'username': username, 'path_id': path_id})
+
+        path['isFollowed'] = follow is not None
+        path['isEnrolled'] = enroll is not None
+
+        return Response(path)
+
+class GetRelatedPath(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, topic_id):
+        data = request.data
+        username = data['username']
+
+        topics = get_related_topics(topic_id)
+        
+        with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
+            paths = list(db.find('path', query={'topic': {'$not': {'$q': {'$nin': topics}}}})) # check
+            followedPaths = list(db.find('follow_path', query={'username': username}, projection={'_id': 0}))
+            enrolledPaths = list(db.find('enroll', query={'username': username},  projection={'_id': 0}))
+
+        for path in paths:
+            path['_id'] = str(path['_id'])
+            path['isFollowed'] = False
+            path['isEnrolled'] = False
+
+        for followed_path in followedPaths:
+            for path in paths:
+                if path['_id'] == followed_path['path_id']:
+                    path['isFollowed'] = True
+
+        for enrolled_path in enrolledPaths:
+            for path in paths:
+                if path['_id'] == enrolled_path['path_id']:
+                    path['isEnrolled'] = True
+
+        return Response(paths, status=status.HTTP_200_OK)
 
 class FollowPath(APIView):
     permission_classes = [IsAuthenticated]
@@ -374,6 +476,7 @@ class SearchPath(APIView):
                                {'title': {'$regex': search_text, '$options': 'i'}}]},
                 projection={}
             ).limit(10))
+
             followedPaths = list(db.find('follow_path', query={'username': username}, projection={'_id': 0}))
             enrolledPaths = list(db.find('enroll', query={'username': username},  projection={'_id': 0}))
 
@@ -392,4 +495,5 @@ class SearchPath(APIView):
                 if path['_id'] == enrolled_path['path_id']:
                     path['isEnrolled'] = True
 
-        return Response(list(paths), status=status.HTTP_200_OK)
+        return Response(paths, status=status.HTTP_200_OK)
+

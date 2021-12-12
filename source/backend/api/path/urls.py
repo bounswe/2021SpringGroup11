@@ -11,9 +11,11 @@ urlpatterns = [
     path('get-enrolled-paths/', views.GetEnrolledPaths.as_view(), name='get_enrolled_paths'),
     path('finish-path/', views.FinishPath.as_view(), name='finish_path'),
     path('rate-path/', views.RatePath.as_view(), name='rate_path'),
+    path('wordcloud/', views.Wordcloud.as_view(), name='wordcloud'),
+    path('get-path/<slug:path_id>/', views.GetPath.as_view(), name='get_path'),
+    path('related-path/<slug:topic_id>/', views.GetRelatedPath.as_view(), name='get_related_path')
     path('follow-path/', views.FollowPath.as_view(), name='follow_path'),
     path('unfollow-path/', views.UnfollowPath.as_view(), name='unfollow_path'),
     path('get-followed-paths/', views.GetFollowedPaths.as_view(), name='get_followed_paths'),
     path('search-path/<slug:search_text>/', views.SearchPath.as_view(), name='search_path'),
-
 ]
