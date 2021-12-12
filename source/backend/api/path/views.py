@@ -321,7 +321,8 @@ class Wordcloud(APIView):
 
         res=wordcloudgen(text,topicnames,width=width,height=height)
         res=base64.b64encode(res)
-        res="data:image/png;base64"+res.decode()
+        #res="data:image/png;base64"+res.decode()
+        res=res.decode()
         return Response(res,status=status.HTTP_200_OK)
 
 class GetPath(APIView):
@@ -334,3 +335,4 @@ class GetPath(APIView):
             path = db.find_one('path', query={'_id': ObjectId(path_id)}, projection={'_id': 0})
         
         return Response(path)
+
