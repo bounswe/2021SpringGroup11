@@ -32,7 +32,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   TextEditingController bioController = TextEditingController();
   bool _isLoading = false;
   void loadPhoto() async {
-    if (User.me!.photo == null) { return ; }
+    if (User.me!.photo == null || User.me!.photo == "") { return ; }
     setState(() {
       _isLoading = true;
     });
@@ -69,7 +69,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     ClipRRect(
                       borderRadius: BorderRadius.circular(40.0),
                       child: _image != null ? Image.file(_image, width: 80, height: 80, fit: BoxFit.fitHeight,) :
-                          User.me!.photo == null ?
+                      (User.me!.photo == null || User.me!.photo == "") ?
                       CircleAvatar(
                           backgroundColor: Colors.blueAccent,
                           child: Text(User.me!.username![0].toUpperCase()),
