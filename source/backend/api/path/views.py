@@ -364,12 +364,32 @@ class SearchPath(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, search_text):
+        data = request.data
+        username = data['username']
+                
         with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
-            paths = db.find(
+            paths = list(db.find(
                 'path',  # TODO Create fulltext index on subtexts
                 query={'$or': [{'$text': {'$search': search_text}},
                                {'title': {'$regex': search_text, '$options': 'i'}}]},
-                projection={'_id': 0}
-            ).limit(10)
+                projection={}
+            ).limit(10))
+            followedPaths = list(db.find('follow_path', query={'username': username}, projection={'_id': 0}))
+            enrolledPaths = list(db.find('enroll', query={'username': username},  projection={'_id': 0}))
+
+        for path in paths:
+            path['_id'] = str(path['_id'])
+            path['isFollowed'] = False
+            path['isEnrolled'] = False
+
+        for followed_path in followedPaths:
+            for path in paths:
+                if path['_id'] == followed_path['path_id']:
+                    path['isFollowed'] = True
+
+        for enrolled_path in enrolledPaths:
+            for path in paths:
+                if path['_id'] == enrolled_path['path_id']:
+                    path['isEnrolled'] = True
 
         return Response(list(paths), status=status.HTTP_200_OK)
