@@ -330,9 +330,14 @@ class GetPath(APIView):
 
     def get(self, request, path_id):
         data = request.data
+        username = data['username']
 
         with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
             path = db.find_one('path', query={'_id': ObjectId(path_id)}, projection={'_id': 0})
-        
-        return Response(path)
+            follow = db.find_one('follow_path', query={'username': username, 'path_id': path_id})
+            enroll = db.find_one('enroll', query={'username': username, 'path_id': path_id})
 
+        path['isFollowed'] = follow is not None
+        path['isEnrolled'] = enroll is not None
+
+        return Response(path)
