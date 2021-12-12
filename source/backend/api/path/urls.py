@@ -14,5 +14,6 @@ urlpatterns = [
     path('follow-path/', views.FollowPath.as_view(), name='follow_path'),
     path('unfollow-path/', views.UnfollowPath.as_view(), name='unfollow_path'),
     path('get-followed-paths/', views.GetFollowedPaths.as_view(), name='get_followed_paths'),
+    path('search-path/<slug:search_text>/', views.SearchPath.as_view(), name='search_path'),
 
 ]
