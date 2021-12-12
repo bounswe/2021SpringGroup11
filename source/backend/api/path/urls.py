@@ -11,6 +11,4 @@ urlpatterns = [
     path('get-enrolled-paths/', views.GetEnrolledPaths.as_view(), name='get-enrolled_paths'),
     path('finish-path/', views.FinishPath.as_view(), name='finish_path'),
     path('rate-path/', views.RatePath.as_view(), name='rate_path'),
-    path('follow-path/', views.FollowPath.as_view(), name='follow_path'),
-    path('unfollow-path/', views.UnfollowPath.as_view(), name='unfollow_path'),
 ]
