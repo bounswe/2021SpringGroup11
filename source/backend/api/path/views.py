@@ -198,7 +198,7 @@ class EnrollPath(APIView):
 
     permission_classes = [IsAuthenticated]
 
-    # requests username and path_id and responses success or fail message, tested
+    """ requests username and path_id and responses success or fail message, tested"""
     def post(self, request):
         data = request.data
         username = data['username']
@@ -224,7 +224,7 @@ class EnrollPath(APIView):
 class UnEnrollPath(APIView):
     permission_classes = [IsAuthenticated]
 
-    # requests username and path_id and responses success or fail message, tested
+    """ requests username and path_id and responses success or fail message, tested"""
     def post(self, request):
 
         data = request.data
@@ -283,3 +283,54 @@ class FinishPath(APIView): #Caution: this endpoint marks the whole path as finis
 
         return Response('SUCCESSFUL')
 
+
+class FollowPath(APIView):
+    permission_classes = [IsAuthenticated]
+
+    """ requests username and path_id and responses success or fail message, tested"""
+    def post(self, request):
+        data = request.data
+        username = data['username']
+        target = data['path_id']
+
+        with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
+            relation = db.find_one('follow_path', {
+                'username': username,
+                'path_id': target,
+            })
+
+            if relation:
+                return Response('ALREADY_FOLLOWED', status=status.HTTP_409_CONFLICT)
+
+            db.insert_one('follow_path', {
+                'username': username,
+                'path_id': target,
+            })
+
+        return Response('SUCCESSFUL')
+
+
+class UnfollowPath(APIView):
+    permission_classes = [IsAuthenticated]
+
+    """ requests username and path_id and responses success or fail message, tested"""
+    def post(self, request):
+        data = request.data
+        username = data['username']
+        target = data['path_id']
+
+        with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
+            relation = db.find_one('follow_path', {
+                'username': username,
+                'path_id': target,
+            })
+
+            if not relation:
+                return Response('NOT_FOLLOWED', status=status.HTTP_409_CONFLICT)
+
+            db.delete_one('follow_path', {
+                'username': username,
+                'path_id': target,
+            })
+
+        return Response('SUCCESSFUL')
