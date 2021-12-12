@@ -250,7 +250,7 @@ class UnEnrollPath(APIView):
 class GetEnrolledPaths(APIView):
     permission_classes = [IsAuthenticated]
 
-    # requests username and returns all enrolled paths of the given username, tested
+    """ requests username and returns all enrolled paths of the given username, tested """
     def post(self, request):
         data = request.data
         username = data['username']
@@ -334,3 +334,22 @@ class UnfollowPath(APIView):
             })
 
         return Response('SUCCESSFUL')
+
+
+class GetFollowedPaths(APIView):
+    permission_classes = [IsAuthenticated]
+
+    """ requests username and returns all enrolled paths of the given username, tested """
+    def post(self, request):
+        data = request.data
+        username = data['username']
+
+        with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
+            followedPaths = list(db.find('follow_path', query={'username': username}))
+
+        return Response(
+            {
+                'enrolledPaths': [path['path_id'] for path in followedPaths]
+            },
+            status=status.HTTP_200_OK
+        )
