@@ -8,7 +8,10 @@ from heybooster.helpers.database.mongodb import MongoDBHelper
 from django.conf import settings
 from common.models import User
 from common.data_check import check_data_keys
-
+from common.wordcloudgen import wordcloudgen
+from common.topicname import topicname
+from bson.objectid import ObjectId
+import base64
 
 class CreatePath(APIView):
     permission_classes = [IsAuthenticated]
@@ -283,3 +286,40 @@ class FinishPath(APIView): #Caution: this endpoint marks the whole path as finis
 
         return Response('SUCCESSFUL')
 
+class Wordcloud(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        data=request.data
+
+        path_id=data['path_id']
+        try:
+            width=data['width']
+        except:
+            width=600
+        try:
+            height=data['height']
+        except:
+            height=400
+
+        with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
+            path = db.find_one('path', query={'_id': ObjectId(path_id)})
+
+        if not path:
+            return Response('PATH_NOT_FOUND', status=status.HTTP_404_NOT_FOUND)
+
+        text=""
+        text+=path["description"]+"\n"
+        text+=path["description"]+"\n" #intentionally added twice to make it more important
+        for m in path["milestones"]:
+            text+=m["title"]+"\n"
+            text+=m["title"]+"\n" # included twice to emphasize
+            text+=m["body"]+"\n"
+
+        topics=path["topics"]
+        topicnames=[topicname(t) for t in topics]
+
+        res=wordcloudgen(text,topicnames,width=width,height=height)
+        res=base64.b64encode(res)
+        res="data:image/png;base64"+res.decode()
+        return Response(res,status=status.HTTP_200_OK)

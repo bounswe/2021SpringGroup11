@@ -1,7 +1,7 @@
 import wordcloud
 import io
 
-def wordcloudgen(text, labels, filename="wordcloud.png", width=600, height=400, maxfreq=True):
+def wordcloudgen(text, labels, width=600, height=400, maxfreq=True):
     wc=wordcloud.WordCloud(mode="RGBA", width=width, height=height, background_color=None, contour_width=1)
 
     words=wc.process_text(text)

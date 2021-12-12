@@ -11,4 +11,5 @@ urlpatterns = [
     path('get-enrolled-paths/', views.GetEnrolledPaths.as_view(), name='get-enrolled_paths'),
     path('finish-path/', views.FinishPath.as_view(), name='finish_path'),
     path('rate-path/', views.RatePath.as_view(), name='rate_path'),
+    path('wordcloud/', views.Wordcloud.as_view(), name='wordcloud'),
 ]
