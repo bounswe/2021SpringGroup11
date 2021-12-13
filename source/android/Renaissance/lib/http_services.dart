@@ -8,6 +8,7 @@ import 'dart:convert';
 
 import 'package:portakal/models/login_response.dart';
 import 'package:portakal/models/search_result.dart';
+import 'package:portakal/models/tag.dart';
 import 'package:portakal/token.dart';
 import 'package:jwt_decode/jwt_decode.dart';
 
@@ -169,13 +170,16 @@ class HttpService {
   }
   */
 
-  Future<List<Object>> searchUser(String username) async {
+  Future<List<String>> searchUser(String username) async {
     String url = baseUrl + '/user/search-user/$username/';
     Response res = await get(Uri.parse(url), headers: headers);
 
     if (res.statusCode == 200) {
-      print(jsonDecode(res.body));
-      return (jsonDecode(res.body));
+      List<String> result = [];
+      for (var item in jsonDecode(res.body)) {
+        result.add(item["username"]);
+      }
+      return result;
     } else {
       throw Exception(res.body);
     }
@@ -199,6 +203,10 @@ class HttpService {
 
     if (res.statusCode == 200) {
       print(jsonDecode(res.body));
+      List<Tag> result = [];
+      for (var item in jsonDecode(res.body)) {
+        result.add(Tag.fromJSON(jsonDecode(item)));
+      }
       return (jsonDecode(res.body));
     } else {
       throw Exception(res.body);
