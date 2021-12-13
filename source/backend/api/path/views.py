@@ -1,18 +1,14 @@
 import time
-import requests
-from rest_framework import permissions, status
+import base64
+from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from authentication.utils import IsAuthenticated, IsAdmin
+from authentication.utils import IsAuthenticated
 from heybooster.helpers.database.mongodb import MongoDBHelper
 from django.conf import settings
-from common.models import User
-from common.data_check import check_data_keys
 from common.wordcloudgen import wordcloudgen
 from common.topicname import topicname
 from path.utils import get_related_topics, get_rate_n_effort, path_is_enrolled, path_is_followed
-from bson.objectid import ObjectId
-import base64
 from bson.objectid import ObjectId
 
 class CreatePath(APIView):
@@ -27,11 +23,8 @@ class CreatePath(APIView):
         creator_username = data['username']
         creator_email = data['email']
         created_at = int(time.time())
-        #images = data['images']
-        #thumbnail = data['thumbnail']
         photo = data['photo']
-        milestones = data['milestones'] # title and body
-        # comments = data['comments']
+        milestones = data['milestones']
         is_banned = False
         is_deleted = False
 
@@ -55,7 +48,6 @@ class CreatePath(APIView):
                     'body': milestone['body']
                 }).inserted_id
 
-                # milestone['id'] = str(id)
                 milestone_ids.append(str(id))
 
 
@@ -598,3 +590,69 @@ class SearchPath(APIView):
 
         return Response(paths, status=status.HTTP_200_OK)
 
+
+class EditPath(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        data = request.data
+
+        path_id = data['pathID']
+        title = data['title']
+        description = data['description']
+        topics = data['topics']
+        photo = data['photo']
+        milestones = data['milestones']
+
+        with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
+            topic_ids = []
+            milestone_ids = []
+
+            for topic in topics:
+                if not db.find_one('topic', {'ID': topic['ID']}):
+                    db.insert_one('topic', {
+                        'ID': topic['ID'],
+                        'name': topic['name'],
+                        'description': topic['description']
+                    })
+                
+                topic_ids.append(topic['ID'])
+
+            for milestone in milestones:
+                if not milestone.get('ID'):
+                    id = db.insert_one('milestone', {
+                        'title': milestone['title'],
+                        'body': milestone['body']
+                    }).inserted_id
+                    milestone_ids.append(str(id))
+                else:
+                    milestone_ids.append(str(milestone['ID']))
+
+            db.find_and_modify(
+                'path',
+                query={
+                    '_id': ObjectId(path_id)
+                },
+                title=title,
+                description=description,
+                topics=topic_ids,
+                photo=photo,
+                milestones=milestone_ids,   
+            )
+
+        return Response('SUCCESS')
+
+class MyPaths(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        data = request.data
+        username = data['username']
+
+        with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
+            paths = list(db.find('path', query={'creator_username': username}))
+
+        for path in paths:
+            path['_id'] = str(path['_id'])
+
+        return Response(paths)

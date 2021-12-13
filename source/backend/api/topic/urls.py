@@ -8,4 +8,5 @@ urlpatterns = [
     path('search-topic/<slug:search_text>/', views.SearchTopics.as_view(), name='search_topics'),
     path('get-topic/<slug:topic_id>/', views.GetTopic.as_view(), name='get_topic'),
     path('related-topic/<slug:topic_id>/', views.RelatedTopics.as_view(), name='related_topics'),
+    path('my-topics/', views.MyTopics.as_view(), name='my_topics')
 ]
