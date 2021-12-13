@@ -300,7 +300,7 @@ class UnEnrollPath(APIView):
         return Response('SUCCESSFUL')
 
 class GetEnrolledPaths(APIView):
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
 
     """ requests username and returns all enrolled paths of the given username, tested """
     def get(self, request):
@@ -524,7 +524,7 @@ class UnfollowPath(APIView):
 
 
 class GetFollowedPaths(APIView):
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
 
     """ requests username and returns all followed paths of the given username, tested """
     def get(self, request):
