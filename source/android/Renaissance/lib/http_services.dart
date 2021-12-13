@@ -109,6 +109,79 @@ class HttpService {
     }
     return false;
   }
+  Future<bool> enroll(String username,String id) async {
+    String url = baseUrl + '/path/enroll-path/';
+    Response res = await post(Uri.parse(url),
+        headers: headers, body: jsonEncode({'username': username,'path_id':id}));
+    if (res.statusCode == 200) {
+      return true;
+    }
+    return false;
+  }
+  Future<bool> unenroll(String username,String id) async {
+    String url = baseUrl + '/path/unenroll-path/';
+    Response res = await post(Uri.parse(url),
+        headers: headers, body: jsonEncode({'username': username,'path_id':id}));
+    if (res.statusCode == 200) {
+      return true;
+    }
+    return false;
+  }
+  Future<bool> fav_path(String username,String id) async {
+    String url = baseUrl + '/path/follow-path/';
+    Response res = await post(Uri.parse(url),
+        headers: headers, body: jsonEncode({'username': username,'path_id':id}));
+    if (res.statusCode == 200) {
+      return true;
+    }
+    return false;
+  }
+  Future<bool> unfav_path(String username,String id) async {
+    String url = baseUrl + '/path/unfollow-path/';
+    Response res = await post(Uri.parse(url),
+        headers: headers, body: jsonEncode({'username': username,'path_id':id}));
+    if (res.statusCode == 200) {
+      return true;
+    }
+    return false;
+  }
+  Future<bool> finish_mielstone(String id) async {
+    String url = baseUrl + '/path/finish-milestone/';
+    Response res = await post(Uri.parse(url),
+        headers: headers, body: jsonEncode({'milestone_id':id}));
+    if (res.statusCode == 200) {
+      return true;
+    }
+    return false;
+  }
+  Future<bool> unfinish_milestone(String id) async {
+    String url = baseUrl + '/path/unfinish-milestone/';
+    Response res = await post(Uri.parse(url),
+        headers: headers, body: jsonEncode({'milestone_id':id}));
+    if (res.statusCode == 200) {
+      return true;
+    }
+    return false;
+  }
+
+  Future<bool> rate_path(String username,String id,double value) async {
+    String url = baseUrl + '/path/rate-path/';
+    Response res = await post(Uri.parse(url),
+        headers: headers, body: jsonEncode({'username':username,'path_id':id,'rating':value}));
+    if (res.statusCode == 200) {
+      return true;
+    }
+    return false;
+  }
+  Future<bool> effort_path(String username,String id,double value) async {
+    String url = baseUrl + '/path/effort-path/';
+    Response res = await post(Uri.parse(url),
+        headers: headers, body: jsonEncode({'username':username,'path_id':id,'effort':value}));
+    if (res.statusCode == 200) {
+      return true;
+    }
+    return false;
+  }
 
   Future<User> getUser(String username) async {
     String url = baseUrl + '/user/get-profile/$username/';

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:portakal/file_converter.dart';
+import 'package:portakal/http_services.dart';
+import 'package:portakal/models/user.dart';
 import 'package:portakal/my_colors.dart';
 import 'package:portakal/widget/comment_box.dart';
 import 'package:portakal/models/path.dart';
@@ -10,25 +13,53 @@ import 'package:portakal/widget/course_container.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:portakal/widget/milestone_widget.dart';
 import 'package:flutter_spinbox/material.dart'; // or flutter_spinbox.dart for both
+import 'package:portakal/models/topic_model.dart';
+import 'package:portakal/models/milestone_model.dart';
 
 class PathPage extends StatefulWidget {
-  const PathPage({ Key? key}): super(key: key);
+  final String? ID;
+  final String? title;
+  final String? description;
+  final List<Topic>? topics;
+  final String? creator_username;
+  final String? creator_email;
+  final int? created_at;
+  final String? photo;
+  final List<Milestone>? milestones;
+  final bool? is_banned;
+  final bool? is_deleted;
+  final bool? isFollowed;
+  final bool? isEnrolled;
+  const PathPage({ Key? key, this.ID,this.title,this.description,this.topics,this.creator_username,this.creator_email,this.created_at,this.photo,this.milestones,this.is_banned,this.is_deleted,this.isFollowed,this.isEnrolled}): super(key: key);
 
   @override
   _PathPageState createState() => _PathPageState();
 }
 
 class _PathPageState extends State<PathPage> {
-  final _controller = TextEditingController();
+  bool isLoading = false;
+  var _image;
 
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
+  void loadPhoto() async {
+    if (widget.photo == "") {
+      return;
+    }
+    setState(() {
+      isLoading = true;
+    });
+    _image = await FileConverter.getImageFromBase64(widget.photo!);
+    setState(() {
+      isLoading = false;
+    });
   }
-  bool isFollowed = true;
 
+
+  bool isFavChanged = false;
+  bool isEnrollChanged = false;
+  bool isFollowed = false;
+  bool isEnrolled=false;
+  double rating = 5.0;
+  double effort = 5.0;
   var paths = [
     {"name": "Selam", "effort": 2, "rating": 10.0},
     {"name": "Muz", "effort": 2, "rating": 10.0},
@@ -66,11 +97,11 @@ class _PathPageState extends State<PathPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         ClipRRect(
-              borderRadius: BorderRadius.circular(15),
-            child: Image(
-                image: NetworkImage('https://i.ebayimg.com/images/g/X5cAAMXQ-alQ4ZyI/s-l300.jpg'),
-                width: MediaQuery.of(context).size.width * 0.4),
-          ),
+                            borderRadius: BorderRadius.circular(15),
+                            child: _image != null ? Image.file(_image, width: MediaQuery.of(context).size.width * 0.4, height: MediaQuery.of(context).size.width * 0.4, fit: BoxFit.fitHeight,) :
+                            (isLoading ? CircularProgressIndicator() :
+                            CircleAvatar(backgroundColor: MyColors.red, child: Text("image"), radius: MediaQuery.of(context).size.width * 0.2,))
+                        ),
                         Container(
                             margin: EdgeInsets.only(top: 15),
                             width: MediaQuery.of(context).size.width * 0.5,
@@ -79,7 +110,7 @@ class _PathPageState extends State<PathPage> {
                         Column(
                           children: [
                             Text(
-                              'Learning Kanji in Two Weeks',
+                              widget.title!,
                               overflow: TextOverflow.ellipsis,
                               softWrap: true,
                               maxLines: 2,
@@ -88,7 +119,7 @@ class _PathPageState extends State<PathPage> {
                             ),
                             SizedBox(height: 5,),
                             Text(
-                                'Creator: Chloe Thing',
+                                'Creator: '+widget.creator_username!,
                               overflow: TextOverflow.ellipsis,
                               softWrap: true,
                               maxLines: 2,
@@ -127,24 +158,19 @@ class _PathPageState extends State<PathPage> {
                             scrollDirection: Axis.horizontal,
                             child: Row(
                               children: [
-                                ButtonTheme(
-                                  height: 20.0,
-                                  buttonColor: Colors.orange,
-                                  child: RaisedButton(
-                                    shape: StadiumBorder(),
-                                    onPressed: () {print('a');},
-                                    child: Text("Writing"),
-                                  ),
-                                ),
-                                ButtonTheme(
-                                  height: 20.0,
-                                  buttonColor: Colors.orange,
-                                  child: RaisedButton(
-                                    shape: StadiumBorder(),
-                                    onPressed: () {print('b');},
-                                    child: Text("Writing"),
-                                  ),
-                                )
+                                ...(widget.topics! as List<Topic>)
+                                    .map((topic) {
+                                  return  ButtonTheme(
+                                    height: 20.0,
+                                    buttonColor: Colors.orange,
+                                    child: RaisedButton(
+                                      shape: StadiumBorder(),
+                                      onPressed: () {print(topic.ID);},
+                                      child: Text(topic.name!),
+                                    ),
+                                  );
+                                }).toList()
+
                               ],
                             ),
                           ),),
@@ -181,7 +207,7 @@ class _PathPageState extends State<PathPage> {
                                 // for Vertical scrolling
                                 scrollDirection: Axis.vertical,
                                 child: Text(
-                                  '''Hello, this path about something like that.''',
+                                  widget.description!,
                                   style: TextStyle(fontSize: 14, height: 1.2,  fontStyle: FontStyle.italic),
                                 ),
                               ),
@@ -199,10 +225,28 @@ class _PathPageState extends State<PathPage> {
                               shape: StadiumBorder(),
                               onPrimary: Colors.white,
                             ),
-                            child: Text(isFollowed?"Enroll":"Unenroll"),
-                            onPressed: (){
+                            child: Text((isEnrollChanged?isEnrolled:widget.isEnrolled!)?"Enroll":"Unenroll"),
+                            onPressed: () async{
+                              if ((isEnrollChanged?isEnrolled:widget.isEnrolled!)) {
+                                try {
+                                  var response = await HttpService.shared.enroll(User.me!.username!, widget.ID!);
+                                } on Exception catch (error) {
+
+                                }
+                              } else {
+                                try {
+                                  var response = await HttpService.shared.unenroll(User.me!.username!, widget.ID!);
+                                } on Exception catch (error) {
+                                }
+                              }
                               setState(() {
-                                isFollowed = !isFollowed;
+                                if(!isEnrollChanged){
+                                  isEnrollChanged = true;
+                                  isEnrolled = !widget.isEnrolled!;
+                                }
+                                else{
+                                  isEnrollChanged = !isEnrollChanged;
+                                }
                               });
                             },
                           ),
@@ -210,9 +254,28 @@ class _PathPageState extends State<PathPage> {
                             children: [
                               InkWell(
 
-                                  onTap: () {
+                                  onTap: () async{
+                                    if ((isFavChanged?isFollowed:widget.isFollowed!)) {
+                                      try {
+                                        var response = await HttpService.shared.fav_path(User.me!.username!, widget.ID!);
+                                      } on Exception catch (error) {
+
+                                      }
+                                    } else {
+                                      try {
+                                        var response = await HttpService.shared.unfav_path(User.me!.username!, widget.ID!);
+                                      } on Exception catch (error) {
+                                      }
+                                    }
                                     setState(() {
-                                      isFollowed = !isFollowed;
+
+                                      if(!isFavChanged){
+                                        isFavChanged = true;
+                                        isFollowed = !widget.isFollowed!;
+                                      }
+                                      else{
+                                        isFavChanged = !isFavChanged;
+                                      }
                                     });
                                   },
                                   child: Container(
@@ -224,9 +287,9 @@ class _PathPageState extends State<PathPage> {
                                     alignment: Alignment.center,
                                     child: Icon(
                                       // NEW from here...
-                                      isFollowed ? Icons.favorite : Icons.favorite_border,
-                                      color: isFollowed ? Colors.red : null,
-                                      semanticLabel: isFollowed ? 'Remove from saved' : 'Save',
+                                      (isFavChanged?isFollowed:widget.isFollowed!) ? Icons.favorite : Icons.favorite_border,
+                                      color: (isFavChanged?isFollowed:widget.isFollowed!) ? Colors.red : null,
+                                      semanticLabel: (isFavChanged?isFollowed:widget.isFollowed!) ? 'Remove from saved' : 'Save',
                                     ),
                                   )),
                               SizedBox(width:5),
@@ -243,10 +306,10 @@ class _PathPageState extends State<PathPage> {
                                               shrinkWrap: true,
                                               children: [
                                                 SizedBox(height: 20),
+                                                /*Container(padding: EdgeInsets.all(15),child:Text('Favorited: 1231',)),
                                                 Container(padding: EdgeInsets.all(15),child:Text('Favorited: 1231',)),
                                                 Container(padding: EdgeInsets.all(15),child:Text('Favorited: 1231',)),
-                                                Container(padding: EdgeInsets.all(15),child:Text('Favorited: 1231',)),
-                                                Container(padding: EdgeInsets.all(15),child:Text('Favorited: 1231',)),
+                                                Container(padding: EdgeInsets.all(15),child:Text('Favorited: 1231',)),*/
                                                 Container(padding: EdgeInsets.symmetric(horizontal: 30,vertical: 10),
                                                     child:SpinBox(
                                                   min: 1.0,
@@ -254,16 +317,25 @@ class _PathPageState extends State<PathPage> {
                                                   value: 5.0,
                                                       decimals: 1,
                                                       step: 0.1,
-                                                  onChanged: (value) => print(value),
-                                                )),
+                                                  onChanged: (value) => {
+
+                                                setState(() {
+                                                  rating = value;
+                                                })}
+                                                )
+                                                ),
                                                 ElevatedButton(
                                                   style: ElevatedButton.styleFrom(
                                                     fixedSize: Size(MediaQuery.of(context).size.width * 0.3,15),
                                                     shape: StadiumBorder(),
                                                     onPrimary: Colors.white,
                                                   ),
-                                                  child: Text('Rate'),
-                                                  onPressed: (){
+                                                  child: Text('Rate Path'),
+                                                  onPressed: ()async{
+                                                    try {
+                                                      var response = await HttpService.shared.rate_path(User.me!.username!, widget.ID!,rating);
+                                                    } on Exception catch (error) {
+                                                    }
                                                   },
                                                 ),
                                                 Container(padding: EdgeInsets.symmetric(horizontal: 30,vertical: 10),
@@ -273,7 +345,11 @@ class _PathPageState extends State<PathPage> {
                                                       value: 5.0,
                                                       decimals: 1,
                                                       step: 0.1,
-                                                      onChanged: (value) => print(value),
+                                                        onChanged: (value) => {
+
+                                                          setState(() {
+                                                            effort = value;
+                                                          })}
                                                     )),
                                                 ElevatedButton(
                                                   style: ElevatedButton.styleFrom(
@@ -281,8 +357,12 @@ class _PathPageState extends State<PathPage> {
                                                     shape: StadiumBorder(),
                                                     onPrimary: Colors.white,
                                                   ),
-                                                  child: Text('Rate'),
-                                                  onPressed: (){
+                                                  child: Text('Rate Effort'),
+                                                  onPressed: ()async{
+                                                    try {
+                                                      var response = await HttpService.shared.effort_path(User.me!.username!, widget.ID!,effort);
+                                                    } on Exception catch (error) {
+                                                    }
                                                   },
                                                 ),
 
@@ -328,16 +408,14 @@ class _PathPageState extends State<PathPage> {
               ListView(
                 physics: BouncingScrollPhysics(),
     children: [
-     MilestoneContainer('This is a title','This is a very long description',true),
-      MilestoneContainer('This is a title','This is a very long description \n selam',false),
-      MilestoneContainer('This is a title','This is a very long description \n selam',false),
-      MilestoneContainer('This is a title','This is a very long description \n selam',false),
-      MilestoneContainer('This is a title','This is a very lahkjdhjkadhjksadhjkasdhsajkdhasjkdhjkashdksdhkasdhong description \n selam',false),
+      ...(widget.milestones! as List<Milestone>)
+          .map((milestone) {
+        return   MilestoneContainer(milestone.id!,milestone.title!,milestone.body!,milestone.isFinished!);
+      }).toList()
 
 
     ]),
-                  SizedBox(height:500,child: TestMe())
-
+                  Text("Under Development.")
                 ],
               ),
             ),
