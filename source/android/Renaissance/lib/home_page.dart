@@ -23,7 +23,7 @@ class _HomePageState extends State<HomePage> {
       {
         "name": "Popular",
         "tags": [
-          Tag(name: "Earth", id: "1", description: "earaarrrth", isFav: true),
+          Tag(name: "Earth", id: "2", description: "earaarrrth", isFav: true),
           Tag(name: "Sun", id: "11", description: "orbital", isFav: true),
           Tag(name: "Space", id: "21", description: "moth into the space", isFav: false),
           Tag(name: "Software", id: "31", description: "engineering.", isFav: true),
@@ -32,7 +32,7 @@ class _HomePageState extends State<HomePage> {
       {
         "name": "For You",
         "tags": [
-          Tag(name: "Games", id: "2", description: "playing some", isFav: false),
+          Tag(name: "Games", id: "7", description: "playing some", isFav: false),
           Tag(name: "Music", id: "211", description: "guitar and piano", isFav: false),
           Tag(name: "Nature", id: "22", description: "trees flowers", isFav: false),
           Tag(name: "Food", id: "23", description: "kebab", isFav: true),
@@ -41,10 +41,10 @@ class _HomePageState extends State<HomePage> {
       {
         "name": "New",
         "tags": [
-          Tag(name: "Youtube", id: "4", description: "video platform", isFav: true),
-          Tag(name: "Streaming", id: "4", description: "twitch platform", isFav: false),
-          Tag(name: "Art", id: "4", description: "sculpture", isFav: true),
-          Tag(name: "Gaming", id: "4", description: "minecraft", isFav: true),
+          Tag(name: "Youtube", id: "45", description: "video platform", isFav: true),
+          Tag(name: "Streaming", id: "44", description: "twitch platform", isFav: false),
+          Tag(name: "Art", id: "43", description: "sculpture", isFav: true),
+          Tag(name: "Gaming", id: "42", description: "minecraft", isFav: true),
         ]
       },
     ];
@@ -158,7 +158,7 @@ class _HomePageState extends State<HomePage> {
                 children: [
                   ...(tags[_pageIndex]["tags"] as List<Tag>)
                       .map((tag) {
-                    return TagContainer(tag);
+                    return TagContainer(key:Key(tag.id!),tag:tag);
                   }).toList(),
                 ],
               ),
@@ -170,7 +170,7 @@ class _HomePageState extends State<HomePage> {
           ),
           ...(paths[_pageIndex]["paths"] as List<BasicPath>)
               .map((path) {
-            return CourseContainer(path);
+            return CourseContainer(key: Key(path.id!),path:path);
           }).toList(),
         ],
       ),

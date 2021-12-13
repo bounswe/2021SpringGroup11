@@ -4,7 +4,7 @@ import 'package:portakal/models/tag.dart';
 import 'package:portakal/my_colors.dart';
 
 class TagContainer extends StatefulWidget {
-  TagContainer(this.tag);
+  TagContainer({Key? key,this.tag}): super(key:key);
   var tag;
   @override
   State<TagContainer> createState() => _TagContainerState();
@@ -16,14 +16,15 @@ class _TagContainerState extends State<TagContainer> {
   Widget build(BuildContext context) {
     return InkWell(
         onTap: () {
+          if (!isFav) {
+            HttpService.shared.favoriteTopic(int.parse(widget.tag.id));
+          } else {
+            HttpService.shared.unfavoriteTopic(int.parse(widget.tag.id));
+          }
           setState(() {
            isFav = !isFav;
           });
-          if (isFav) {
-            HttpService.shared.favoriteTopic(widget.tag.id);
-          } else {
-            HttpService.shared.unfavoriteTopic(widget.tag.id);
-          }
+
         },
         child: Container(
           margin: EdgeInsets.all(5),

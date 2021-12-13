@@ -23,7 +23,7 @@ class HttpService {
   late String? token = Token.shared.token;
   late Map<String, String> headers = {
     'Content-Type': 'application/json; charset=UTF-8',
-    HttpHeaders.authorizationHeader: 'Bearer $token'
+    HttpHeaders.authorizationHeader: 'Bearer $token'.replaceAll('"', '')
   };
 
   Future<LoginResponse> login(String username, String password) async {
@@ -102,6 +102,7 @@ class HttpService {
   }
   Future<bool> enroll(String username,String id) async {
     String url = baseUrl + '/path/enroll-path/';
+    print(headers);
     Response res = await post(Uri.parse(url),
         headers: headers, body: jsonEncode({'username': username,'path_id':id}));
     if (res.statusCode == 200) {
@@ -111,6 +112,7 @@ class HttpService {
   }
   Future<bool> unenroll(String username,String id) async {
     String url = baseUrl + '/path/unenroll-path/';
+    print(headers);
     Response res = await post(Uri.parse(url),
         headers: headers, body: jsonEncode({'username': username,'path_id':id}));
     if (res.statusCode == 200) {

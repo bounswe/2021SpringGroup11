@@ -7,8 +7,7 @@ import 'package:portakal/models/basic_path.dart';
 import 'package:portakal/my_colors.dart';
 
 class CourseContainer extends StatefulWidget {
-  CourseContainer(
-      this.path);
+  CourseContainer({Key? key, required this.path}):super(key:key);
   final BasicPath path;
 
   @override

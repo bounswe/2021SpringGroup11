@@ -36,12 +36,37 @@ class _MilestoneContainerState extends State<MilestoneContainer> {
           if (newValue) {
             try {
               var response = await HttpService.shared.fav_path(User.me!.username!, widget.ID);
+              if(!response){
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text(
+                    'An error occured please try again later.',
+                    style: TextStyle(
+                        decorationColor: Colors.greenAccent,
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ));
+                return;
+              }
             } on Exception catch (error) {
+
 
             }
           } else {
             try {
               var response = await HttpService.shared.unfav_path(User.me!.username!, widget.ID);
+              if(!response){
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text(
+                    'An error occured please try again later.',
+                    style: TextStyle(
+                        decorationColor: Colors.greenAccent,
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ));
+                return;
+              }
             } on Exception catch (error) {
             }
           }
