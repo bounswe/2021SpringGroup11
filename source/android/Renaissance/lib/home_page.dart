@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:portakal/models/basic_path.dart';
+import 'package:portakal/models/tag.dart';
 
 import 'package:portakal/my_colors.dart';
 import 'package:portakal/widget/course_container.dart';
@@ -15,42 +17,34 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   var _pageIndex = 0;
 
-  void changePage(int num) {
-    setState(() {
-      _pageIndex = num;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     var tags = [
       {
         "name": "Popular",
         "tags": [
-          {"name": "Games", "effort": 3, "rating": 3.2},
-          {"name": "Science", "effort": 7, "rating": 4.3},
-          {"name": "Music", "effort": 6, "rating": 4.4},
-          {"name": "Cooking", "effort": 4, "rating": 3.4},
+          Tag(name: "Earth", id: "1", description: "earaarrrth", isFav: true),
+          Tag(name: "Sun", id: "11", description: "orbital", isFav: true),
+          Tag(name: "Space", id: "21", description: "moth into the space", isFav: false),
+          Tag(name: "Software", id: "31", description: "engineering.", isFav: true),
         ]
       },
       {
         "name": "For You",
         "tags": [
-          {"name": "Science", "effort": 7, "rating": 4.3},
-          {"name": "Games", "effort": 3, "rating": 3.2},
-          {"name": "Music", "effort": 6, "rating": 4.4},
-          {"name": "Nature", "effort": 3, "rating": 4.9},
-          {"name": "Movie", "effort": 6, "rating": 4.4},
+          Tag(name: "Games", id: "2", description: "playing some", isFav: false),
+          Tag(name: "Music", id: "211", description: "guitar and piano", isFav: false),
+          Tag(name: "Nature", id: "22", description: "trees flowers", isFav: false),
+          Tag(name: "Food", id: "23", description: "kebab", isFav: true),
         ]
       },
       {
         "name": "New",
         "tags": [
-          {"name": "E-Sports", "effort": 3, "rating": 3.8},
-          {"name": "Streaming", "effort": 6, "rating": 2.8},
-          {"name": "Space", "effort": 4, "rating": 2.9},
-          {"name": "Youtube", "effort": 6, "rating": 2.8},
-          {"name": "Art", "effort": 4, "rating": 2.9},
+          Tag(name: "Youtube", id: "4", description: "video platform", isFav: true),
+          Tag(name: "Streaming", id: "4", description: "twitch platform", isFav: false),
+          Tag(name: "Art", id: "4", description: "sculpture", isFav: true),
+          Tag(name: "Gaming", id: "4", description: "minecraft", isFav: true),
         ]
       },
     ];
@@ -58,127 +52,31 @@ class _HomePageState extends State<HomePage> {
       {
         "name": "Popular",
         "paths": [
-          {
-            "name": "Learn Music Theory With a Shadowing Technique",
-            "effort": 2,
-            "rating": 1.8,
-            "url":
-                "https://www.mrmaglocci.com/uploads/5/9/2/0/59208011/__9801869_orig.jpg"
-          },
-          {
-            "name": "TEDTALKS Quantum Physics Essentials",
-            "effort": 7,
-            "rating": 4.8,
-            "url":
-                "https://img-cdn.tnwcdn.com/image?fit=1280%2C720&url=https%3A%2F%2Fcdn0.tnwcdn.com%2Fwp-content%2Fblogs.dir%2F1%2Ffiles%2F2021%2F06%2Fschrodingers-cat.jpg&signature=0a120f4487449152b88aefd7df6035e4"
-          },
-          {
-            "name": "Become a Master Chef in a Month.",
-            "effort": 6,
-            "rating": 3.9,
-            "url":
-                "https://m.media-amazon.com/images/S/assets.wholefoodsmarket.com//content/97/06/b8e9829749c587b37d175a282e33/7-tips-for-cooking-seafood-hero.jpg"
-          },
-          {
-            "name": "Running a 42 km Marathon.",
-            "effort": 7,
-            "rating": 3.2,
-            "url": "https://wmimg.azureedge.net/public/img/home/hp-4-min.jpg"
-          },
-          {
-            "name":
-                "Script Writing and Planning the Main Storyline for Dummies.",
-            "effort": 3,
-            "rating": 4.9,
-            "url":
-                "https://images.ctfassets.net/3s5io6mnxfqz/4FgiJwJPwtk1i8HzoGcC4F/7cd4e2b9312a58ba3f385e9f02bd6338/AdobeStock_112096736.jpeg?fm=jpg&w=900&fl=progressive"
-          },
+          BasicPath(id: "123", title: "Learn Music Theory With a Shadowing Technique", effort: 10, rating: 5, photo: ""),
+          BasicPath(id: "124", title: "TEDTALKS Quantum Physics Essentials", effort: 7, rating: 8, photo: ""),
+          BasicPath(id: "125", title: "Become a Master Chef in a Month.", effort: 3, rating: 8.4, photo: ""),
+          BasicPath(id: "125", title: "Radio and Television Design", effort: 6, rating: 8.4, photo: ""),
+          BasicPath(id: "41", title: "Running a 42 km Marathon.", effort: 5.5, rating: 9.6, photo: ""),
+          BasicPath(id: "471", title: "Script Writing and Planning the Main Storyline for Dummies.", effort: 7.5, rating: 8, photo: "")
         ]
       },
       {
         "name": "For You",
         "paths": [
-          {
-            "name": "TEDTALKS Quantum Physics Essentials",
-            "effort": 7,
-            "rating": 4.8,
-            "url":
-                "https://img-cdn.tnwcdn.com/image?fit=1280%2C720&url=https%3A%2F%2Fcdn0.tnwcdn.com%2Fwp-content%2Fblogs.dir%2F1%2Ffiles%2F2021%2F06%2Fschrodingers-cat.jpg&signature=0a120f4487449152b88aefd7df6035e4"
-          },
-          {
-            "name": "Understanding Kafka, a detailed Author Review",
-            "effort": 7,
-            "rating": 4.8,
-            "url":
-                "https://miro.medium.com/max/1100/1*E3aOnbVbUuYEFnW2NkIJIw.jpeg"
-          },
-          {
-            "name": "How to Survive in an Island by Yourself ",
-            "effort": 6,
-            "rating": 3.9,
-            "url":
-                "http://cdn.cnn.com/cnnnext/dam/assets/180219103122-zanzibar-and-its-islands---mnemba-a-view-from-the-sky-mnemba-island-lodge.jpg"
-          },
-          {
-            "name": "Explore the Marvel Cinematic Universe with All Details",
-            "effort": 2,
-            "rating": 1.8,
-            "url":
-                "https://play-lh.googleusercontent.com/c4SxEDCnHLh78ihzLqM3XwdCvrwJKQdhd5opSCMerITWeom5cO0yP3AKolYpqxPzIlo"
-          },
+          BasicPath(id: "130", title: "TEDTALKS Quantum Physics Essentials", effort: 7, rating: 8, photo: ""),
+          BasicPath(id: "120", title: "Understanding Kafka, a detailed Author Review", effort: 1, rating: 3.8, photo: ""),
+          BasicPath(id: "1244", title: "How to Survive in an Island by Yourself", effort: 6, rating: 5, photo: ""),
+          BasicPath(id: "1247", title: "Explore the Marvel Cinematic Universe with All Details", effort: 2, rating: 2, photo: ""),
+          BasicPath(id: "199", title: "Principles of Successful Dating", effort: 0.8, rating: 10.0, photo: ""),
         ]
       },
       {
         "name": "New",
         "paths": [
-          {
-            "name": "Studying and Coding with Pomodoro Technique",
-            "effort": 2,
-            "rating": 1.8,
-            "url":
-                "https://assets-global.website-files.com/6104304f085fddea384acd87/612825f61e6a8ca5c0020935_pomodoro-technique.png"
-          },
-          {
-            "name": "The Art of Flying for People, For Real! ",
-            "effort": 7,
-            "rating": 4.8,
-            "url":
-                "https://media.istockphoto.com/photos/superman-style-enthusiasm-concept-strong-bearded-businessman-felt-a-picture-id1023747070?k=20&m=1023747070&s=612x612&w=0&h=EzLsVJ0sIqTGcpF3PQk0zb-PcywI6ZFYFzRG_xchw5k="
-          },
-          {
-            "name": "Learn Japanese Daily Phrases.",
-            "effort": 6,
-            "rating": 3.9,
-            "url": "https://i.ebayimg.com/images/g/X5cAAMXQ-alQ4ZyI/s-l300.jpg"
-          },
-          {
-            "name": "Learn to play Violin",
-            "effort": 2,
-            "rating": 1.8,
-            "url":
-                "https://i.guim.co.uk/img/media/b0cc3b05df4b50ec6a46402a0ee9338cbfab3ec6/0_1039_4798_2875/master/4798.jpg?width=1200&quality=85&auto=format&fit=max&s=3404250f319dacb93b9b4d40f699064f"
-          },
-          {
-            "name": "How to tie a strong knot",
-            "effort": 7,
-            "rating": 4.8,
-            "url":
-                "https://image.shutterstock.com/image-photo/rope-knot-isolated-on-white-260nw-310989119.jpg"
-          },
-          {
-            "name": "Cooking for Students, Practical Receipes",
-            "effort": 6,
-            "rating": 3.9,
-            "url":
-                "https://www.seriouseats.com/thmb/GSqpVkulyUZu-D6sPijmbFV_f4s=/1500x1125/filters:fill(auto,1)/__opt__aboutcom__coeus__resources__content_migration__serious_eats__seriouseats.com__2020__03__20200224-carretteira-pasta-vicky-wasik-21-ffe68515b25f4b348cbde845a59d6a62.jpg"
-          },
-          {
-            "name": "How to Develop an Application in 4 months.",
-            "effort": 6,
-            "rating": 3.9,
-            "url":
-                "https://sharpsheets.io/blog/wp-content/uploads/2021/10/mobile-app-development-guide-scaled-1.jpeg"
-          },
+          BasicPath(id: "8593", title: "Studying and Coding with Pomodoro Technique", effort: 7.1, rating: 9.0, photo: ""),
+          BasicPath(id: "8693", title: "Learn Japanese Daily Phrases.", effort: 8.4, rating: 9.2, photo: ""),
+          BasicPath(id: "8793", title: "Learn to play Violin", effort: 2.9, rating: 9.3, photo: ""),
+          BasicPath(id: "8893", title: "How to tie a strong knot", effort: 2.2, rating: 8.5, photo: ""),
         ]
       },
     ];
@@ -228,131 +126,51 @@ class _HomePageState extends State<HomePage> {
       body: ListView(
         physics: BouncingScrollPhysics(),
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              ElevatedButton(
-                child: Text(
-                  'Popular',
-                  style: TextStyle(color: Colors.black),
-                ),
-                style: ButtonStyle(
-                  backgroundColor:
-                      MaterialStateProperty.all(MyColors.lightYellow),
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                  ),
-                ),
-                onPressed: () => changePage(0),
-              ),
-              ElevatedButton(
-                child: Text(
-                  'For You',
-                  style: TextStyle(color: Colors.black),
-                ),
-                style: ButtonStyle(
-                  backgroundColor:
-                      MaterialStateProperty.all(MyColors.lightYellow),
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                  ),
-                ),
-                onPressed: () => changePage(1),
-              ),
-              ElevatedButton(
-                child: Text(
-                  'New',
-                  style: TextStyle(color: Colors.black),
-                ),
-                style: ButtonStyle(
-                  backgroundColor:
-                      MaterialStateProperty.all(MyColors.lightYellow),
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                  ),
-                ),
-                onPressed: () => changePage(2),
-              ),
-            ],
+          CupertinoSegmentedControl(
+              children: {
+                0: Text("POPULAR"),
+                1: Text("FOR YOU"),
+                2: Text("NEW")
+              },
+              onValueChanged: (value) {
+                setState(() {
+                  _pageIndex = value as int;
+                });
+              },
+            padding: EdgeInsets.all(5),
+            groupValue: _pageIndex,
+            selectedColor: Colors.red,
+            borderColor: Colors.black,
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Expanded(
-                child: ElevatedButton(
-                  child: Text(
-                    'Tags',
-                    style: TextStyle(color: Colors.black),
-                  ),
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(Colors.orange),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        side: BorderSide(width: 3),
-                      ),
-                    ),
-                  ),
-                  onPressed: () => null,
-                ),
-              )
-            ],
+          Container(
+            child: Text("TAGS", style: TextStyle(color: Colors.black, fontSize: 25, fontWeight: FontWeight.w700, letterSpacing: 2.0)),
+            color: Colors.grey.shade300,
           ),
           Container(
             width: double.infinity,
             padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
             decoration: BoxDecoration(
-                color: Color(0x99FFFFFF),
-                borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                color: Colors.grey.shade500,
+            ),
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
                 children: [
-                  ...(tags[_pageIndex]["tags"] as List<Map<String, Object>>)
+                  ...(tags[_pageIndex]["tags"] as List<Tag>)
                       .map((tag) {
-                    return TagContainer(tag["name"] as String,
-                        tag["effort"] as int, tag["rating"] as double);
+                    return TagContainer(tag);
                   }).toList(),
                 ],
               ),
             ),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Expanded(
-                child: ElevatedButton(
-                  child: Text(
-                    'Paths',
-                    style: TextStyle(color: Colors.black),
-                  ),
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(Colors.orange),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        side: BorderSide(width: 3),
-                      ),
-                    ),
-                  ),
-                  onPressed: () => null,
-                ),
-              )
-            ],
+          Container(
+            child: Text("PATHS", style: TextStyle(color: Colors.black, fontSize: 25, fontWeight: FontWeight.w700, letterSpacing: 2.0)),
+            color: Colors.grey.shade300,
           ),
-          ...(paths[_pageIndex]["paths"] as List<Map<String, Object>>)
+          ...(paths[_pageIndex]["paths"] as List<BasicPath>)
               .map((path) {
-            return CourseContainer(
-                path["name"] as String,
-                path["effort"] as int,
-                path["rating"] as double,
-                path["url"] as String);
+            return CourseContainer(path);
           }).toList(),
         ],
       ),

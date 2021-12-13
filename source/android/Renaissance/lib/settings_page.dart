@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:portakal/login_page.dart';
 import 'package:portakal/my_colors.dart';
+import 'package:portakal/my_paths_page.dart';
 import 'package:portakal/profile_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -161,7 +162,9 @@ class _SettingsPageState extends State<SettingsPage> {
               height: 16,
             ),
             MaterialButton(
-              onPressed: () {},
+              onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => MyPathsPage()));
+              },
               child: Row(
                 children: [
                   Icon(Icons.access_time_outlined, color: MyColors.blue),
@@ -205,8 +208,7 @@ class _SettingsPageState extends State<SettingsPage> {
             MaterialButton(
               onPressed: () async {
                 SharedPreferences prefs = await SharedPreferences.getInstance();
-                await prefs.remove('isLoggedIn');
-
+                await Future.wait([prefs.remove('isLoggedIn'), prefs.remove('token')]);
                 Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
                     PageRouteBuilder(pageBuilder: (
                       BuildContext context,

@@ -9,8 +9,9 @@ class Token {
     return prefs.setString('token', value);
   }
 
-  void initializeToken() async {
+  Future<String?> initializeToken() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     token = prefs.getString('token');
+    return token;
   }
 }
