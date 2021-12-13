@@ -41,7 +41,7 @@ class _ProfilePageState extends State<ProfilePage> with EditProfileDelegate {
   // https://stackoverflow.com/questions/62156996/how-to-decode-base64-string-to-image-file-with-flutter?rq=1 profil fotosu yukleme yap.
 
   void loadPhoto() async {
-    if (User.me!.photo == null) { return ; }
+    if (User.me!.photo == null || User.me!.photo == "") { return ; }
     setState(() {
       loadingImage = true;
     });
@@ -73,7 +73,7 @@ class _ProfilePageState extends State<ProfilePage> with EditProfileDelegate {
                   Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        User.me!.photo == null ?
+                        User.me!.photo == null || User.me!.photo == "" ?
                         CircleAvatar(
                             backgroundColor: Colors.blueAccent,
                             child: Text(widget.user.username![0].toUpperCase()),
