@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:portakal/http_services.dart';
 import 'package:portakal/login_page.dart';
 import 'package:portakal/my_colors.dart';
 import 'package:portakal/my_paths_page.dart';
@@ -272,8 +273,8 @@ class _SettingsPageState extends State<SettingsPage> {
                     decoration: InputDecoration(hintText: "New Password"),
                     obscureText: true,
                     validator: (val) {
-                      if (val!.length < 6)
-                        return 'Length must be at least 6 characters.';
+                      if (val!.length < 5)
+                        return 'Length must be at least 5 characters.';
                       return null;
                     },
                     autovalidateMode: AutovalidateMode.always,
@@ -297,10 +298,17 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
             actions: [
               MaterialButton(
-                onPressed: () {
+                onPressed: () async {
                   if (_formKey.currentState!.validate()) {
                     ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: Text('Processing data')));
+                    try {
+                      var response = await HttpService.shared.changePassword(_passwordController.text);
+
+                    } on Exception catch (error) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text(error.toString())));
+                    }
                     Navigator.pop(context);
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(

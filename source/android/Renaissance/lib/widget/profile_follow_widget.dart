@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 
+mixin FollowerWidgetDelegate {
+  void onFollowersTap();
+  void onFollowingsTap();
+}
+
 class FollowerWidget extends StatelessWidget {
-  FollowerWidget(this.follower_count,this.following_count);
+  FollowerWidget(this.follower_count,this.following_count,this.delegate);
   final int follower_count;
   final int following_count;
-
+  FollowerWidgetDelegate delegate;
   @override
   Widget build(BuildContext context) => Container(
       child:Row(
@@ -17,14 +22,17 @@ class FollowerWidget extends StatelessWidget {
       )
   );
 
-
-
-
   Widget buildButton(BuildContext context, String value, String text) =>
       MaterialButton(
         shape: StadiumBorder(),
         padding: EdgeInsets.symmetric(vertical: 2),
-        onPressed: () {},
+        onPressed: () {
+          if (text == 'Followers') {
+            delegate.onFollowersTap();
+          } else {
+            delegate.onFollowingsTap();
+          }
+        },
         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
         child: Column(
           mainAxisSize: MainAxisSize.min,
