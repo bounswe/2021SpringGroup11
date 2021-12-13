@@ -1,14 +1,9 @@
-import time
-import requests
-from requests.api import get
-from rest_framework import permissions, status
+from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from authentication.utils import IsAuthenticated, IsAdmin
 from heybooster.helpers.database.mongodb import MongoDBHelper
 from django.conf import settings
-from common.models import User
-from common.data_check import check_data_keys
 from topic.utils import get_topics
 
 class FavoriteTopic(APIView):
@@ -82,3 +77,20 @@ class SearchTopics(APIView):
                     topic['isFav'] = True
 
         return Response(topics)
+
+
+class MyTopics(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        data = request.data
+
+        username = data['username']
+
+        with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
+            topics = list(db.find('favorite', {'username': username}))
+            topics = [topic['ID'] for topic in topics]
+            print(topics)
+            topic_data = list(db.find('topic', query={'ID': {'$in': topics}}, projection={'_id': 0, 'name': 1, 'ID': 1, 'description': 1}))
+
+        return Response(topic_data)
