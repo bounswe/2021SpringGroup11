@@ -187,9 +187,9 @@ class HttpService {
       return User.fromJson(jsonDecode(res.body));
     } else if (res.statusCode == 403) {
       //await refreshToken();
-      throw Exception("403.");
+      throw Exception("Please try again later.");
     } else {
-      throw Exception(headers[HttpHeaders.authorizationHeader]);
+      throw Exception("An Error Occured. Please try again later.");
     }
   }
 /*
