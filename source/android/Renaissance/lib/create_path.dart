@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:portakal/file_converter.dart';
+import 'package:portakal/models/tag.dart';
 import 'package:snippet_coder_utils/multi_images_utils.dart';
 
 import 'http_services.dart';
@@ -29,6 +30,7 @@ class _CreatePathPageState extends State<CreatePathPage> {
 
   TextEditingController titleController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
+  TextEditingController topicController = TextEditingController();
 
   void clearMilestones() {
     _titleControllers = [];
@@ -47,6 +49,7 @@ class _CreatePathPageState extends State<CreatePathPage> {
     }
     titleController.dispose();
     descriptionController.dispose();
+    topicController.dispose();
     super.dispose();
   }
 
@@ -228,7 +231,7 @@ class _CreatePathPageState extends State<CreatePathPage> {
                     border: OutlineInputBorder(),
                     hintText: "Topics",
                     contentPadding: EdgeInsets.all(10.0)),
-                controller: descriptionController,
+                controller: topicController,
                 style: TextStyle(
                     color: MyColors.coolGray,
                     fontSize: 14.0,
@@ -238,8 +241,8 @@ class _CreatePathPageState extends State<CreatePathPage> {
                 'Milestones',
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
               ),
-              _addTile(),
               _milestones(),
+              _addTile(),
               MaterialButton(
                 onPressed: () async {
                   try {
@@ -248,6 +251,7 @@ class _CreatePathPageState extends State<CreatePathPage> {
                     });
 
                     List<Map<String, String>> milestones = [];
+                    List<Map<String, String>> topics = [];
 
                     for (var i = 0; i < _titleControllers.length; i++) {
                       milestones.add({
@@ -256,14 +260,31 @@ class _CreatePathPageState extends State<CreatePathPage> {
                       });
                     }
 
+                    List<Tag> topicsSubmit = await HttpService.shared
+                        .searchTopic(topicController.text);
+
+                    // for (var i = 0; i < topicsSubmit.length; i++) {
+                    //   print(topicsSubmit[i].id);
+                    //   print(topicsSubmit[i].description);
+                    // }
+
+                    List<Map<String, Object>> sendTopic = [
+                      {
+                        "ID": int.parse(topicsSubmit[0].id as String),
+                        "name": topicsSubmit[0].name as String,
+                        "description": topicsSubmit[0].description as String
+                      }
+                    ];
+
                     User response = await HttpService.shared.createPath(
-                        titleController.text,
-                        descriptionController.text,
-                        milestones,
-                        _image == null
-                            ? ""
-                            : FileConverter.getBase64StringFile(_image),
-                        [1]);
+                      titleController.text,
+                      descriptionController.text,
+                      milestones,
+                      _image == null
+                          ? ""
+                          : FileConverter.getBase64StringFile(_image),
+                      sendTopic,
+                    );
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                       content: Text(
                         'Successfully created ${titleController.text}',

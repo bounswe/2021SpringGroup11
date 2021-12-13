@@ -8,6 +8,7 @@ import 'package:portakal/models/get_follow_response.dart';
 import 'dart:convert';
 
 import 'package:portakal/models/login_response.dart';
+import 'package:portakal/models/tag.dart';
 import 'package:portakal/token.dart';
 import 'package:jwt_decode/jwt_decode.dart';
 
@@ -168,7 +169,7 @@ class HttpService {
       String description,
       List<Map<String, String>> milestones,
       String? photo,
-      List<int> topics) async {
+      List<Map<String, Object>> topics) async {
     String url = baseUrl + '/path/create-path/';
     var body = jsonEncode({
       'title': title,
@@ -195,37 +196,42 @@ class HttpService {
   }
   */
 
-  Future<List<Object>> searchUser(String username) async {
+  Future<List<String>> searchUser(String username) async {
     String url = baseUrl + '/user/search-user/$username/';
     Response res = await get(Uri.parse(url), headers: headers);
 
     if (res.statusCode == 200) {
-      print(jsonDecode(res.body));
-      return (jsonDecode(res.body));
+      List<String> result = [];
+      for (var item in jsonDecode(res.body)) {
+        result.add(item["username"]);
+      }
+      return result;
     } else {
       throw Exception(res.body);
     }
   }
 
   Future<List<Object>> searchPath(String pathName) async {
-    String url = baseUrl + '/user/search-path/$pathName/';
+    String url = baseUrl + '/path/search-path/$pathName/';
     Response res = await get(Uri.parse(url), headers: headers);
 
     if (res.statusCode == 200) {
-      print(jsonDecode(res.body));
       return (jsonDecode(res.body));
     } else {
       throw Exception(res.body);
     }
   }
 
-  Future<List<Object>> searchTag(String topicName) async {
-    String url = baseUrl + '/user/search-topic/$topicName/';
+  Future<List<Tag>> searchTopic(String topicName) async {
+    String url = baseUrl + '/topic/search-topic/$topicName/';
     Response res = await get(Uri.parse(url), headers: headers);
 
     if (res.statusCode == 200) {
-      print(jsonDecode(res.body));
-      return (jsonDecode(res.body));
+      List<Tag> result = [];
+      for (var item in jsonDecode(res.body)) {
+        result.add(Tag.fromJSON(item));
+      }
+      return (result);
     } else {
       throw Exception(res.body);
     }
