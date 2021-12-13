@@ -275,6 +275,7 @@ class _PathPageState extends State<PathPage> {
                                       }
                                       else{
                                         isFavChanged = !isFavChanged;
+                                        isFollowed = !isFollowed;
                                       }
                                     });
                                   },
