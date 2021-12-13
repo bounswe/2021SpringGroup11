@@ -1,5 +1,7 @@
 import requests
 import json
+from django.conf import settings
+from heybooster.helpers.database.mongodb import MongoDBHelper
 
 def get_related_topics(id:int):
     
@@ -26,3 +28,35 @@ def get_related_topics(id:int):
                 pass
     
     return ret
+
+def get_rate_n_effort(path_id: str):
+    rating = 0
+    effort = 0
+
+    with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
+        rates = list(db.find('pathRating', query={'path_id': path_id}))
+        efforts = list(db.find('pathEffort', query={'path_id': path_id}))
+
+    for rate in rates:
+        rating += rate['rating']
+    if rates:
+        rating /= len(rates)
+
+    for effort_document in efforts:
+        effort += effort_document['effort']
+    if efforts:
+        effort /= len(efforts)
+
+    return rating, effort
+
+def path_is_enrolled(path_id: str, username: str) -> bool:
+    with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
+        relation = db.find_one('enroll', query={'username': username, 'path_id': path_id})
+    
+    return relation is not None
+
+def path_is_followed(path_id: str, username: str) -> bool:
+    with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
+        relation = db.find_one('follow_path', query={'username': username, 'path_id': path_id})
+    
+    return relation is not None

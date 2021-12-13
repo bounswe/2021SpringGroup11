@@ -10,7 +10,7 @@ from common.models import User
 from common.data_check import check_data_keys
 from common.wordcloudgen import wordcloudgen
 from common.topicname import topicname
-from path.utils import get_related_topics
+from path.utils import get_related_topics, get_rate_n_effort, path_is_enrolled, path_is_followed
 from bson.objectid import ObjectId
 import base64
 from bson.objectid import ObjectId
@@ -319,12 +319,21 @@ class GetEnrolledPaths(APIView):
             enrolledPaths = list(db.find('enroll', query={'username': username},  projection={'_id': 0}))
             allPaths = list(
                 db.find('path', query={'_id': {'$in': [ObjectId(path['path_id']) for path in enrolledPaths]}},
-                        projection={'_id': 0}))
+                projection={
+                    '_id': 1,
+                    'title': 1,
+                    'photo': 1
+                }))
+
+        for path in allPaths:
+            path['_id'] = str(path['_id'])
+            rating, effort = get_rate_n_effort(path['_id'])
+            path['rating'] = rating
+            path['effort'] = effort
+            path['isFollowed'] = path_is_followed(path['_id'], username)
 
         return Response(
-            {
-                'enrolledPaths': [path for path in zip(enrolledPaths, allPaths)]
-            },
+            allPaths,
             status=status.HTTP_200_OK
         )
 
@@ -529,12 +538,24 @@ class GetFollowedPaths(APIView):
 
         with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
             followedPaths = list(db.find('follow_path', query={'username': username}, projection={'_id': 0}))
-            allPaths = list(db.find('path', query={'_id': {'$in': [ObjectId(path['path_id']) for path in followedPaths]}}, projection={'_id': 0}))
+            allPaths = list(db.find('path',
+                query={'_id': {'$in': [ObjectId(path['path_id']) for path in followedPaths]}},
+                projection={
+                    '_id': 1,
+                    'title': 1,
+                    'photo': 1
+                }
+            ))
+
+        for path in allPaths:
+            path['_id'] = str(path['_id'])
+            rating, effort = get_rate_n_effort(path['_id'])
+            path['rating'] = rating
+            path['effort'] = effort
+            path['isEnrolled'] = path_is_enrolled(path['_id'], username)
 
         return Response(
-            {
-                'enrolledPaths': [path for path in zip(followedPaths, allPaths)]
-            },
+            allPaths,
             status=status.HTTP_200_OK
         )
 
