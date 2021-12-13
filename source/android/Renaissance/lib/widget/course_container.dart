@@ -1,15 +1,15 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:portakal/file_converter.dart';
+import 'package:portakal/http_services.dart';
+import 'package:portakal/models/basic_path.dart';
 import 'package:portakal/my_colors.dart';
 
 class CourseContainer extends StatefulWidget {
   CourseContainer(
-      this.course_name, this.course_effort, this.course_rating, this.photo_url);
-  final String photo_url;
-  final String course_name;
-  final int course_effort;
-  final double course_rating;
+      this.path);
+  final BasicPath path;
 
   @override
   State<CourseContainer> createState() => _CourseContainerState();
@@ -17,7 +17,22 @@ class CourseContainer extends StatefulWidget {
 
 /// This is the private State class that goes with MyStatefulWidget.
 class _CourseContainerState extends State<CourseContainer> {
-  bool already_saved = false;
+  bool already_saved = false, isLoading = false;
+  var _image;
+
+  void loadPhoto() async {
+    if (widget.path.photo == "") {
+      return;
+    }
+    setState(() {
+      isLoading = true;
+    });
+    _image = await FileConverter.getImageFromBase64(widget.path.photo!);
+    setState(() {
+      isLoading = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -42,9 +57,9 @@ class _CourseContainerState extends State<CourseContainer> {
                   children: [
                     ClipRRect(
                       borderRadius: BorderRadius.circular(15),
-                      child: Image(
-                          image: NetworkImage(widget.photo_url),
-                          width: MediaQuery.of(context).size.width * 0.2),
+                      child: _image != null ? Image.file(_image, width: 60, height: 60, fit: BoxFit.fitHeight,) :
+                      (isLoading ? CircularProgressIndicator() :
+                      CircleAvatar(backgroundColor: MyColors.red, child: Text("image"), radius: 30,)),
                     ),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -52,7 +67,7 @@ class _CourseContainerState extends State<CourseContainer> {
                       children: [
                         Container(
                             width: MediaQuery.of(context).size.width * 0.6,
-                            child: Text(widget.course_name,
+                            child: Text(widget.path.title!,
                                 overflow: TextOverflow.ellipsis,
                                 softWrap: true,
                                 maxLines: 2,
@@ -68,7 +83,7 @@ class _CourseContainerState extends State<CourseContainer> {
                                   Text('Effort',
                                       style: TextStyle(
                                           fontSize: 14, color: Colors.yellow)),
-                                  Text(widget.course_effort.toString(),
+                                  Text(widget.path.effort.toString(),
                                       style: TextStyle(
                                           fontSize: 14, color: Colors.white)),
                                 ]),
@@ -76,7 +91,7 @@ class _CourseContainerState extends State<CourseContainer> {
                                   Text('Rating',
                                       style: TextStyle(
                                           fontSize: 14, color: Colors.yellow)),
-                                  Text(widget.course_rating.toString(),
+                                  Text(widget.path.rating.toString(),
                                       style: TextStyle(
                                           fontSize: 14, color: Colors.white))
                                 ])
@@ -93,7 +108,14 @@ class _CourseContainerState extends State<CourseContainer> {
           ),
           InkWell(
               onTap: () {
-                //already_saved = !already_saved;
+                setState(() {
+                  already_saved = !already_saved;
+                });
+                if (already_saved) {
+                  HttpService.shared.followPath(widget.path.id!);
+                } else {
+                  HttpService.shared.unfollowPath(widget.path.id!);
+                }
               },
               child: Container(
                 height: 70,

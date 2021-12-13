@@ -1,55 +1,56 @@
 import 'package:flutter/material.dart';
+import 'package:portakal/http_services.dart';
+import 'package:portakal/models/tag.dart';
 import 'package:portakal/my_colors.dart';
 
-class TagContainer extends StatelessWidget {
-  TagContainer(this.course_name, this.course_effort, this.course_rating);
-  final String course_name;
-  final int course_effort;
-  final double course_rating;
+class TagContainer extends StatefulWidget {
+  TagContainer(this.tag);
+  var tag;
+  @override
+  State<TagContainer> createState() => _TagContainerState();
+}
+
+class _TagContainerState extends State<TagContainer> {
+  late var isFav = widget.tag.isFav;
   @override
   Widget build(BuildContext context) {
     return InkWell(
         onTap: () {
-          print("Course Clicked");
+          setState(() {
+           isFav = !isFav;
+          });
+          if (isFav) {
+            HttpService.shared.favoriteTopic(widget.tag.id);
+          } else {
+            HttpService.shared.unfavoriteTopic(widget.tag.id);
+          }
         },
         child: Container(
-          width: 105,
-          height: 80,
           margin: EdgeInsets.all(5),
           color: Colors.transparent,
           child: Container(
               padding: EdgeInsets.symmetric(horizontal: 7, vertical: 7),
               decoration: BoxDecoration(
-                  color: Colors.blue,
+                  color: MyColors.lightGreen,
                   borderRadius: BorderRadius.all(Radius.circular(10.0))),
-              child: Column(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Text(course_name,
+                  Text(widget.tag.name!,
                       overflow: TextOverflow.clip,
-                      maxLines: 2,
+                      maxLines: 1,
                       textAlign: TextAlign.center,
                       style: TextStyle(fontSize: 14)),
-                  const SizedBox(height: 5),
-                  MaterialButton(
-                    shape: StadiumBorder(),
-                    color: MyColors.lightGrey,
-                    padding: EdgeInsets.symmetric(vertical: 2),
-                    onPressed: () {
-                      print("Selam");
-                    },
-                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        Text("Favourite",
-                            style:
-                                TextStyle(fontSize: 12, color: Colors.white)),
-                      ],
-                    ),
+                  Icon(
+                    // NEW from here...
+                    isFav ? Icons.favorite : Icons.favorite_border,
+                    color: isFav ? Colors.red : null,
+                    semanticLabel: isFav ? 'Remove from fav' : 'Add to fav',
                   ),
                 ],
-              )),
-        ));
+              )
+          ),
+        )
+    );
   }
 }

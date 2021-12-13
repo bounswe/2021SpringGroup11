@@ -1,8 +1,10 @@
 import 'dart:developer';
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/animation.dart';
 import 'package:http/http.dart';
+import 'package:portakal/models/get_follow_response.dart';
 import 'dart:convert';
 
 import 'package:portakal/models/login_response.dart';
@@ -187,4 +189,129 @@ class HttpService {
       throw Exception(headers[HttpHeaders.authorizationHeader]);
     }
   }
+/*
+  Future<List<Object>> search(String name) async {
+    return (searchUser(name).concat(searchPath(name).concat(searchUser(name))));
+  }
+  */
+
+  Future<List<Object>> searchUser(String username) async {
+    String url = baseUrl + '/user/search-user/$username/';
+    Response res = await get(Uri.parse(url), headers: headers);
+
+    if (res.statusCode == 200) {
+      print(jsonDecode(res.body));
+      return (jsonDecode(res.body));
+    } else {
+      throw Exception(res.body);
+    }
+  }
+
+  Future<List<Object>> searchPath(String pathName) async {
+    String url = baseUrl + '/user/search-path/$pathName/';
+    Response res = await get(Uri.parse(url), headers: headers);
+
+    if (res.statusCode == 200) {
+      print(jsonDecode(res.body));
+      return (jsonDecode(res.body));
+    } else {
+      throw Exception(res.body);
+    }
+  }
+
+  Future<List<Object>> searchTag(String topicName) async {
+    String url = baseUrl + '/user/search-topic/$topicName/';
+    Response res = await get(Uri.parse(url), headers: headers);
+
+    if (res.statusCode == 200) {
+      print(jsonDecode(res.body));
+      return (jsonDecode(res.body));
+    } else {
+      throw Exception(res.body);
+    }
+  }
+
+  Future<bool> favoriteTopic(int id) async {
+    String url = baseUrl + '/topic/favorite-topic/';
+    final body = jsonEncode({'username': User.me!.username, 'ID': id});
+    Response res = await post(Uri.parse(url), headers: headers, body: body);
+    if (res.statusCode == 200) {
+      return true;
+    } else {
+      throw Exception(res.body);
+    }
+  }
+
+  Future<bool> unfavoriteTopic(int id) async {
+    String url = baseUrl + '/topic/unfavorite-topic/';
+    final body = jsonEncode({'username': User.me!.username, 'ID': id});
+    Response res = await post(Uri.parse(url), headers: headers, body: body);
+    if (res.statusCode == 200) {
+      return true;
+    } else {
+      throw Exception(res.body);
+    }
+  }
+
+  Future<bool> enrollPath(String id) async {
+    String url = baseUrl + '/path/enroll-path/';
+    final body = jsonEncode({'username': User.me!.username, 'path_id': id});
+    Response res = await post(Uri.parse(url), headers: headers, body: body);
+    if (res.statusCode == 200) {
+      return true;
+    } else {
+      throw Exception(res.body);
+    }
+  }
+
+  Future<bool> unenrollPath(String id) async {
+    String url = baseUrl + '/path/unenroll-path/';
+    final body = jsonEncode({'username': User.me!.username, 'path_id': id});
+    Response res = await post(Uri.parse(url), headers: headers, body: body);
+    if (res.statusCode == 200) {
+      return true;
+    } else {
+      throw Exception(res.body);
+    }
+  }
+
+  Future<GetFollowResponse> getFollow(String username) async {
+    String url = baseUrl + '/user/get-follow/';
+    Response res = await get(Uri.parse(url), headers: headers);
+    if (res.statusCode == 200) {
+      return GetFollowResponse.fromJSON(json.decode(res.body));
+    } else {
+      throw Exception(res.body);
+    }
+  }
+
+  Future<bool> followPath(String pathId) async {
+    String url = baseUrl + '/path/follow-path';
+    final body =
+        jsonEncode({'username': User.me!.username!, 'path_id': pathId});
+    Response res = await post(Uri.parse(url), headers: headers, body: body);
+    if (res.statusCode == 200) {
+      return true;
+    } else {
+      throw Exception(res.body);
+    }
+  }
+
+  Future<bool> unfollowPath(String pathId) async {
+    String url = baseUrl + '/path/unfollow-path';
+    final body =
+        jsonEncode({'username': User.me!.username!, 'path_id': pathId});
+    Response res = await post(Uri.parse(url), headers: headers, body: body);
+    if (res.statusCode == 200) {
+      return true;
+    } else {
+      throw Exception(res.body);
+    }
+  }
+
+  // Future<bool> getFollowedPaths(String username) async {
+  //   String url = baseUrl + '/path/get-followed-paths/';
+  //   Response res = await get(Uri.parse(url), headers: headers);
+  //
+  // }
 }
