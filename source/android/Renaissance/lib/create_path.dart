@@ -23,8 +23,54 @@ class _CreatePathPageState extends State<CreatePathPage> {
   bool _isLoading = false;
   var _milestones;
 
+  List<TextEditingController> _controllers = [];
+  List<TextField> _fields = [];
+
   TextEditingController titleController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
+
+  @override
+  void dispose() {
+    for (final controller in _controllers) {
+      controller.dispose();
+    }
+    titleController.dispose();
+    descriptionController.dispose();
+    super.dispose();
+  }
+
+  Widget _addTile() {
+    return ListTile(
+      title: Icon(Icons.add),
+      onTap: () {
+        final controller = TextEditingController();
+        final field = TextField(
+          controller: controller,
+          decoration: InputDecoration(
+            border: OutlineInputBorder(),
+            hintText: "Milestone ${_controllers.length + 1}",
+          ),
+        );
+
+        setState(() {
+          _controllers.add(controller);
+          _fields.add(field);
+        });
+      },
+    );
+  }
+
+  Widget _listView() {
+    return ListView.builder(
+      itemCount: _fields.length,
+      itemBuilder: (context, index) {
+        return Container(
+          margin: EdgeInsets.all(5),
+          child: _fields[index],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -126,6 +172,8 @@ class _CreatePathPageState extends State<CreatePathPage> {
                                 fontSize: 14.0,
                                 fontWeight: FontWeight.w400),
                           ),
+                          _addTile(),
+                          _listView(),
                           MaterialButton(
                             onPressed: () async {
                               try {
