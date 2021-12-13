@@ -394,7 +394,7 @@ class GetPath(APIView):
         username = data['username']
 
         with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
-            path = db.find_one('path', query={'_id': ObjectId(path_id)}, projection={'_id': 0})
+            path = db.find_one('path', query={'_id': ObjectId(path_id)})
             follow = db.find_one('follow_path', query={'username': username, 'path_id': path_id})
             enroll = db.find_one('enroll', query={'username': username, 'path_id': path_id})
             topics = list(db.find('topic', query={'ID': {'$in': path['topics']}}))
@@ -402,7 +402,7 @@ class GetPath(APIView):
             #finished_milestones = list(db.find('finished_milestone', query={'username': username, '_id': {'$in': [ObjectId(milestone_id) for milestone_id in path['milestones']]}}))
             finished_milestones = list(db.find('finished_milestone', query={'username': username, 'milestone_id': {'$in': path['milestones']}}))
 
-
+        path['_id'] = str(path['_id'])
         path['isFollowed'] = follow is not None
         path['isEnrolled'] = enroll is not None
 
