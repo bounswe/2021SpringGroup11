@@ -37,6 +37,7 @@ class CreatePath(APIView):
 
         with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
             topic_ids = []
+            milestone_ids = []
 
             for topic in topics:
                 if not db.find_one('topic', {'ID': topic['ID']}):
@@ -48,6 +49,16 @@ class CreatePath(APIView):
                 
                 topic_ids.append(topic['ID'])
 
+            for milestone in milestones:
+                id = db.insert_one('milestone', {
+                    'title': milestone['title'],
+                    'body': milestone['body']
+                }).inserted_id
+
+                # milestone['id'] = str(id)
+                milestone_ids.append(str(id))
+
+
             id = db.insert_one('path',
             {
                 'title': title,
@@ -57,12 +68,44 @@ class CreatePath(APIView):
                 'creator_email': creator_email,
                 'created_at': created_at,
                 'photo': photo,
-                'milestones': milestones,
+                'milestones': milestone_ids,
                 'is_banned': is_banned,
                 'is_deleted': is_deleted
             }).inserted_id
 
         return Response({'pathID': str(id)}, status=status.HTTP_200_OK)
+
+class FinishMilestone(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        data = request.data
+        username = data['username']
+        milestone_id = data['milestone_id']
+
+        with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
+            db.insert_one('finished_milestone', {
+                'username': username,
+                'milestone_id': milestone_id
+            })
+        
+        return Response('SUCCESSFUL')
+
+class UnfinishMilestone(APIView):
+    permission_classes = [IsAuthenticated]
+    
+    def post(self, request):
+        data = request.data
+        username = data['username']
+        milestone_id = data['milestone_id']
+        
+        with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
+            db.delete_one('finished_milestone', {
+                'username': username,
+                'milestone_id': milestone_id
+            })
+        
+        return Response('SUCCESSFUL')
 
 class RatePath(APIView):
     permission_classes = [IsAuthenticated]
@@ -353,11 +396,44 @@ class GetPath(APIView):
             path = db.find_one('path', query={'_id': ObjectId(path_id)}, projection={'_id': 0})
             follow = db.find_one('follow_path', query={'username': username, 'path_id': path_id})
             enroll = db.find_one('enroll', query={'username': username, 'path_id': path_id})
+            topics = list(db.find('topic', query={'ID': {'$in': path['topics']}}))
+            milestones = list(db.find('milestone', query={'_id': {'$in': [ObjectId(milestone_id) for milestone_id in path['milestones']]}}))
+            #finished_milestones = list(db.find('finished_milestone', query={'username': username, '_id': {'$in': [ObjectId(milestone_id) for milestone_id in path['milestones']]}}))
+            finished_milestones = list(db.find('finished_milestone', query={'username': username, 'milestone_id': {'$in': path['milestones']}}))
+
 
         path['isFollowed'] = follow is not None
         path['isEnrolled'] = enroll is not None
 
+        new_path_topics = []
+        for path_topic in path['topics']:
+            for topic in topics:
+                if path_topic == topic['ID']:
+                    path_topic = {}
+                    path_topic['ID'] = topic['ID']
+                    path_topic['name'] = topic['name']
+                    path_topic['description'] = topic['description']
+                    new_path_topics.append(path_topic)
+                    break
+        path['topics'] = new_path_topics
+
+        finished_milestone_ids = [finished_milestone['milestone_id'] for finished_milestone in finished_milestones]
+
+        new_path_milestones = []
+        for path_milestone in path['milestones']:
+            for milestone in milestones:
+                if str(milestone['_id']) == path_milestone:
+                    path_milestone = {}
+                    path_milestone['_id'] = str(milestone['_id'])
+                    path_milestone['title'] = milestone['body']
+                    path_milestone['body'] = milestone['body']
+                    path_milestone['isFinished'] = str(milestone['_id']) in finished_milestone_ids
+                    new_path_milestones.append(path_milestone)
+                    break
+        path['milestones'] = new_path_milestones
+
         return Response(path)
+
 
 class GetRelatedPath(APIView):
     permission_classes = [IsAuthenticated]
