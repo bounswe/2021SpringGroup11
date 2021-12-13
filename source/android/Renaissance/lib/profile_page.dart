@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:portakal/edit_profile.dart';
 import 'package:portakal/file_converter.dart';
+import 'package:portakal/follow_page.dart';
 import 'package:portakal/http_services.dart';
 import 'dart:io';
 import 'package:portakal/my_colors.dart';
@@ -20,7 +21,7 @@ class ProfilePage extends StatefulWidget {
 }
 bool isFollowed = true;
 
-class _ProfilePageState extends State<ProfilePage> with EditProfileDelegate {
+class _ProfilePageState extends State<ProfilePage> with EditProfileDelegate, FollowerWidgetDelegate {
 
   var paths = [
     {"name": "Selam", "effort": 2, "rating": 10.0},
@@ -125,8 +126,8 @@ class _ProfilePageState extends State<ProfilePage> with EditProfileDelegate {
                                 color: Color(0x99FFFFFF),
                                 borderRadius: BorderRadius.all(Radius.circular(50.0))
                             ),
-                            child: new Center(
-                                child: FollowerWidget(0,0)
+                            child: Center(
+                                child: FollowerWidget(0,0, this)
                             ),
                             margin: EdgeInsets.only(top: 10)
                         ),
@@ -206,6 +207,16 @@ class _ProfilePageState extends State<ProfilePage> with EditProfileDelegate {
     loadPhoto();
     setState(() {
     });
+  }
+
+  @override
+  void onFollowersTap() {
+    Navigator.push(context, MaterialPageRoute(builder: (context) => FollowerPage()));
+  }
+
+  @override
+  void onFollowingsTap() {
+    Navigator.push(context, MaterialPageRoute(builder: (context) => FollowingPage()));
   }
 }
 
