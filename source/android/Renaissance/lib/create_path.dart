@@ -21,17 +21,28 @@ class CreatePathPage extends StatefulWidget {
 class _CreatePathPageState extends State<CreatePathPage> {
   var _image;
   bool _isLoading = false;
-  var _milestones;
 
-  List<TextEditingController> _controllers = [];
-  List<TextField> _fields = [];
+  List<TextEditingController> _titleControllers = [];
+  List<TextField> _titleFields = [];
+  List<TextEditingController> _descControllers = [];
+  List<TextField> _descFields = [];
 
   TextEditingController titleController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
 
+  void clearMilestones() {
+    _titleControllers = [];
+    _titleFields = [];
+    _descControllers = [];
+    _descFields = [];
+  }
+
   @override
   void dispose() {
-    for (final controller in _controllers) {
+    for (final controller in _titleControllers) {
+      controller.dispose();
+    }
+    for (final controller in _descControllers) {
       controller.dispose();
     }
     titleController.dispose();
@@ -43,32 +54,76 @@ class _CreatePathPageState extends State<CreatePathPage> {
     return ListTile(
       title: Icon(Icons.add),
       onTap: () {
-        final controller = TextEditingController();
-        final field = TextField(
-          controller: controller,
+        final titleController = TextEditingController();
+        final titleField = TextField(
+          controller: titleController,
+          maxLength: 50,
+          style: TextStyle(
+              color: MyColors.coolGray,
+              fontSize: 14.0,
+              fontWeight: FontWeight.w400),
           decoration: InputDecoration(
             border: OutlineInputBorder(),
-            hintText: "Milestone ${_controllers.length + 1}",
+            hintText: "Title...",
           ),
+        );
+        final descController = TextEditingController();
+        final descField = TextField(
+          controller: descController,
+          maxLength: 200,
+          maxLines: 5,
+          style: TextStyle(
+              color: MyColors.coolGray,
+              fontSize: 14.0,
+              fontWeight: FontWeight.w400),
+          decoration: InputDecoration(
+              border: OutlineInputBorder(),
+              hintText: "Description...",
+              contentPadding: EdgeInsets.all(10.0)),
         );
 
         setState(() {
-          _controllers.add(controller);
-          _fields.add(field);
+          _titleControllers.add(titleController);
+          _titleFields.add(titleField);
+          _descControllers.add(descController);
+          _descFields.add(descField);
         });
       },
     );
   }
 
-  Widget _listView() {
-    return ListView.builder(
-      itemCount: _fields.length,
-      itemBuilder: (context, index) {
-        return Container(
+  Widget _milestones() {
+    final children = [
+      for (var i = 0; i < _titleControllers.length; i++)
+        Container(
           margin: EdgeInsets.all(5),
-          child: _fields[index],
-        );
-      },
+          child: InputDecorator(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Title",
+                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+                ),
+                _titleFields[i],
+                Text(
+                  "Description ",
+                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+                ),
+                _descFields[i],
+              ],
+            ),
+            decoration: InputDecoration(
+              labelText: "Milestone " + (i + 1).toString(),
+              labelStyle: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+            ),
+          ),
+        )
+    ];
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: children,
     );
   }
 
@@ -80,169 +135,158 @@ class _CreatePathPageState extends State<CreatePathPage> {
           resizeToAvoidBottomInset: false,
           appBar: AppBar(
             backgroundColor: MyColors.blue,
-            title: Text("Create a New Path"),
+            title: Text("Create New Path"),
             centerTitle: true,
           ),
-          body: CustomScrollView(
-            scrollDirection: Axis.vertical,
-            slivers: [
-              SliverFillRemaining(
-                hasScrollBody: false,
-                child: Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      ClipRRect(
-                          borderRadius: BorderRadius.circular(32.0),
-                          child: _image != null
-                              ? Image.file(
-                                  _image,
-                                  width: 80,
-                                  height: 80,
-                                  fit: BoxFit.fitHeight,
-                                )
-                              : Image(
-                                  image: AssetImage('assets/placeHolder.jpg'),
-                                  width: 80,
-                                  height: 80,
-                                  fit: BoxFit.fitHeight,
-                                )),
-                      Text(
-                        'Your Path...',
+          body: ListView(
+            physics: BouncingScrollPhysics(),
+            padding: EdgeInsets.all(20.0),
+            children: [
+              Column(
+                children: [
+                  ClipRRect(
+                      borderRadius: BorderRadius.circular(300.0),
+                      child: _image != null
+                          ? Image.file(
+                              _image,
+                              width: 160,
+                              height: 90,
+                              fit: BoxFit.fitHeight,
+                            )
+                          : Image(
+                              image: AssetImage('assets/placeHolder.jpg'),
+                              width: 160,
+                              height: 90,
+                              fit: BoxFit.fitHeight,
+                            )),
+                  Center(
+                      child: Text(
+                    'Your Path...',
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
+                  )),
+                  MaterialButton(
+                    onPressed: () async {
+                      final ImagePicker _picker = ImagePicker();
+                      final XFile? image =
+                          await _picker.pickImage(source: ImageSource.gallery);
+                      setState(() {
+                        if (image != null) {
+                          _image = File(image.path);
+                        }
+                      });
+                    },
+                    textColor: Colors.white70,
+                    shape: StadiumBorder(),
+                    child: Text(
+                      'Change Path Image',
+                    ),
+                    color: MyColors.blue,
+                  )
+                ],
+              ),
+              Text(
+                'Title',
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+              ),
+              TextField(
+                maxLength: 50,
+                decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    hintText: "Your title",
+                    contentPadding: EdgeInsets.symmetric(horizontal: 10)),
+                controller: titleController,
+                style: TextStyle(
+                    color: MyColors.coolGray,
+                    fontSize: 14.0,
+                    fontWeight: FontWeight.w400),
+              ),
+              Text(
+                'Description',
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+              ),
+              TextField(
+                maxLength: 200,
+                maxLines: 5,
+                decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    hintText: "Your description...",
+                    contentPadding: EdgeInsets.all(10.0)),
+                controller: descriptionController,
+                style: TextStyle(
+                    color: MyColors.coolGray,
+                    fontSize: 14.0,
+                    fontWeight: FontWeight.w400),
+              ),
+              Text(
+                'Milestones',
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+              ),
+              _addTile(),
+              _milestones(),
+              MaterialButton(
+                onPressed: () async {
+                  try {
+                    setState(() {
+                      _isLoading = true;
+                    });
+
+                    // User response = await HttpService.shared
+                    //     .createPath(
+                    //         titleController.text,
+                    //         descriptionController.text,
+                    //         _milestones,
+                    //         _image == null
+                    //             ? FileConverter.getBase64StringPath(
+                    //                 "assets/placeHolder.jpg")
+                    //             : FileConverter.getBase64StringFile(
+                    //                 _image),
+                    //         [1]);
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text(
+                        'Successfully created ${titleController.text}',
                         style: TextStyle(
-                            fontSize: 24, fontWeight: FontWeight.w500),
+                            decorationColor: Colors.greenAccent,
+                            fontSize: 25,
+                            fontWeight: FontWeight.bold),
                       ),
-                      MaterialButton(
-                        onPressed: () async {
-                          final ImagePicker _picker = ImagePicker();
-                          final XFile? image = await _picker.pickImage(
-                              source: ImageSource.gallery);
-                          setState(() {
-                            if (image != null) {
-                              _image = File(image.path);
-                            }
-                          });
-                        },
-                        textColor: Colors.white70,
-                        shape: StadiumBorder(),
-                        child: Text(
-                          'Change Path Image',
+                    ));
+
+                    titleController.clear();
+                    descriptionController.clear();
+                    clearMilestones();
+
+                    setState(() {
+                      _isLoading = false;
+                    });
+                  } on Exception catch (error) {
+                    setState(() {
+                      _isLoading = false;
+                    });
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text(
+                        '$error',
+                        style: TextStyle(
+                            decorationColor: Colors.greenAccent,
+                            fontSize: 25,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ));
+                  }
+                },
+                child: _isLoading
+                    ? Container(
+                        width: 24,
+                        height: 24,
+                        padding: const EdgeInsets.all(2.0),
+                        child: const CircularProgressIndicator(
+                          color: Colors.white,
+                          strokeWidth: 3,
                         ),
-                        color: MyColors.blue,
-                      ),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Title',
-                            style: TextStyle(
-                                fontSize: 22, fontWeight: FontWeight.bold),
-                          ),
-                          TextField(
-                            maxLength: 20,
-                            decoration: InputDecoration(
-                                border: OutlineInputBorder(),
-                                hintText: "Your title",
-                                contentPadding:
-                                    EdgeInsets.symmetric(horizontal: 10)),
-                            controller: titleController,
-                            style: TextStyle(
-                                color: MyColors.coolGray,
-                                fontSize: 14.0,
-                                fontWeight: FontWeight.w400),
-                          ),
-                          Text(
-                            'Description',
-                            style: TextStyle(
-                                fontSize: 22, fontWeight: FontWeight.bold),
-                          ),
-                          TextField(
-                            maxLength: 200,
-                            maxLines: 5,
-                            decoration: InputDecoration(
-                                border: OutlineInputBorder(),
-                                hintText: "Your description...",
-                                contentPadding: EdgeInsets.all(10.0)),
-                            controller: descriptionController,
-                            style: TextStyle(
-                                color: MyColors.coolGray,
-                                fontSize: 14.0,
-                                fontWeight: FontWeight.w400),
-                          ),
-                          _addTile(),
-                          _listView(),
-                          MaterialButton(
-                            onPressed: () async {
-                              try {
-                                setState(() {
-                                  _isLoading = true;
-                                });
-
-                                // User response = await HttpService.shared
-                                //     .createPath(
-                                //         titleController.text,
-                                //         descriptionController.text,
-                                //         _milestones,
-                                //         _image == null
-                                //             ? FileConverter.getBase64StringPath(
-                                //                 "assets/placeHolder.jpg")
-                                //             : FileConverter.getBase64StringFile(
-                                //                 _image),
-                                //         [1]);
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(SnackBar(
-                                  content: Text(
-                                    'Successfully created ${titleController.text}',
-                                    style: TextStyle(
-                                        decorationColor: Colors.greenAccent,
-                                        fontSize: 25,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ));
-
-                                setState(() {
-                                  _isLoading = false;
-                                });
-                              } on Exception catch (error) {
-                                setState(() {
-                                  _isLoading = false;
-                                });
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(SnackBar(
-                                  content: Text(
-                                    '$error',
-                                    style: TextStyle(
-                                        decorationColor: Colors.greenAccent,
-                                        fontSize: 25,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ));
-                              }
-                            },
-                            child: _isLoading
-                                ? Container(
-                                    width: 24,
-                                    height: 24,
-                                    padding: const EdgeInsets.all(2.0),
-                                    child: const CircularProgressIndicator(
-                                      color: Colors.white,
-                                      strokeWidth: 3,
-                                    ),
-                                  )
-                                : Text('Save'),
-                            shape: StadiumBorder(),
-                            color: MyColors.red,
-                          )
-                        ],
-                      ),
-                      Spacer()
-                    ],
-                  ),
-                ),
-              )
+                      )
+                    : Text('Save'),
+                shape: StadiumBorder(),
+                color: MyColors.red,
+              ),
             ],
           )),
     );
