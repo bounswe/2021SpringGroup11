@@ -3,10 +3,12 @@ import 'dart:io';
 
 import 'package:flutter/animation.dart';
 import 'package:http/http.dart';
+import 'package:portakal/models/basic_path.dart';
 import 'package:portakal/models/get_follow_response.dart';
 import 'dart:convert';
 
 import 'package:portakal/models/login_response.dart';
+import 'package:portakal/models/path.dart';
 import 'package:portakal/token.dart';
 import 'package:jwt_decode/jwt_decode.dart';
 
@@ -217,7 +219,7 @@ class HttpService {
   }
 
   Future<User> changePassword(String password) async {
-    String url = baseUrl + 'user/change-password/';
+    String url = baseUrl + '/user/change-password/';
     var body = jsonEncode({
       'password': password
     });
@@ -230,7 +232,7 @@ class HttpService {
   }
 
   Future<String> followUser(String username, String targetUsername) async {
-    String url = baseUrl + 'user/follow-user/';
+    String url = baseUrl + '/user/follow-user/';
     var body = jsonEncode({
       'username': username,
       'target': targetUsername
@@ -244,7 +246,7 @@ class HttpService {
   }
 
   Future<String> unfollowUser(String username, String targetUsername) async {
-    String url = baseUrl + 'user/unfollow-user/';
+    String url = baseUrl + '/user/unfollow-user/';
     var body = jsonEncode({
       'username': username,
       'target': targetUsername
@@ -354,7 +356,7 @@ class HttpService {
   }
 
   Future<bool> followPath(String pathId) async {
-    String url = baseUrl + '/path/follow-path';
+    String url = baseUrl + '/path/follow-path/';
     final body = jsonEncode({'username': User.me!.username!, 'path_id': pathId});
     Response res = await post(Uri.parse(url), headers: headers, body: body);
     if (res.statusCode == 200) {
@@ -365,7 +367,7 @@ class HttpService {
   }
 
   Future<bool> unfollowPath(String pathId) async {
-    String url = baseUrl + '/path/unfollow-path';
+    String url = baseUrl + '/path/unfollow-path/';
     final body = jsonEncode({'username': User.me!.username!, 'path_id': pathId});
     Response res = await post(Uri.parse(url), headers: headers, body: body);
     if (res.statusCode == 200) {
@@ -375,9 +377,35 @@ class HttpService {
     }
   }
 
-  // Future<bool> getFollowedPaths(String username) async {
-  //   String url = baseUrl + '/path/get-followed-paths/';
-  //   Response res = await get(Uri.parse(url), headers: headers);
-  //
-  // }
+  Future<List<BasicPath>> getFollowedPaths(String username) async {
+    String url = baseUrl + '/path/get-followed-paths/';
+    final body = jsonEncode({'username': username});
+    Response res = await post(Uri.parse(url), headers: headers, body: body);
+    if (res.statusCode == 200) {
+      return (res.body as List<Map<String, dynamic>>).map((map) => BasicPath.fromJSON(map)).toList();
+    } else {
+      throw Exception(res.body);
+    }
+  }
+
+  Future<List<BasicPath>> getEnrolledPaths(String username) async {
+    String url = baseUrl + '/path/get-enrolled-paths/';
+    final body = jsonEncode({'username': username});
+    Response res = await post(Uri.parse(url), headers: headers, body: body);
+    if (res.statusCode == 200) {
+      return (res.body as List<Map<String, dynamic>>).map((map) => BasicPath.fromJSON(map)).toList();
+    } else {
+      throw Exception(res.body);
+    }
+  }
+
+  Future<List<Path>> myPaths() async {
+    String url = baseUrl + '/path/my-paths/';
+    Response res = await get(Uri.parse(url), headers: headers);
+    if (res.statusCode == 200) {
+      return (res.body as List<Map<String, dynamic>>).map((map) => Path.fromJson(map)).toList();
+    } else {
+      throw Exception(res.body);
+    }
+  }
 }

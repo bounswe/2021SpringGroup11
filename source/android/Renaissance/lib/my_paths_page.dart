@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:portakal/http_services.dart';
 import 'package:portakal/models/basic_path.dart';
+import 'package:portakal/models/path.dart';
 import 'package:portakal/widget/course_container.dart';
 
 import 'my_colors.dart';
@@ -15,18 +16,16 @@ class MyPathsPage extends StatefulWidget {
 }
 
 class _MyPathsPageState extends State<MyPathsPage> {
-  late Future<List<BasicPath>> myPaths;
+  late Future<List<Path>> myPaths;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    //myPaths = [] as Future<List<BasicPath>>;
+    myPaths = HttpService.shared.myPaths();
   }
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Scaffold(
       appBar: AppBar(
         backgroundColor: MyColors.blue,
@@ -34,15 +33,16 @@ class _MyPathsPageState extends State<MyPathsPage> {
         centerTitle: true,
       ),
       body: Center(
-        child: FutureBuilder<List<BasicPath>>(
+        child: FutureBuilder<List<Path>>(
           future: myPaths,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               return ListView.builder(
+                physics: BouncingScrollPhysics(),
                 itemCount: snapshot.data!.length,
                 itemBuilder: (context, index) {
-                  BasicPath path = snapshot.data![index];
-                  return CourseContainer(path);
+                  Path path = snapshot.data![index];
+                  return CourseContainer(path.basic());
                 },
               );
             } else {
