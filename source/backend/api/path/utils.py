@@ -1,5 +1,4 @@
 import requests
-import json
 from django.conf import settings
 from heybooster.helpers.database.mongodb import MongoDBHelper
 
@@ -14,13 +13,9 @@ def get_related_topics(id:int):
     
     ret = []
     
-    #with open('data3.json', 'w+') as outfile:
-    #    json.dump(resp.json(), outfile)
-
-    print(f'Q{id}')
     data = resp.json()["entities"][f'Q{id}']["claims"]
 
-    for key,value in data.items():
+    for key, value in data.items():
         for item in value:
             try:
                 ret.append(int(item['mainsnak']['datavalue']['value']['id'][1:]))

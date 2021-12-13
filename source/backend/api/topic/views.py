@@ -1,15 +1,10 @@
-import time
-import requests
-from requests.api import get
-from rest_framework import permissions, status
+from rest_framework import  status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from authentication.utils import IsAuthenticated, IsAdmin
 from heybooster.helpers.database.mongodb import MongoDBHelper
 from django.conf import settings
-from common.models import User
-from common.data_check import check_data_keys
-from topic.utils import get_topics
+from topic.utils import get_topics, get_related_topics, topicname
 
 class FavoriteTopic(APIView):
     permission_classes = [IsAuthenticated]
@@ -75,6 +70,46 @@ class SearchTopics(APIView):
 
         with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
             fav_topics = list(db.find('favorite', {'username': username, 'ID': {'$in': [topic['id'] for topic in topics]}}))
+
+        for fav_topic in fav_topics:
+            for topic in topics:
+                if topic['id'] == fav_topic['ID']:
+                    topic['isFav'] = True
+
+        return Response(topics)
+
+
+class GetTopic(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, topic_id):
+        data = request.data
+
+        username = data['username']
+        topic_id = int(topic_id)
+
+        with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
+            topic = db.find_one('topic', {'ID': topic_id}, projection={'_id': 0, 'ID': 1, 'name': 1, 'description': 1})
+            favorite = db.find_one('favorite', {'username': username, 'ID': topic_id})
+            topic['isFav'] = favorite is not None
+
+        return Response(topic)
+
+
+class RelatedTopics(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, topic_id):
+        data = request.data
+        username = data['username']
+        topic_id = int(topic_id)
+        topics = get_related_topics(topic_id)
+        for topic in topics:
+            topic['isFav'] = False
+            topic['name'] = topicname(topic['ID'])
+
+        with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
+            fav_topics = list(db.find('favorite', {'username': username, 'ID': {'$in': [topic['ID'] for topic in topics]}}))
 
         for fav_topic in fav_topics:
             for topic in topics:

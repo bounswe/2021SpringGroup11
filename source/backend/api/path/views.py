@@ -463,6 +463,9 @@ class GetRelatedPath(APIView):
             path['_id'] = str(path['_id'])
             path['isFollowed'] = False
             path['isEnrolled'] = False
+            rating, effort = get_rate_n_effort(path['_id'])
+            path['rating'] = rating
+            path['effort'] = effort
 
         for followed_path in followedPaths:
             for path in paths:
