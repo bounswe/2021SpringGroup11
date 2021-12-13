@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:async';
 import 'dart:io';
 
@@ -8,6 +9,7 @@ import 'package:portakal/models/get_follow_response.dart';
 import 'dart:convert';
 
 import 'package:portakal/models/login_response.dart';
+import 'package:portakal/models/tag.dart';
 import 'package:portakal/models/path.dart';
 import 'package:portakal/token.dart';
 import 'package:jwt_decode/jwt_decode.dart';
@@ -28,9 +30,7 @@ class HttpService {
     // only JWT strings return from this endpoint.
     String url = baseUrl + "/authentication/login/";
     Response res = await post(Uri.parse(url),
-        headers: {
-        'Content-Type': 'application/json; charset=UTF-8'
-        },
+        headers: {'Content-Type': 'application/json; charset=UTF-8'},
         body: jsonEncode({'username': username, 'password': password}));
     if (res.statusCode == 200) {
       await Token.shared.setToken(res.body.replaceAll('"', ''));
@@ -48,11 +48,8 @@ class HttpService {
   Future<LoginResponse> refreshToken() async {
     String url = baseUrl + '/authentication/refresh-token/';
     Response res = await post(Uri.parse(url),
-        headers: {
-          'Content-Type': 'application/json; charset=UTF-8'
-        },
-        body: jsonEncode({ 'jwt': token!.replaceAll('"', '') })
-    );
+        headers: {'Content-Type': 'application/json; charset=UTF-8'},
+        body: jsonEncode({'jwt': token!.replaceAll('"', '')}));
     if (res.statusCode == 200) {
       await Token.shared.setToken(res.body.replaceAll('"', ''));
       token = Token.shared.token;
@@ -66,9 +63,7 @@ class HttpService {
       String lastname, String password) async {
     String url = baseUrl + '/authentication/signup/';
     Response res = await post(Uri.parse(url),
-        headers: {
-        'Content-Type': 'application/json; charset=UTF-8'
-        },
+        headers: {'Content-Type': 'application/json; charset=UTF-8'},
         body: jsonEncode({
           'email': email,
           'username': username,
@@ -87,15 +82,9 @@ class HttpService {
 
   Future<bool> forgotPassword(String username) async {
     String url = baseUrl + '/authentication/forgot-password/';
-    Response res =
-        await post(
-            Uri.parse(url),
-            headers: {
-              'Content-Type': 'application/json; charset=UTF-8'
-            },
-            body: jsonEncode({'username': username}
-            )
-        );
+    Response res = await post(Uri.parse(url),
+        headers: {'Content-Type': 'application/json; charset=UTF-8'},
+        body: jsonEncode({'username': username}));
     if (res.statusCode == 202) {
       return true;
     }
@@ -114,9 +103,7 @@ class HttpService {
 
   Future<User> getUser(String username) async {
     String url = baseUrl + '/user/get-profile/$username/';
-    Response res = await get(Uri.parse(url),
-      headers: headers
-    );
+    Response res = await get(Uri.parse(url), headers: headers);
 
     if (res.statusCode == 200) {
       return User.fromJson(jsonDecode(res.body));
@@ -125,7 +112,8 @@ class HttpService {
     }
   }
 
-  Future<User> editUser(String firstName, String lastName, String bio, String? photo) async {
+  Future<User> editUser(
+      String firstName, String lastName, String bio, String? photo) async {
     String url = baseUrl + '/user/edit-user/';
     var body = jsonEncode({
       'firstname': firstName,
@@ -139,17 +127,15 @@ class HttpService {
     } else if (res.statusCode == 403) {
       //await refreshToken();
       throw Exception("403.");
-    }
-    else {
-      throw Exception(headers[HttpHeaders.authorizationHeader]); // token not valid donuyor anlamsizca. token da set edili normalde.
+    } else {
+      throw Exception(headers[HttpHeaders
+          .authorizationHeader]); // token not valid donuyor anlamsizca. token da set edili normalde.
     }
   }
 
   Future<User> changePassword(String password) async {
     String url = baseUrl + '/user/change-password/';
-    var body = jsonEncode({
-      'password': password
-    });
+    var body = jsonEncode({'password': password});
     Response res = await post(Uri.parse(url), headers: headers, body: body);
     if (res.statusCode == 200) {
       return User.fromJson(jsonDecode(res.body));
@@ -160,10 +146,7 @@ class HttpService {
 
   Future<String> followUser(String username, String targetUsername) async {
     String url = baseUrl + '/user/follow-user/';
-    var body = jsonEncode({
-      'username': username,
-      'target': targetUsername
-    });
+    var body = jsonEncode({'username': username, 'target': targetUsername});
     Response res = await post(Uri.parse(url), headers: headers, body: body);
     if (res.statusCode == 200) {
       return res.body;
@@ -174,10 +157,7 @@ class HttpService {
 
   Future<String> unfollowUser(String username, String targetUsername) async {
     String url = baseUrl + '/user/unfollow-user/';
-    var body = jsonEncode({
-      'username': username,
-      'target': targetUsername
-    });
+    var body = jsonEncode({'username': username, 'target': targetUsername});
     Response res = await post(Uri.parse(url), headers: headers, body: body);
     if (res.statusCode == 200) {
       return res.body;
@@ -186,48 +166,79 @@ class HttpService {
     }
   }
 
+  Future<User> createPath(
+      String title,
+      String description,
+      List<Map<String, String>> milestones,
+      String? photo,
+      List<Map<String, Object>> topics) async {
+    String url = baseUrl + '/path/create-path/';
+    var body = jsonEncode({
+      'title': title,
+      'description': description,
+      'milestones': milestones,
+      'topics': topics,
+      'photo': photo,
+    });
+    //log(body);
+    log(HttpHeaders.authorizationHeader);
+    Response res = await post(Uri.parse(url), headers: headers, body: body);
+    if (res.statusCode == 200) {
+      return User.fromJson(jsonDecode(res.body));
+    } else if (res.statusCode == 403) {
+      //await refreshToken();
+      throw Exception("Please try again later.");
+    } else {
+      throw Exception("An Error Occured. Please try again later.");
+    }
+  }
 /*
   Future<List<Object>> search(String name) async {
     return (searchUser(name).concat(searchPath(name).concat(searchUser(name))));
   }
   */
 
-  Future<List<Object>> searchUser(String username) async {
+  Future<List<String>> searchUser(String username) async {
     String url = baseUrl + '/user/search-user/$username/';
     Response res = await get(Uri.parse(url), headers: headers);
 
     if (res.statusCode == 200) {
-      print(jsonDecode(res.body));
-      return (jsonDecode(res.body));
+      List<String> result = [];
+      for (var item in jsonDecode(res.body)) {
+        result.add(item["username"]);
+      }
+      return result;
     } else {
       throw Exception(res.body);
     }
   }
 
   Future<List<Object>> searchPath(String pathName) async {
-    String url = baseUrl + '/user/search-path/$pathName/';
+    String url = baseUrl + '/path/search-path/$pathName/';
     Response res = await get(Uri.parse(url), headers: headers);
 
     if (res.statusCode == 200) {
-      print(jsonDecode(res.body));
       return (jsonDecode(res.body));
     } else {
       throw Exception(res.body);
     }
   }
 
-  Future<List<Object>> searchTag(String topicName) async {
-    String url = baseUrl + '/user/search-topic/$topicName/';
+  Future<List<Tag>> searchTopic(String topicName) async {
+    String url = baseUrl + '/topic/search-topic/$topicName/';
     Response res = await get(Uri.parse(url), headers: headers);
 
     if (res.statusCode == 200) {
-      print(jsonDecode(res.body));
-      return (jsonDecode(res.body));
+      List<Tag> result = [];
+      for (var item in jsonDecode(res.body)) {
+        result.add(Tag.fromJSON(item));
+      }
+      return (result);
     } else {
       throw Exception(res.body);
     }
   }
-  
+
   Future<bool> favoriteTopic(int id) async {
     String url = baseUrl + '/topic/favorite-topic/';
     final body = jsonEncode({'username': User.me!.username, 'ID': id});
@@ -284,7 +295,8 @@ class HttpService {
 
   Future<bool> followPath(String pathId) async {
     String url = baseUrl + '/path/follow-path/';
-    final body = jsonEncode({'username': User.me!.username!, 'path_id': pathId});
+    final body =
+        jsonEncode({'username': User.me!.username!, 'path_id': pathId});
     Response res = await post(Uri.parse(url), headers: headers, body: body);
     if (res.statusCode == 200) {
       return true;
@@ -295,7 +307,8 @@ class HttpService {
 
   Future<bool> unfollowPath(String pathId) async {
     String url = baseUrl + '/path/unfollow-path/';
-    final body = jsonEncode({'username': User.me!.username!, 'path_id': pathId});
+    final body =
+        jsonEncode({'username': User.me!.username!, 'path_id': pathId});
     Response res = await post(Uri.parse(url), headers: headers, body: body);
     if (res.statusCode == 200) {
       return true;
@@ -309,7 +322,9 @@ class HttpService {
     final body = jsonEncode({'username': username});
     Response res = await post(Uri.parse(url), headers: headers, body: body);
     if (res.statusCode == 200) {
-      return (res.body as List<Map<String, dynamic>>).map((map) => BasicPath.fromJSON(map)).toList();
+      return (res.body as List<Map<String, dynamic>>)
+          .map((map) => BasicPath.fromJSON(map))
+          .toList();
     } else {
       throw Exception(res.body);
     }
@@ -320,7 +335,9 @@ class HttpService {
     final body = jsonEncode({'username': username});
     Response res = await post(Uri.parse(url), headers: headers, body: body);
     if (res.statusCode == 200) {
-      return (res.body as List<Map<String, dynamic>>).map((map) => BasicPath.fromJSON(map)).toList();
+      return (res.body as List<Map<String, dynamic>>)
+          .map((map) => BasicPath.fromJSON(map))
+          .toList();
     } else {
       throw Exception(res.body);
     }
@@ -330,7 +347,9 @@ class HttpService {
     String url = baseUrl + '/path/my-paths/';
     Response res = await get(Uri.parse(url), headers: headers);
     if (res.statusCode == 200) {
-      return (res.body as List<Map<String, dynamic>>).map((map) => Path.fromJson(map)).toList();
+      return (res.body as List<Map<String, dynamic>>)
+          .map((map) => Path.fromJson(map))
+          .toList();
     } else {
       throw Exception(res.body);
     }
