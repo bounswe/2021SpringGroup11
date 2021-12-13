@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:portakal/my_colors.dart';
-import 'package:portakal/widget/profile_appbar_widget.dart';
+import 'package:portakal/widget/comment_box.dart';
 import 'package:portakal/models/path.dart';
 import 'package:portakal/widget/profile_stats_widget.dart';
 import 'package:portakal/widget/profile_follow_widget.dart';
 import 'package:portakal/widget/course_container.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:portakal/widget/milestone_widget.dart';
+import 'package:flutter_spinbox/material.dart'; // or flutter_spinbox.dart for both
 
 class PathPage extends StatefulWidget {
   const PathPage({ Key? key}): super(key: key);
@@ -14,9 +17,17 @@ class PathPage extends StatefulWidget {
   @override
   _PathPageState createState() => _PathPageState();
 }
-bool isFollowed = true;
 
 class _PathPageState extends State<PathPage> {
+  final _controller = TextEditingController();
+
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+  bool isFollowed = true;
 
   var paths = [
     {"name": "Selam", "effort": 2, "rating": 10.0},
@@ -37,9 +48,8 @@ class _PathPageState extends State<PathPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
-      body: ListView(
-        physics: BouncingScrollPhysics(),
+      backgroundColor: Colors.blue,
+      body: Column(
         children: [
           Container(
               padding: EdgeInsets.only(bottom: 16),
@@ -113,15 +123,32 @@ class _PathPageState extends State<PathPage> {
                                   'Tags:',
                                   style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color:Colors.white),
                                 ),
-                          ButtonTheme(
-                            height: 20.0,
-                            buttonColor: Colors.orange,
-                            child: RaisedButton(
-                              shape: StadiumBorder(),
-                              onPressed: () {},
-                              child: Text("Writing"),
+                          SizedBox(width:MediaQuery.of(context).size.width * 0.3,child:SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              children: [
+                                ButtonTheme(
+                                  height: 20.0,
+                                  buttonColor: Colors.orange,
+                                  child: RaisedButton(
+                                    shape: StadiumBorder(),
+                                    onPressed: () {print('a');},
+                                    child: Text("Writing"),
+                                  ),
+                                ),
+                                ButtonTheme(
+                                  height: 20.0,
+                                  buttonColor: Colors.orange,
+                                  child: RaisedButton(
+                                    shape: StadiumBorder(),
+                                    onPressed: () {print('b');},
+                                    child: Text("Writing"),
+                                  ),
+                                )
+                              ],
                             ),
-                          )
+                          ),),
+
                               ],
                             ),
                           ],
@@ -144,7 +171,7 @@ class _PathPageState extends State<PathPage> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              'Course Description',
+                              'Path Description',
                               style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                             ),
                             Container(
@@ -154,7 +181,7 @@ class _PathPageState extends State<PathPage> {
                                 // for Vertical scrolling
                                 scrollDirection: Axis.vertical,
                                 child: Text(
-                                  '''Hello, this course about something like that.''',
+                                  '''Hello, this path about something like that.''',
                                   style: TextStyle(fontSize: 14, height: 1.2,  fontStyle: FontStyle.italic),
                                 ),
                               ),
@@ -206,9 +233,66 @@ class _PathPageState extends State<PathPage> {
                               InkWell(
 
                                   onTap: () {
-                                    setState(() {
-                                      isFollowed = !isFollowed;
-                                    });
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) => Dialog(
+                                        child:  Container(
+
+                                          child:
+                                            ListView(
+                                              shrinkWrap: true,
+                                              children: [
+                                                SizedBox(height: 20),
+                                                Container(padding: EdgeInsets.all(15),child:Text('Favorited: 1231',)),
+                                                Container(padding: EdgeInsets.all(15),child:Text('Favorited: 1231',)),
+                                                Container(padding: EdgeInsets.all(15),child:Text('Favorited: 1231',)),
+                                                Container(padding: EdgeInsets.all(15),child:Text('Favorited: 1231',)),
+                                                Container(padding: EdgeInsets.symmetric(horizontal: 30,vertical: 10),
+                                                    child:SpinBox(
+                                                  min: 1.0,
+                                                  max: 10.0,
+                                                  value: 5.0,
+                                                      decimals: 1,
+                                                      step: 0.1,
+                                                  onChanged: (value) => print(value),
+                                                )),
+                                                ElevatedButton(
+                                                  style: ElevatedButton.styleFrom(
+                                                    fixedSize: Size(MediaQuery.of(context).size.width * 0.3,15),
+                                                    shape: StadiumBorder(),
+                                                    onPrimary: Colors.white,
+                                                  ),
+                                                  child: Text('Rate'),
+                                                  onPressed: (){
+                                                  },
+                                                ),
+                                                Container(padding: EdgeInsets.symmetric(horizontal: 30,vertical: 10),
+                                                    child:SpinBox(
+                                                      min: 1.0,
+                                                      max: 10.0,
+                                                      value: 5.0,
+                                                      decimals: 1,
+                                                      step: 0.1,
+                                                      onChanged: (value) => print(value),
+                                                    )),
+                                                ElevatedButton(
+                                                  style: ElevatedButton.styleFrom(
+                                                    fixedSize: Size(MediaQuery.of(context).size.width * 0.3,15),
+                                                    shape: StadiumBorder(),
+                                                    onPrimary: Colors.white,
+                                                  ),
+                                                  child: Text('Rate'),
+                                                  onPressed: (){
+                                                  },
+                                                ),
+
+
+
+                                              ],
+                                            ),
+                                        ),
+                                      ),
+                                    );
                                   },
                                   child: Container(
                                     height: 50,
@@ -225,28 +309,42 @@ class _PathPageState extends State<PathPage> {
                       ),
                     ],
                   ),
-
                 ],
               )
           ),
-          CheckboxListTile(
-            title: const Text('Start Slowly'),
-            value: true,
-            onChanged: (bool? value) {
-            },
-          ),
-          CheckboxListTile(
-            title: const Text('Continue Slowly'),
-            value: true,
-            onChanged: (bool? value) {
-            },
-          ),
-          CheckboxListTile(
-            title: const Text('Finish Slowly'),
-            value: true,
-            onChanged: (bool? value) {
-            },
-          ),
+          Expanded(child: DefaultTabController(
+            length: 2,
+            child: Scaffold(
+              appBar: AppBar(
+                title: TabBar(
+                  tabs: [
+                    Tab(text: 'Milestones'),
+                    Tab(text: 'Comments'),
+                  ],
+                ),
+              ),
+              body: TabBarView(
+                children: [
+              ListView(
+                physics: BouncingScrollPhysics(),
+    children: [
+     MilestoneContainer('This is a title','This is a very long description',true),
+      MilestoneContainer('This is a title','This is a very long description \n selam',false),
+      MilestoneContainer('This is a title','This is a very long description \n selam',false),
+      MilestoneContainer('This is a title','This is a very long description \n selam',false),
+      MilestoneContainer('This is a title','This is a very lahkjdhjkadhjksadhjkasdhsajkdhasjkdhjkashdksdhkasdhong description \n selam',false),
+
+
+    ]),
+                  SizedBox(height:500,child: TestMe())
+
+                ],
+              ),
+            ),
+          )),
+
+
+
         ],
       ),
     );
