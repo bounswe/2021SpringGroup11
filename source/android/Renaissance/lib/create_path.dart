@@ -218,6 +218,23 @@ class _CreatePathPageState extends State<CreatePathPage> {
                     fontWeight: FontWeight.w400),
               ),
               Text(
+                'Topics',
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+              ),
+              TextField(
+                maxLength: 70,
+                maxLines: 2,
+                decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    hintText: "Topics",
+                    contentPadding: EdgeInsets.all(10.0)),
+                controller: descriptionController,
+                style: TextStyle(
+                    color: MyColors.coolGray,
+                    fontSize: 14.0,
+                    fontWeight: FontWeight.w400),
+              ),
+              Text(
                 'Milestones',
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
               ),
@@ -230,17 +247,23 @@ class _CreatePathPageState extends State<CreatePathPage> {
                       _isLoading = true;
                     });
 
-                    // User response = await HttpService.shared
-                    //     .createPath(
-                    //         titleController.text,
-                    //         descriptionController.text,
-                    //         _milestones,
-                    //         _image == null
-                    //             ? FileConverter.getBase64StringPath(
-                    //                 "assets/placeHolder.jpg")
-                    //             : FileConverter.getBase64StringFile(
-                    //                 _image),
-                    //         [1]);
+                    List<Map<String, String>> milestones = [];
+
+                    for (var i = 0; i < _titleControllers.length; i++) {
+                      milestones.add({
+                        "title": _titleControllers[i].text,
+                        "body": _descControllers[i].text
+                      });
+                    }
+
+                    User response = await HttpService.shared.createPath(
+                        titleController.text,
+                        descriptionController.text,
+                        milestones,
+                        _image == null
+                            ? ""
+                            : FileConverter.getBase64StringFile(_image),
+                        [1]);
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                       content: Text(
                         'Successfully created ${titleController.text}',
@@ -254,6 +277,7 @@ class _CreatePathPageState extends State<CreatePathPage> {
                     titleController.clear();
                     descriptionController.clear();
                     clearMilestones();
+                    _image = null;
 
                     setState(() {
                       _isLoading = false;

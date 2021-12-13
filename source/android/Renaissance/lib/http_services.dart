@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/animation.dart';
@@ -171,9 +172,11 @@ class HttpService {
       'title': title,
       'description': description,
       'milestones': milestones,
+      'topics': topics,
       'photo': photo,
-      'topics': topics
     });
+    //log(body);
+    log(HttpHeaders.authorizationHeader);
     Response res = await post(Uri.parse(url), headers: headers, body: body);
     if (res.statusCode == 200) {
       return User.fromJson(jsonDecode(res.body));
