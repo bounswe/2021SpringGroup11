@@ -303,7 +303,7 @@ class GetEnrolledPaths(APIView):
     # permission_classes = [IsAuthenticated]
 
     """ requests username and returns all enrolled paths of the given username, tested """
-    def get(self, request):
+    def post(self, request):
         data = request.data
         username = data['username']
 
@@ -527,7 +527,7 @@ class GetFollowedPaths(APIView):
     # permission_classes = [IsAuthenticated]
 
     """ requests username and returns all followed paths of the given username, tested """
-    def get(self, request):
+    def post(self, request):
         data = request.data
         username = data['username']
 
