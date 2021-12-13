@@ -18,4 +18,6 @@ urlpatterns = [
     path('unfollow-path/', views.UnfollowPath.as_view(), name='unfollow_path'),
     path('get-followed-paths/', views.GetFollowedPaths.as_view(), name='get_followed_paths'),
     path('search-path/<slug:search_text>/', views.SearchPath.as_view(), name='search_path'),
+    path('finish-milestone/', views.FinishMilestone.as_view(), name='finish_milestone'),
+    path('unfinish-milestone/', views.UnfinishMilestone.as_view(), name='unfinish_milestone')
 ]
