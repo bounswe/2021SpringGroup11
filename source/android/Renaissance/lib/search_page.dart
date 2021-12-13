@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:portakal/models/basic_path.dart';
 
 import 'package:portakal/my_colors.dart';
 import 'package:portakal/widget/course_container.dart';
@@ -195,13 +196,8 @@ class _SearchPageState extends State<SearchPage> {
               )
             ],
           ),
-          ...(paths[_pageIndex]["paths"] as List<Map<String, Object>>)
-              .map((path) {
-            return CourseContainer(
-                path["name"] as String,
-                path["effort"] as int,
-                path["rating"] as double,
-                path["url"] as String);
+          ...(paths[_pageIndex]["paths"] as List<BasicPath>).map((path) {
+            return CourseContainer(path);
           }).toList(),
         ],
       ),
