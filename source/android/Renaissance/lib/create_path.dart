@@ -260,21 +260,30 @@ class _CreatePathPageState extends State<CreatePathPage> {
                       });
                     }
 
-                    List<Tag> topicsSubmit = await HttpService.shared
-                        .searchTopic(topicController.text);
+                    List<String> splitted = topicController.text.split(",");
 
-                    // for (var i = 0; i < topicsSubmit.length; i++) {
-                    //   print(topicsSubmit[i].id);
-                    //   print(topicsSubmit[i].description);
-                    // }
+                    List<Tag> topicsSubmit = [];
+                    for (var item in splitted) {
+                      List<Tag> resultTags =
+                          await HttpService.shared.searchTopic(item.trim());
 
-                    List<Map<String, Object>> sendTopic = [
-                      {
-                        "ID": int.parse(topicsSubmit[0].id as String),
-                        "name": topicsSubmit[0].name as String,
-                        "description": topicsSubmit[0].description as String
-                      }
-                    ];
+                      resultTags = [resultTags[0]];
+                      topicsSubmit = topicsSubmit + resultTags;
+                    }
+
+                    for (var i = 0; i < topicsSubmit.length; i++) {
+                      print(topicsSubmit[i].name);
+                      print(topicsSubmit[i].description);
+                    }
+
+                    List<Map<String, Object>> sendTopic = [];
+                    for (var i = 0; i < topicsSubmit.length; i++) {
+                      sendTopic.add({
+                        "ID": int.parse(topicsSubmit[i].id as String),
+                        "name": topicsSubmit[i].name as String,
+                        "description": topicsSubmit[i].description as String
+                      });
+                    }
 
                     User response = await HttpService.shared.createPath(
                       titleController.text,
@@ -297,6 +306,7 @@ class _CreatePathPageState extends State<CreatePathPage> {
 
                     titleController.clear();
                     descriptionController.clear();
+                    topicController.clear();
                     clearMilestones();
                     _image = null;
 
