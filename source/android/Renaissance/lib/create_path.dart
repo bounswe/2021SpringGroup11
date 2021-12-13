@@ -250,6 +250,24 @@ class _CreatePathPageState extends State<CreatePathPage> {
                       _isLoading = true;
                     });
 
+                    if (titleController.text == "")
+                      throw Exception('Please give a title!');
+
+                    if (descriptionController.text == "")
+                      throw Exception('Please give a description!');
+
+                    if (topicController.text == "")
+                      throw Exception('Please give some topic!');
+
+                    for (var item in _titleControllers)
+                      if (item.text == "")
+                        throw Exception('Please fill all milestone titles!');
+
+                    for (var item in _descControllers)
+                      if (item.text == "")
+                        throw Exception(
+                            'Please fill all milestone descriptions!');
+
                     List<Map<String, String>> milestones = [];
                     List<Map<String, String>> topics = [];
 
@@ -317,9 +335,10 @@ class _CreatePathPageState extends State<CreatePathPage> {
                     setState(() {
                       _isLoading = false;
                     });
+
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                       content: Text(
-                        '$error',
+                        '${error.toString().substring(11)}',
                         style: TextStyle(
                             decorationColor: Colors.greenAccent,
                             fontSize: 25,
