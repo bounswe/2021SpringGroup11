@@ -49,8 +49,6 @@ class _MilestoneContainerState extends State<MilestoneContainer> {
                 return;
               }
             } on Exception catch (error) {
-
-
             }
           } else {
             try {

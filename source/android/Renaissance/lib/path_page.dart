@@ -277,7 +277,6 @@ class _PathPageState extends State<PathPage> {
                           Row(
                             children: [
                               InkWell(
-
                                   onTap: () async{
                                     bool ret = false;
                                     if ((isFavChanged?isFollowed:widget.isFollowed!)) {
@@ -316,7 +315,6 @@ class _PathPageState extends State<PathPage> {
                                       } on Exception catch (error) {
                                       }
                                     }
-
                                     setState(() {
 
                                       if(!isFavChanged){
@@ -325,6 +323,7 @@ class _PathPageState extends State<PathPage> {
                                       }
                                       else{
                                         isFollowed = !isFollowed;
+                                        isFavChanged = !isFavChanged;
                                       }
                                     });
                                   },
