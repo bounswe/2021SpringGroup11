@@ -28,6 +28,7 @@ const pathReducer = (state = initialState, action) =>
         draft.loading = true;
         draft.pathId = action.pathId;
         draft.path = undefined;
+        draft.error = undefined;
         break;
       case GET_PATH_SUCCESS:
         draft.loading = false;

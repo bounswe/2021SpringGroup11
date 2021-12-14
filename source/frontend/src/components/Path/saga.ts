@@ -3,7 +3,13 @@ import { ENROLL_PATH, GET_PATH } from './constants';
 import makeSelectPath from './selectors';
 import { GET_PATH_URL, ENROLL_PATH_URL } from '../../utils/endpoints';
 import { get, post } from '../../utils/axios';
-import { getPathSuccess, getPathFailure, enrollPathSuccess, enrollPathFailure } from './actions';
+import {
+  getPathSuccess,
+  getPathFailure,
+  enrollPathSuccess,
+  enrollPathFailure,
+  getPath,
+} from './actions';
 
 export interface sessionStorageUserData {
   username: string;
@@ -31,7 +37,7 @@ export function* enrollPathSaga() {
       path_id: pathData.pathId,
     });
     if (response.data) {
-      yield put(enrollPathSuccess(response.data));
+      yield put(getPath(pathData.pathId));
     } else {
       yield put(enrollPathFailure(response));
     }
