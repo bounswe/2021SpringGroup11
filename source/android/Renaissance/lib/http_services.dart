@@ -395,9 +395,9 @@ class HttpService {
     final body = jsonEncode({'username': username});
     Response res = await post(Uri.parse(url), headers: headers, body: body);
     if (res.statusCode == 200) {
-      return (res.body as List<Map<String, dynamic>>)
-          .map((map) => BasicPath.fromJSON(map))
-          .toList();
+      Iterable l = json.decode(res.body);
+      List<BasicPath> basicPaths = l.map((json) => BasicPath.fromJSON(json)).toList();
+      return basicPaths;
     } else {
       throw Exception(res.body);
     }
@@ -408,21 +408,21 @@ class HttpService {
     final body = jsonEncode({'username': username});
     Response res = await post(Uri.parse(url), headers: headers, body: body);
     if (res.statusCode == 200) {
-      return (res.body as List<Map<String, dynamic>>)
-          .map((map) => BasicPath.fromJSON(map))
-          .toList();
+      Iterable l = json.decode(res.body);
+      List<BasicPath> basicPaths = l.map((json) => BasicPath.fromJSON(json)).toList();
+      return basicPaths;
     } else {
       throw Exception(res.body);
     }
   }
 
-  Future<List<Path>> myPaths() async {
+  Future<List<BasicPath>> myPaths() async {
     String url = baseUrl + '/path/my-paths/';
     Response res = await get(Uri.parse(url), headers: headers);
     if (res.statusCode == 200) {
-      return (res.body as List<Map<String, dynamic>>)
-          .map((map) => Path.fromJson(map))
-          .toList();
+      Iterable l = json.decode(res.body);
+      List<BasicPath> basicPaths = l.map((json) => BasicPath.fromJSON(json)).toList();
+      return basicPaths;
     } else {
       throw Exception(res.body);
     }
