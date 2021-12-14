@@ -33,6 +33,8 @@ import {
   searchTopic,
   searchUser,
 } from './search.util';
+import faker from 'faker';
+import { getPathPhotoData } from '../Profile/helper';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -111,7 +113,7 @@ const SearchBox = (props: Props) => {
         inputProps={{ 'aria-label': 'search' }}
       />
       {searchText.trim() && (
-        <div style={{ position: 'relative' }}>
+        <div style={{ position: 'relative', overflowWrap: 'anywhere' }}>
           <div style={{ position: 'absolute', zIndex: 9, background: 'gray', width: '100%' }}>
             {searchResults ? (
               <>
@@ -124,7 +126,14 @@ const SearchBox = (props: Props) => {
                           history.push(`/profile/${userSearchItem.username}`);
                           setSearchText('');
                         }}
-                        style={{ display: 'flex', flexDirection: 'row' }}
+                        style={{
+                          display: 'flex',
+                          flexDirection: 'row',
+                          background: 'blue',
+                          margin: '1rem',
+                          borderStyle: 'double',
+                          borderRadius: '5px',
+                        }}
                       >
                         <img
                           style={{
@@ -143,12 +152,20 @@ const SearchBox = (props: Props) => {
                     return (
                       <div
                         onClick={() => {
-                          history.push(`/topic/${topicSearchItem.ID}`);
+                          history.push(`/topic/${topicSearchItem.id}`);
                           setSearchText('');
                         }}
-                        style={{ display: 'flex', flexDirection: 'row' }}
+                        style={{
+                          display: 'flex',
+                          flexDirection: 'column',
+                          background: 'purple',
+                          margin: '1rem',
+                          borderStyle: 'double',
+                          borderRadius: '5px',
+                        }}
                       >
                         <h2>#{topicSearchItem.name}</h2>
+                        <h5>{topicSearchItem.description}</h5>
                       </div>
                     );
                   }
@@ -158,24 +175,24 @@ const SearchBox = (props: Props) => {
                     return (
                       <div
                         onClick={() => {
-                          history.push(`/path/${pathSearchItem.ID}`);
+                          history.push(`/path/${pathSearchItem._id}`);
                           setSearchText('');
                         }}
-                        style={{ display: 'flex', flexDirection: 'row' }}
+                        style={{
+                          display: 'flex',
+                          flexDirection: 'row',
+                          background: 'green',
+                          margin: '1rem',
+                          borderStyle: 'double',
+                          borderRadius: '5px',
+                        }}
                       >
                         {' '}
-                        <img
-                          style={{
-                            height: '100%',
-                          }}
-                          src={`${pathSearchItem.photo}`}
-                        />
+                        <WordCloudImg id={pathSearchItem._id} photo={`${pathSearchItem.photo}`} />
                         <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
                           <h3>{pathSearchItem.title}</h3>
-                          <h5>
-                            Rating:{pathSearchItem.rating}
-                            Effort:{pathSearchItem.effort}
-                          </h5>
+                          <br />
+                          <h5>{pathSearchItem.description}</h5>
                         </div>
                       </div>
                     );
@@ -198,6 +215,35 @@ const SearchBox = (props: Props) => {
         </div>
       )}
     </Search>
+  );
+};
+
+const WordCloudImg = ({ id, photo }) => {
+  const [img, setimg] = useState('https://c.tenor.com/I6kN-6X7nhAAAAAj/loading-buffering.gif');
+  useEffect(() => {
+    (async () => {
+      if (photo) {
+        setimg((photo.startsWith('data') ? '' : 'data:image/png;base64,') + photo);
+
+        setimg(`data:image/png;base64,${photo}`);
+      } else {
+        try {
+          const wc = await getPathPhotoData(id);
+          setimg((wc.startsWith('data') ? '' : 'data:image/png;base64,') + wc);
+        } catch (error) {
+          setimg(faker.image.imageUrl(64, 64, undefined, true));
+        }
+      }
+    })();
+  }, []);
+  return (
+    <img
+      style={{
+        height: '64px',
+        width: '64px',
+      }}
+      src={`${img}`}
+    />
   );
 };
 
