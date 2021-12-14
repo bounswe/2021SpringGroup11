@@ -23,7 +23,6 @@ export const GET_TOPIC_BY_TOPIC_ID_URL = `${baseUrl}topic/get-topic/`; //
 export const FAV_TOPIC_URL = `${baseUrl}topic/favorite-topic/`; //
 export const UNFAV_TOPIC_URL = `${baseUrl}topic/unfavorite-topic/`; //
 
-export const GET_PATH_URL = `${baseUrl}path/get-path/`;
 export const ENROLL_PATH_URL = `${baseUrl}path/enroll-path/`;
 export const SEARCH_PATH_URL = `${baseUrl}path/search-path/`; // /search-path/<search_text>
 export const GET_PATHS_BY_TOPIC_ID_URL = `${baseUrl}path/related-path/`; /// /path/related-path/<topic:int> Wikidata tag number
