@@ -230,8 +230,8 @@ class HttpService {
           created_at: 1.0 * temp['created_at'],
           photo: temp['photo'],
           milestones: milestoness,
-          rating: 7.3,
-          effort: 8.2,
+          rating: temp['rating'],
+          effort: temp['effort'],
           isEnrolled: temp['isEnrolled'],
           isFollowed: temp['isFollowed']);
     } else {
@@ -309,6 +309,7 @@ class HttpService {
     });
     //log(body);
     log(HttpHeaders.authorizationHeader);
+    print(body);
     Response res = await post(Uri.parse(url), headers: headers, body: body);
     if (res.statusCode == 200) {
       return User.fromJson(jsonDecode(res.body));

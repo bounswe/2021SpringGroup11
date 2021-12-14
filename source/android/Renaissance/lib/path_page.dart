@@ -19,7 +19,7 @@ import 'package:portakal/models/path.dart';
 
 class PathPage extends StatefulWidget {
   final Path? p;
-  const PathPage({ Key? key,this.p}): super(key: key);
+  const PathPage({Key? key, this.p}) : super(key: key);
 
   @override
   _PathPageState createState() => _PathPageState();
@@ -42,11 +42,10 @@ class _PathPageState extends State<PathPage> {
     });
   }
 
-
   bool isFavChanged = false;
   bool isEnrollChanged = false;
   bool isFollowed = false;
-  bool isEnrolled=false;
+  bool isEnrolled = false;
   double rating = 5.0;
   double effort = 5.0;
   var paths = [
@@ -67,7 +66,7 @@ class _PathPageState extends State<PathPage> {
 
   @override
   Widget build(BuildContext context) {
-    if(!isLoading && _image == null) {
+    if (!isLoading && _image == null) {
       loadPhoto();
     }
     return Scaffold(
@@ -79,7 +78,9 @@ class _PathPageState extends State<PathPage> {
               width: double.infinity,
               decoration: BoxDecoration(
                   color: Color(0xFF70A9FF),
-                  borderRadius: BorderRadius.only(bottomLeft: Radius.circular(30.0),bottomRight: Radius.circular(30.0))),
+                  borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(30.0),
+                      bottomRight: Radius.circular(30.0))),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -90,107 +91,155 @@ class _PathPageState extends State<PathPage> {
                       children: [
                         ClipRRect(
                             borderRadius: BorderRadius.circular(15),
-                            child: _image != null ? Image.file(_image, width: MediaQuery.of(context).size.width * 0.4, height: MediaQuery.of(context).size.width * 0.4, fit: BoxFit.fitHeight,) :
-                            (isLoading ? CircularProgressIndicator() :
-                            CircleAvatar(backgroundColor: MyColors.red, child: Text("image"), radius: MediaQuery.of(context).size.width * 0.2,))
-                        ),
+                            child: _image != null
+                                ? Image.file(
+                                    _image,
+                                    width:
+                                        MediaQuery.of(context).size.width * 0.4,
+                                    height:
+                                        MediaQuery.of(context).size.width * 0.4,
+                                    fit: BoxFit.fitHeight,
+                                  )
+                                : (isLoading
+                                    ? CircularProgressIndicator()
+                                    : CircleAvatar(
+                                        backgroundColor: MyColors.red,
+                                        child: Text("image"),
+                                        radius:
+                                            MediaQuery.of(context).size.width *
+                                                0.2,
+                                      ))),
                         Container(
                             margin: EdgeInsets.only(top: 15),
                             width: MediaQuery.of(context).size.width * 0.5,
-                            padding: EdgeInsets.symmetric(horizontal: 5,vertical: 5),
-                        child:
-                        Column(
-                          children: [
-                            Text(
-                              widget.p!.title!,
-                              overflow: TextOverflow.ellipsis,
-                              softWrap: true,
-                              maxLines: 2,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                            ),
-                            SizedBox(height: 5,),
-                            Text(
-                                'Creator: '+widget.p!.creator_username!,
-                              overflow: TextOverflow.ellipsis,
-                              softWrap: true,
-                              maxLines: 2,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(fontSize: 15,color:Colors.white),
-                            ),
-                            SizedBox(height: 15,),
-
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                RichText(text:TextSpan( text:'Rating: ',
-                                    style: TextStyle(fontSize: 14,color:Colors.greenAccent),
-                                    children: <TextSpan>[
-                                      TextSpan( text:'8.1',
-                                          style: TextStyle(fontSize: 14,color:Colors.black))
-                                    ])),
-                                RichText(text:TextSpan( text:'Effort: ',
-                                  style: TextStyle(fontSize: 14,color:Colors.deepOrange),
-                                children: <TextSpan>[
-                                    TextSpan( text:'75%',
-                                    style: TextStyle(fontSize: 14,color:Colors.black))
-                                ])),
-                              ],
-                            ),
-                            SizedBox(height: 10,),
-
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 5, vertical: 5),
+                            child: Column(
                               children: [
                                 Text(
-                                  'Tags:',
-                                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color:Colors.white),
+                                  widget.p!.title!,
+                                  overflow: TextOverflow.ellipsis,
+                                  softWrap: true,
+                                  maxLines: 2,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
                                 ),
-                          SizedBox(width:MediaQuery.of(context).size.width * 0.3,child:SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: Row(
-                              children: [
-                                ...(widget.p!.topics! as List<Topic>)
-                                    .map((topic) {
-                                  return  ButtonTheme(
-                                    height: 20.0,
-                                    buttonColor: Colors.orange,
-                                    child: RaisedButton(
-                                      shape: StadiumBorder(),
-                                      onPressed: () {print(topic.ID);},
-                                      child: Text(topic.name!),
+                                SizedBox(
+                                  height: 5,
+                                ),
+                                Text(
+                                  'Creator: ' + widget.p!.creator_username!,
+                                  overflow: TextOverflow.ellipsis,
+                                  softWrap: true,
+                                  maxLines: 2,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontSize: 15, color: Colors.white),
+                                ),
+                                SizedBox(
+                                  height: 15,
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    RichText(
+                                        text: TextSpan(
+                                            text: 'Rating: ',
+                                            style: TextStyle(
+                                                fontSize: 14,
+                                                color: Colors.greenAccent),
+                                            children: <TextSpan>[
+                                          TextSpan(
+                                              text:
+                                                  widget.p!.rating!.toString(),
+                                              style: TextStyle(
+                                                  fontSize: 14,
+                                                  color: Colors.black))
+                                        ])),
+                                    RichText(
+                                        text: TextSpan(
+                                            text: 'Effort: ',
+                                            style: TextStyle(
+                                                fontSize: 14,
+                                                color: Colors.deepOrange),
+                                            children: <TextSpan>[
+                                          TextSpan(
+                                              text:
+                                                  widget.p!.effort!.toString(),
+                                              style: TextStyle(
+                                                  fontSize: 14,
+                                                  color: Colors.black))
+                                        ])),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Text(
+                                      'Tags:',
+                                      style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white),
                                     ),
-                                  );
-                                }).toList()
-
+                                    SizedBox(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.3,
+                                      child: SingleChildScrollView(
+                                        scrollDirection: Axis.horizontal,
+                                        child: Row(
+                                          children: [
+                                            ...(widget.p!.topics!
+                                                    as List<Topic>)
+                                                .map((topic) {
+                                              return ButtonTheme(
+                                                height: 20.0,
+                                                buttonColor: Colors.orange,
+                                                child: RaisedButton(
+                                                  shape: StadiumBorder(),
+                                                  onPressed: () {
+                                                    print(topic.ID);
+                                                  },
+                                                  child: Text(topic.name!),
+                                                ),
+                                              );
+                                            }).toList()
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ],
-                            ),
-                          ),),
-
-                              ],
-                            ),
-                          ],
-                        )
-                        ),
-                      ]
-                  ),
+                            )),
+                      ]),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       Container(
                         margin: EdgeInsets.only(top: 15),
                         width: MediaQuery.of(context).size.width * 0.6,
-                        padding: EdgeInsets.symmetric(horizontal: 5,vertical: 5),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 5, vertical: 5),
                         decoration: BoxDecoration(
                             color: Color(0x99FFFFFF),
-                            borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10.0))),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
                               'Path Description',
-                              style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                              style: TextStyle(
+                                  fontSize: 14, fontWeight: FontWeight.bold),
                             ),
                             Container(
                               // adding margin
@@ -200,11 +249,13 @@ class _PathPageState extends State<PathPage> {
                                 scrollDirection: Axis.vertical,
                                 child: Text(
                                   widget.p!.description!,
-                                  style: TextStyle(fontSize: 14, height: 1.2,  fontStyle: FontStyle.italic),
+                                  style: TextStyle(
+                                      fontSize: 14,
+                                      height: 1.2,
+                                      fontStyle: FontStyle.italic),
                                 ),
                               ),
                             ),
-
                           ],
                         ),
                       ),
@@ -213,17 +264,27 @@ class _PathPageState extends State<PathPage> {
                         children: [
                           ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              fixedSize: Size(MediaQuery.of(context).size.width * 0.3,15),
+                              fixedSize: Size(
+                                  MediaQuery.of(context).size.width * 0.3, 15),
                               shape: StadiumBorder(),
                               onPrimary: Colors.white,
                             ),
-                            child: Text((isEnrollChanged?isEnrolled:widget.p!.isEnrolled!)?"Enroll":"Unenroll"),
-                            onPressed: () async{
-                              if ((isEnrollChanged?isEnrolled:widget.p!.isEnrolled!)) {
+                            child: Text((isEnrollChanged
+                                    ? isEnrolled
+                                    : widget.p!.isEnrolled!)
+                                ? "Enroll"
+                                : "Unenroll"),
+                            onPressed: () async {
+                              if ((isEnrollChanged
+                                  ? isEnrolled
+                                  : widget.p!.isEnrolled!)) {
                                 try {
-                                  var response = await HttpService.shared.enroll(User.me!.username!, widget.p!.id!);
-                                  if(!response){
-                                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                  var response = await HttpService.shared
+                                      .enroll(
+                                          User.me!.username!, widget.p!.id!);
+                                  if (!response) {
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(SnackBar(
                                       content: Text(
                                         'An error occured please try again later.',
                                         style: TextStyle(
@@ -234,14 +295,15 @@ class _PathPageState extends State<PathPage> {
                                     ));
                                     return;
                                   }
-                                } on Exception catch (error) {
-
-                                }
+                                } on Exception catch (error) {}
                               } else {
                                 try {
-                                  var response = await HttpService.shared.unenroll(User.me!.username!, widget.p!.id!);
-                                  if(!response){
-                                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                  var response = await HttpService.shared
+                                      .unenroll(
+                                          User.me!.username!, widget.p!.id!);
+                                  if (!response) {
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(SnackBar(
                                       content: Text(
                                         'An error occured please try again later.',
                                         style: TextStyle(
@@ -252,15 +314,13 @@ class _PathPageState extends State<PathPage> {
                                     ));
                                     return;
                                   }
-                                } on Exception catch (error) {
-                                }
+                                } on Exception catch (error) {}
                               }
                               setState(() {
-                                if(!isEnrollChanged){
+                                if (!isEnrollChanged) {
                                   isEnrollChanged = true;
                                   isEnrolled = !widget.p!.isEnrolled!;
-                                }
-                                else{
+                                } else {
                                   isEnrollChanged = !isEnrollChanged;
                                 }
                               });
@@ -269,181 +329,234 @@ class _PathPageState extends State<PathPage> {
                           Row(
                             children: [
                               InkWell(
-
-                                  onTap: () async{
-                                    if ((isFavChanged?isFollowed:widget.p!.isFollowed!)) {
+                                  onTap: () async {
+                                    if ((isFavChanged
+                                        ? isFollowed
+                                        : widget.p!.isFollowed!)) {
                                       try {
-                                        var response = await HttpService.shared.fav_path(User.me!.username!, widget.p!.id!);
-                                        if(!response){
-                                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                        var response = await HttpService.shared
+                                            .fav_path(User.me!.username!,
+                                                widget.p!.id!);
+                                        if (!response) {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(SnackBar(
                                             content: Text(
                                               'An error occured please try again later.',
                                               style: TextStyle(
-                                                  decorationColor: Colors.greenAccent,
+                                                  decorationColor:
+                                                      Colors.greenAccent,
                                                   fontSize: 25,
                                                   fontWeight: FontWeight.bold),
                                             ),
                                           ));
                                           return;
                                         }
-                                      } on Exception catch (error) {
-
-                                      }
+                                      } on Exception catch (error) {}
                                     } else {
                                       try {
-                                        var response = await HttpService.shared.unfav_path(User.me!.username!, widget.p!.id!);
-                                        if(!response){
-                                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                        var response = await HttpService.shared
+                                            .unfav_path(User.me!.username!,
+                                                widget.p!.id!);
+                                        if (!response) {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(SnackBar(
                                             content: Text(
                                               'An error occured please try again later.',
                                               style: TextStyle(
-                                                  decorationColor: Colors.greenAccent,
+                                                  decorationColor:
+                                                      Colors.greenAccent,
                                                   fontSize: 25,
                                                   fontWeight: FontWeight.bold),
                                             ),
                                           ));
                                           return;
                                         }
-                                      } on Exception catch (error) {
-                                      }
+                                      } on Exception catch (error) {}
                                     }
                                     setState(() {
-
-                                      if(!isFavChanged){
+                                      if (!isFavChanged) {
                                         isFavChanged = true;
                                         isFollowed = !widget.p!.isFollowed!;
-                                      }
-                                      else{
+                                      } else {
                                         isFollowed = !isFollowed;
                                       }
                                     });
                                   },
                                   child: Container(
                                     height: 50,
-                                    width: MediaQuery.of(context).size.width * 0.15,
+                                    width: MediaQuery.of(context).size.width *
+                                        0.15,
                                     decoration: BoxDecoration(
                                         color: Colors.blue,
-                                        borderRadius: BorderRadius.circular(15)),
+                                        borderRadius:
+                                            BorderRadius.circular(15)),
                                     alignment: Alignment.center,
                                     child: Icon(
                                       // NEW from here...
-                                      (isFavChanged?isFollowed:widget.p!.isFollowed!) ? Icons.favorite : Icons.favorite_border,
-                                      color: (isFavChanged?isFollowed:widget.p!.isFollowed!) ? Colors.red : null,
-                                      semanticLabel: (isFavChanged?isFollowed:widget.p!.isFollowed!) ? 'Remove from saved' : 'Save',
+                                      (isFavChanged
+                                              ? isFollowed
+                                              : widget.p!.isFollowed!)
+                                          ? Icons.favorite
+                                          : Icons.favorite_border,
+                                      color: (isFavChanged
+                                              ? isFollowed
+                                              : widget.p!.isFollowed!)
+                                          ? Colors.red
+                                          : null,
+                                      semanticLabel: (isFavChanged
+                                              ? isFollowed
+                                              : widget.p!.isFollowed!)
+                                          ? 'Remove from saved'
+                                          : 'Save',
                                     ),
                                   )),
-                              SizedBox(width:5),
+                              SizedBox(width: 5),
                               InkWell(
-
                                   onTap: () {
                                     showDialog(
                                       context: context,
                                       builder: (BuildContext context) => Dialog(
-                                        child:  Container(
-
-                                          child:
-                                            ListView(
-                                              shrinkWrap: true,
-                                              children: [
-                                                SizedBox(height: 20),
-                                                /*Container(padding: EdgeInsets.all(15),child:Text('Favorited: 1231',)),
+                                        child: Container(
+                                          child: ListView(
+                                            shrinkWrap: true,
+                                            children: [
+                                              SizedBox(height: 20),
+                                              /*Container(padding: EdgeInsets.all(15),child:Text('Favorited: 1231',)),
                                                 Container(padding: EdgeInsets.all(15),child:Text('Favorited: 1231',)),
                                                 Container(padding: EdgeInsets.all(15),child:Text('Favorited: 1231',)),
                                                 Container(padding: EdgeInsets.all(15),child:Text('Favorited: 1231',)),*/
-                                                Container(padding: EdgeInsets.symmetric(horizontal: 30,vertical: 10),
-                                                    child:SpinBox(
-                                                  min: 1.0,
-                                                  max: 10.0,
-                                                  value: 5.0,
-                                                      decimals: 1,
-                                                      step: 0.1,
-                                                  onChanged: (value) => {
-
-                                                setState(() {
-                                                  rating = value;
-                                                })}
-                                                )
-                                                ),
-                                                ElevatedButton(
-                                                  style: ElevatedButton.styleFrom(
-                                                    fixedSize: Size(MediaQuery.of(context).size.width * 0.3,15),
-                                                    shape: StadiumBorder(),
-                                                    onPrimary: Colors.white,
-                                                  ),
-                                                  child: Text('Rate Path'),
-                                                  onPressed: ()async{
-                                                    try {
-                                                      var response = await HttpService.shared.rate_path(User.me!.username!, widget.p!.id!,rating);
-                                                      if(!response){
-                                                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                                          content: Text(
-                                                            'An error occured please try again later.',
-                                                            style: TextStyle(
-                                                                decorationColor: Colors.greenAccent,
-                                                                fontSize: 25,
-                                                                fontWeight: FontWeight.bold),
-                                                          ),
-                                                        ));
-                                                        return;
-                                                      }
-                                                    } on Exception catch (error) {
-                                                    }
-                                                  },
-                                                ),
-                                                Container(padding: EdgeInsets.symmetric(horizontal: 30,vertical: 10),
-                                                    child:SpinBox(
+                                              Container(
+                                                  padding: EdgeInsets.symmetric(
+                                                      horizontal: 30,
+                                                      vertical: 10),
+                                                  child: SpinBox(
                                                       min: 1.0,
                                                       max: 10.0,
                                                       value: 5.0,
                                                       decimals: 1,
                                                       step: 0.1,
-                                                        onChanged: (value) => {
-
-                                                          setState(() {
-                                                            effort = value;
-                                                          })}
-                                                    )),
-                                                ElevatedButton(
-                                                  style: ElevatedButton.styleFrom(
-                                                    fixedSize: Size(MediaQuery.of(context).size.width * 0.3,15),
-                                                    shape: StadiumBorder(),
-                                                    onPrimary: Colors.white,
-                                                  ),
-                                                  child: Text('Rate Effort'),
-                                                  onPressed: ()async{
-                                                    try {
-                                                      var response = await HttpService.shared.effort_path(User.me!.username!, widget.p!.id!,effort);
-                                                      if(!response){
-                                                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                                          content: Text(
-                                                            'An error occured please try again later.',
-                                                            style: TextStyle(
-                                                                decorationColor: Colors.greenAccent,
-                                                                fontSize: 25,
-                                                                fontWeight: FontWeight.bold),
-                                                          ),
-                                                        ));
-                                                        return;
-                                                      }
-                                                    } on Exception catch (error) {
-                                                    }
-                                                  },
+                                                      onChanged: (value) => {
+                                                            setState(() {
+                                                              rating = value;
+                                                            })
+                                                          })),
+                                              ElevatedButton(
+                                                style: ElevatedButton.styleFrom(
+                                                  fixedSize: Size(
+                                                      MediaQuery.of(context)
+                                                              .size
+                                                              .width *
+                                                          0.3,
+                                                      15),
+                                                  shape: StadiumBorder(),
+                                                  onPrimary: Colors.white,
                                                 ),
-
-
-
-                                              ],
-                                            ),
+                                                child: Text('Rate Path'),
+                                                onPressed: () async {
+                                                  try {
+                                                    var response =
+                                                        await HttpService
+                                                            .shared
+                                                            .rate_path(
+                                                                User.me!
+                                                                    .username!,
+                                                                widget.p!.id!,
+                                                                rating);
+                                                    if (!response) {
+                                                      ScaffoldMessenger.of(
+                                                              context)
+                                                          .showSnackBar(
+                                                              SnackBar(
+                                                        content: Text(
+                                                          'An error occured please try again later.',
+                                                          style: TextStyle(
+                                                              decorationColor:
+                                                                  Colors
+                                                                      .greenAccent,
+                                                              fontSize: 25,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                        ),
+                                                      ));
+                                                      return;
+                                                    }
+                                                  } on Exception catch (error) {}
+                                                },
+                                              ),
+                                              Container(
+                                                  padding: EdgeInsets.symmetric(
+                                                      horizontal: 30,
+                                                      vertical: 10),
+                                                  child: SpinBox(
+                                                      min: 1.0,
+                                                      max: 10.0,
+                                                      value: 5.0,
+                                                      decimals: 1,
+                                                      step: 0.1,
+                                                      onChanged: (value) => {
+                                                            setState(() {
+                                                              effort = value;
+                                                            })
+                                                          })),
+                                              ElevatedButton(
+                                                style: ElevatedButton.styleFrom(
+                                                  fixedSize: Size(
+                                                      MediaQuery.of(context)
+                                                              .size
+                                                              .width *
+                                                          0.3,
+                                                      15),
+                                                  shape: StadiumBorder(),
+                                                  onPrimary: Colors.white,
+                                                ),
+                                                child: Text('Rate Effort'),
+                                                onPressed: () async {
+                                                  try {
+                                                    var response =
+                                                        await HttpService
+                                                            .shared
+                                                            .effort_path(
+                                                                User.me!
+                                                                    .username!,
+                                                                widget.p!.id!,
+                                                                effort);
+                                                    if (!response) {
+                                                      ScaffoldMessenger.of(
+                                                              context)
+                                                          .showSnackBar(
+                                                              SnackBar(
+                                                        content: Text(
+                                                          'An error occured please try again later.',
+                                                          style: TextStyle(
+                                                              decorationColor:
+                                                                  Colors
+                                                                      .greenAccent,
+                                                              fontSize: 25,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                        ),
+                                                      ));
+                                                      return;
+                                                    }
+                                                  } on Exception catch (error) {}
+                                                },
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       ),
                                     );
                                   },
                                   child: Container(
                                     height: 50,
-                                    width: MediaQuery.of(context).size.width * 0.15,
+                                    width: MediaQuery.of(context).size.width *
+                                        0.15,
                                     decoration: BoxDecoration(
                                         color: Colors.blue,
-                                        borderRadius: BorderRadius.circular(15)),
+                                        borderRadius:
+                                            BorderRadius.circular(15)),
                                     alignment: Alignment.center,
                                     child: FaIcon(FontAwesomeIcons.infoCircle),
                                   )),
@@ -454,9 +567,9 @@ class _PathPageState extends State<PathPage> {
                     ],
                   ),
                 ],
-              )
-          ),
-          Expanded(child: DefaultTabController(
+              )),
+          Expanded(
+              child: DefaultTabController(
             length: 2,
             child: Scaffold(
               appBar: AppBar(
@@ -469,27 +582,20 @@ class _PathPageState extends State<PathPage> {
               ),
               body: TabBarView(
                 children: [
-              ListView(
-                physics: BouncingScrollPhysics(),
-    children: [
-      ...(widget.p!.milestones! as List<Milestonee>)
-          .map((milestone) {
-        return   MilestoneContainer(milestone.id!,milestone.title!,milestone.body!,milestone.isFinished!);
-      }).toList()
-
-
-    ]),
+                  ListView(physics: BouncingScrollPhysics(), children: [
+                    ...(widget.p!.milestones! as List<Milestonee>)
+                        .map((milestone) {
+                      return MilestoneContainer(milestone.id!, milestone.title!,
+                          milestone.body!, milestone.isFinished!);
+                    }).toList()
+                  ]),
                   Text("Under Development.")
                 ],
               ),
             ),
           )),
-
-
-
         ],
       ),
     );
   }
 }
-
