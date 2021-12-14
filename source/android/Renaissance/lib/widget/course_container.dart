@@ -35,6 +35,9 @@ class _CourseContainerState extends State<CourseContainer> {
 
   @override
   Widget build(BuildContext context) {
+    if(!isLoading && _image == null) {
+      loadPhoto();
+    }
     return Container(
       height: 70,
       decoration: BoxDecoration(
