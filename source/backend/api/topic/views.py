@@ -91,7 +91,7 @@ class GetTopic(APIView):
         with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
             topic = db.find_one('topic', {'ID': topic_id}, projection={'_id': 0, 'ID': 1, 'name': 1, 'description': 1})
             if not topic:
-                return Response({'ID': topic_id, 'name': topicname(topic_id)})
+                return Response({'ID': topic_id, 'name': topicname(topic_id), 'isFav': False})
             favorite = db.find_one('favorite', {'username': username, 'ID': topic_id})
             topic['isFav'] = favorite is not None
 
