@@ -24,14 +24,13 @@ import {
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Switch, Route, Link, useParams } from 'react-router-dom';
+import avatar from '../../images/avatar1.png';
 import MDEditor from '@uiw/react-md-editor';
 import PhotoCamera from '@mui/icons-material/PhotoCamera';
-import { toast } from 'react-toastify';
 
 import NavBar from '../NavBar';
-import { getPathPhotoData, getProfileData, getUserData, updateUserData } from './helper';
+import { getProfileData, getUserData, updateUserData } from './helper';
 import auth from '../../utils/auth';
-import faker from 'faker';
 
 interface Props {
   history: any;
@@ -65,7 +64,7 @@ const Profile = (props: Props) => {
         setStats(_stats);
         setFavorites(_favorites);
         setLoading(false);
-      }, 10);
+      }, 100);
     })();
   }, [username]);
 
@@ -96,7 +95,7 @@ const Profile = (props: Props) => {
           justifyContent: 'center',
         }}
       >
-        <img style={{ height: '80%' }} src={user.photo} alt="" />
+        <img style={{ height: '80%' }} src={avatar} alt="" />
       </div>
       <div
         style={{
@@ -150,41 +149,22 @@ const Profile = (props: Props) => {
             <div style={{ color: 'white' }}>{user.username}</div>
           </div>
         </div>
-        {!username && (
-          <Button
-            style={{
-              color: 'white',
-              marginLeft: 'auto',
-              // padding: '0 20px',
-              flex: 1,
-            }}
-            onClick={() => seteditProfilePopup(true)}
-          >
-            Edit Your Profile
-          </Button>
-        )}
+        <Button
+          style={{
+            color: 'white',
+            marginLeft: 'auto',
+            // padding: '0 20px',
+            flex: 1,
+          }}
+          onClick={() => seteditProfilePopup(true)}
+        >
+          Edit Your Profile
+        </Button>
       </div>
       <ProfileContent user={user} resources={resources} favorites={favorites} />
       <Modal
         open={editProfilePopup}
-        onClose={async () => {
-          seteditProfilePopup(false);
-          setLoading(true);
-
-          const {
-            resources: _resources,
-            user: _user,
-            stats: _stats,
-            favorites: _favorites,
-          } = await getProfileData(username || auth.getAuthInfoFromSession()?.username || 'e');
-          console.log(_resources);
-
-          setResources(_resources);
-          setUser({ ..._user });
-          setStats(_stats);
-          setFavorites(_favorites);
-          setLoading(false);
-        }}
+        onClose={() => seteditProfilePopup(false)}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
@@ -203,20 +183,14 @@ const Profile = (props: Props) => {
             height: '90vh',
           }}
         >
-          <EditProfile seteditProfilePopup={seteditProfilePopup} username={username} />{' '}
+          <EditProfile username={username} />{' '}
         </Box>
       </Modal>
     </div>
   );
 };
 
-const EditProfile = ({
-  username,
-  seteditProfilePopup,
-}: {
-  username: string;
-  seteditProfilePopup: Function;
-}) => {
+const EditProfile = ({ username }: { username: string }) => {
   const [loading, setLoading] = useState(true);
 
   const [user, setUser] = useState(null);
@@ -245,8 +219,8 @@ const EditProfile = ({
       <div>
         <h2>Edit Profile</h2>
         {[
-          // { label: 'Username', key: 'username' },
-          // { label: 'Email', key: 'email' },
+          { label: 'Username', key: 'username' },
+          { label: 'Email', key: 'email' },
           { label: 'First Name', key: 'firstname' },
           { label: 'Last Name', key: 'lastname' },
         ].map(({ key, label }) => (
@@ -292,17 +266,7 @@ const EditProfile = ({
         <br />
         <Button
           onClick={() => {
-            updateUserData(user).then((s) => {
-              toast.success('Saved', {
-                position: 'top-left',
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-              });
-            });
+            updateUserData(user);
           }}
         >
           Save
@@ -340,10 +304,7 @@ const ProfileContent = (props: ProfileContentProps) => (
         }}
       >
         <div style={{ color: 'red' }}>{props.user.name}</div>
-        <MDEditor.Markdown
-          style={{ background: 'white', borderRadius: '5px' }}
-          source={props.user.bio}
-        />
+        <div style={{ background: 'white', borderRadius: '5px' }}>{props.user.bio}</div>
       </div>
     </div>
 
@@ -456,7 +417,6 @@ interface Resource {
   isEnrolled: boolean;
   isFollowed: boolean;
   photo: string;
-  id: string;
 }
 interface ResourceCardProps {
   resource: Resource;
@@ -466,79 +426,55 @@ interface ResourceCardProps {
   color: string;
 }
 
-export const ResourceCard = (props: ResourceCardProps) => {
-  const [img, setimg] = useState('https://c.tenor.com/I6kN-6X7nhAAAAAj/loading-buffering.gif');
-  useEffect(() => {
-    (async () => {
-      if (props.resource.photo) {
-        setimg(
-          (props.resource.photo.startsWith('data') ? '' : 'data:image/png;base64,') +
-            props.resource.photo,
-        );
-      } else {
-        try {
-          const wc = await getPathPhotoData(props.resource.id);
-          setimg((wc.startsWith('data') ? '' : 'data:image/png;base64,') + wc);
-        } catch (error) {
-          setimg(faker.image.imageUrl(64, 64, undefined, true));
-        }
-      }
-    })();
-  }, []);
-  return (
-    <>
-      <Card onClick={props.onClick} sx={{ width: '200px', background: props.color, margin: '5px' }}>
-        <CardContent>
-          <img src={img} style={{ width: '100%', height: '150px' }} alt="" />
-          <Typography
-            sx={{ fontSize: 14, whiteSpace: 'nowrap' }}
-            color="text.secondary"
-            gutterBottom
-          >
-            {props.resource.title}
-          </Typography>
-          <div
-            style={{
-              alignItems: 'center',
-              display: 'flex',
-              flex: 1,
+export const ResourceCard = (props: ResourceCardProps) => (
+  <>
+    <Card onClick={props.onClick} sx={{ width: '200px', background: props.color, margin: '5px' }}>
+      <CardContent>
+        <img src={props.resource.photo} style={{ width: '100%', height: '150px' }} alt="" />
+        <Typography sx={{ fontSize: 14, whiteSpace: 'nowrap' }} color="text.secondary" gutterBottom>
+          {props.resource.title}
+        </Typography>
+        <div
+          style={{
+            alignItems: 'center',
+            display: 'flex',
+            flex: 1,
 
-              justifyContent: 'space-evenly',
-              borderRadius: '10px',
-              background: 'white',
-              padding: '5px',
-            }}
-          >
-            {[
-              { text: 'Effort', value: props.resource.effort },
-              { text: 'Rating', value: props.resource.rating },
-            ].map((item) => (
-              <div
-                style={{
-                  alignItems: 'center',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'space-around',
-                }}
-              >
-                <div style={{ color: 'green' }}>{item.text}</div>
-                <div>{item.value}</div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-        <CardActions>
-          <Button
-            sx={{ backgroundColor: 'rgba(255,255,255,0.7)', color: 'black' }}
-            fullWidth
-            size="medium"
-            onClick={props.onButtonClick}
-          >
-            {props.buttonText}
-          </Button>
-        </CardActions>
-      </Card>
-    </>
-  );
-};
+            justifyContent: 'space-evenly',
+            borderRadius: '10px',
+            background: 'white',
+            padding: '5px',
+          }}
+        >
+          {[
+            { text: 'Effort', value: props.resource.effort },
+            { text: 'Rating', value: props.resource.rating },
+          ].map((item) => (
+            <div
+              style={{
+                alignItems: 'center',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-around',
+              }}
+            >
+              <div style={{ color: 'green' }}>{item.text}</div>
+              <div>{item.value}</div>
+            </div>
+          ))}
+        </div>
+      </CardContent>
+      <CardActions>
+        <Button
+          sx={{ backgroundColor: 'rgba(255,255,255,0.7)', color: 'black' }}
+          fullWidth
+          size="medium"
+          onClick={props.onButtonClick}
+        >
+          {props.buttonText}
+        </Button>
+      </CardActions>
+    </Card>
+  </>
+);
 export default Profile;

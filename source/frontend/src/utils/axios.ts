@@ -12,7 +12,7 @@ function checkStatus(response) {
 }
 
 export function post(url, options, config = {}) {
-  const token = store.getState().login.authInfo && store.getState().login.authInfo.token;
+  const token = store.getState().login.authInfo && store.getState().login.authInfo.accessToken;
   const header = {
     headers: {
       Authorization: token ? `Bearer ${token}` : '',
@@ -25,7 +25,7 @@ export function post(url, options, config = {}) {
 }
 
 export function get(url, options?) {
-  const token = store.getState().login.authInfo && store.getState().login.authInfo.token;
+  const token = store.getState().login.authInfo && store.getState().login.authInfo.accessToken;
   const header = {
     headers: {
       Authorization: token ? `Bearer ${token}` : '',
