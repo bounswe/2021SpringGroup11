@@ -104,74 +104,89 @@ class HttpService {
     }
     return false;
   }
-  Future<bool> enroll(String username,String id) async {
+
+  Future<bool> enroll(String username, String id) async {
     String url = baseUrl + '/path/enroll-path/';
     Response res = await post(Uri.parse(url),
-        headers: headers, body: jsonEncode({'username': username,'path_id':id}));
-    if (res.statusCode == 200) {
-      return true;
-    }
-    return false;
-  }
-  Future<bool> unenroll(String username,String id) async {
-    String url = baseUrl + '/path/unenroll-path/';
-    Response res = await post(Uri.parse(url),
-        headers: headers, body: jsonEncode({'username': username,'path_id':id}));
-    if (res.statusCode == 200) {
-      return true;
-    }
-    return false;
-  }
-  Future<bool> fav_path(String username,String id) async {
-    String url = baseUrl + '/path/follow-path/';
-    Response res = await post(Uri.parse(url),
-        headers: headers, body: jsonEncode({'username': username,'path_id':id}));
-    if (res.statusCode == 200) {
-      return true;
-    }
-    return false;
-  }
-  Future<bool> unfav_path(String username,String id) async {
-    String url = baseUrl + '/path/unfollow-path/';
-    Response res = await post(Uri.parse(url),
-        headers: headers, body: jsonEncode({'username': username,'path_id':id}));
-    if (res.statusCode == 200) {
-      return true;
-    }
-    return false;
-  }
-  Future<bool> finish_mielstone(String id) async {
-    String url = baseUrl + '/path/finish-milestone/';
-    Response res = await post(Uri.parse(url),
-        headers: headers, body: jsonEncode({'milestone_id':id}));
-    if (res.statusCode == 200) {
-      return true;
-    }
-    return false;
-  }
-  Future<bool> unfinish_milestone(String id) async {
-    String url = baseUrl + '/path/unfinish-milestone/';
-    Response res = await post(Uri.parse(url),
-        headers: headers, body: jsonEncode({'milestone_id':id}));
+        headers: headers,
+        body: jsonEncode({'username': username, 'path_id': id}));
     if (res.statusCode == 200) {
       return true;
     }
     return false;
   }
 
-  Future<bool> rate_path(String username,String id,double value) async {
-    String url = baseUrl + '/path/rate-path/';
+  Future<bool> unenroll(String username, String id) async {
+    String url = baseUrl + '/path/unenroll-path/';
     Response res = await post(Uri.parse(url),
-        headers: headers, body: jsonEncode({'username':username,'path_id':id,'rating':value}));
+        headers: headers,
+        body: jsonEncode({'username': username, 'path_id': id}));
     if (res.statusCode == 200) {
       return true;
     }
     return false;
   }
-  Future<bool> effort_path(String username,String id,double value) async {
+
+  Future<bool> fav_path(String username, String id) async {
+    String url = baseUrl + '/path/follow-path/';
+    Response res = await post(Uri.parse(url),
+        headers: headers,
+        body: jsonEncode({'username': username, 'path_id': id}));
+    if (res.statusCode == 200) {
+      return true;
+    }
+    return false;
+  }
+
+  Future<bool> unfav_path(String username, String id) async {
+    String url = baseUrl + '/path/unfollow-path/';
+    Response res = await post(Uri.parse(url),
+        headers: headers,
+        body: jsonEncode({'username': username, 'path_id': id}));
+    if (res.statusCode == 200) {
+      return true;
+    }
+    return false;
+  }
+
+  Future<bool> finish_mielstone(String id) async {
+    String url = baseUrl + '/path/finish-milestone/';
+    Response res = await post(Uri.parse(url),
+        headers: headers, body: jsonEncode({'milestone_id': id}));
+    if (res.statusCode == 200) {
+      return true;
+    }
+    return false;
+  }
+
+  Future<bool> unfinish_milestone(String id) async {
+    String url = baseUrl + '/path/unfinish-milestone/';
+    Response res = await post(Uri.parse(url),
+        headers: headers, body: jsonEncode({'milestone_id': id}));
+    if (res.statusCode == 200) {
+      return true;
+    }
+    return false;
+  }
+
+  Future<bool> rate_path(String username, String id, double value) async {
+    String url = baseUrl + '/path/rate-path/';
+    Response res = await post(Uri.parse(url),
+        headers: headers,
+        body:
+            jsonEncode({'username': username, 'path_id': id, 'rating': value}));
+    if (res.statusCode == 200) {
+      return true;
+    }
+    return false;
+  }
+
+  Future<bool> effort_path(String username, String id, double value) async {
     String url = baseUrl + '/path/effort-path/';
     Response res = await post(Uri.parse(url),
-        headers: headers, body: jsonEncode({'username':username,'path_id':id,'effort':value}));
+        headers: headers,
+        body:
+            jsonEncode({'username': username, 'path_id': id, 'effort': value}));
     if (res.statusCode == 200) {
       return true;
     }
@@ -198,21 +213,31 @@ class HttpService {
       List<Milestonee> milestoness = [];
       List<Topic> topicss = [];
 
-      (temp["milestones"])
-        .map((tag) {
-    milestoness.add( Milestonee.fromJson(tag));
-    }).toList();
-
-      (temp["topics"])
-          .map((tag) {
-        topicss.add( Topic.fromJson(tag));
+      (temp["milestones"]).map((tag) {
+        milestoness.add(Milestonee.fromJson(tag));
       }).toList();
-      return Path(id:path_id,title: temp['title'],description: temp['description'],topics: topicss,creator_username: temp['creator_username'],creator_email: temp['creator_email'],created_at:1.0*temp['created_at'],photo:temp['photo'],milestones: milestoness,rating: 7.3,effort: 8.2,isEnrolled: temp['isEnrolled'], isFollowed: temp['isFollowed']);
+
+      (temp["topics"]).map((tag) {
+        topicss.add(Topic.fromJson(tag));
+      }).toList();
+      return Path(
+          id: path_id,
+          title: temp['title'],
+          description: temp['description'],
+          topics: topicss,
+          creator_username: temp['creator_username'],
+          creator_email: temp['creator_email'],
+          created_at: 1.0 * temp['created_at'],
+          photo: temp['photo'],
+          milestones: milestoness,
+          rating: 7.3,
+          effort: 8.2,
+          isEnrolled: temp['isEnrolled'],
+          isFollowed: temp['isFollowed']);
     } else {
       throw Exception(res.body);
     }
   }
-
 
   Future<User> editUser(
       String firstName, String lastName, String bio, String? photo) async {
@@ -337,7 +362,7 @@ class HttpService {
       }
       return (result);
     } else {
-      throw Exception(res.body);
+      throw Exception("An error occured with topics, please try another set");
     }
   }
 
@@ -425,7 +450,8 @@ class HttpService {
     Response res = await post(Uri.parse(url), headers: headers, body: body);
     if (res.statusCode == 200) {
       Iterable l = json.decode(res.body);
-      List<BasicPath> basicPaths = l.map((json) => BasicPath.fromJSON(json)).toList();
+      List<BasicPath> basicPaths =
+          l.map((json) => BasicPath.fromJSON(json)).toList();
       return basicPaths;
     } else {
       throw Exception(res.body);
@@ -438,7 +464,8 @@ class HttpService {
     Response res = await post(Uri.parse(url), headers: headers, body: body);
     if (res.statusCode == 200) {
       Iterable l = json.decode(res.body);
-      List<BasicPath> basicPaths = l.map((json) => BasicPath.fromJSON(json)).toList();
+      List<BasicPath> basicPaths =
+          l.map((json) => BasicPath.fromJSON(json)).toList();
       return basicPaths;
     } else {
       throw Exception(res.body);
@@ -450,7 +477,8 @@ class HttpService {
     Response res = await get(Uri.parse(url), headers: headers);
     if (res.statusCode == 200) {
       Iterable l = json.decode(res.body);
-      List<BasicPath> basicPaths = l.map((json) => BasicPath.fromJSON(json)).toList();
+      List<BasicPath> basicPaths =
+          l.map((json) => BasicPath.fromJSON(json)).toList();
       return basicPaths;
     } else {
       throw Exception(res.body);
