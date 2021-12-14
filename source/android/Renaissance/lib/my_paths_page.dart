@@ -1,4 +1,6 @@
 
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:portakal/http_services.dart';
@@ -41,7 +43,7 @@ class _MyPathsPageState extends State<MyPathsPage> {
                 itemCount: snapshot.data!.length,
                 itemBuilder: (context, index) {
                   BasicPath path = snapshot.data![index];
-                  return CourseContainer(path);
+                  return CourseContainer(path:path);
                 },
               );
             }

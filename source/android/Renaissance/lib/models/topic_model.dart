@@ -3,10 +3,9 @@ class Topic {
   final String? name;
   final String? description;
 
-  const Topic({
-    this.ID, this.name,this.description});
+  const Topic({this.ID, this.name,this.description});
 
-  factory Topic.fromJSON(Map<String, dynamic> json){
+  factory Topic.fromJson(Map<String, dynamic> json){
     return Topic(ID: json['ID'], name: json['name'], description: json['description']);
   }
 }
