@@ -158,7 +158,7 @@ class _HomePageState extends State<HomePage> {
                 children: [
                   ...(tags[_pageIndex]["tags"] as List<Tag>)
                       .map((tag) {
-                    return TagContainer(tag);
+                    return TagContainer(key:Key(tag.id!),tag:tag);
                   }).toList(),
                 ],
               ),
@@ -170,7 +170,7 @@ class _HomePageState extends State<HomePage> {
           ),
           ...(paths[_pageIndex]["paths"] as List<BasicPath>)
               .map((path) {
-            return CourseContainer(path);
+            return CourseContainer(key: Key(path.id!),path:path);
           }).toList(),
         ],
       ),

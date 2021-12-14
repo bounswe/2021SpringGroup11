@@ -42,7 +42,7 @@ class _MyPathsPageState extends State<MyPathsPage> {
                 itemCount: snapshot.data!.length,
                 itemBuilder: (context, index) {
                   Path path = snapshot.data![index];
-                  return CourseContainer(path.basic());
+                  return CourseContainer(path:path.basic());
                 },
               );
             } else {

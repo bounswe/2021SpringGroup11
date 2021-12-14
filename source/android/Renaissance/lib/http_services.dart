@@ -23,7 +23,7 @@ class HttpService {
   late String? token = Token.shared.token;
   late Map<String, String> headers = {
     'Content-Type': 'application/json; charset=UTF-8',
-    HttpHeaders.authorizationHeader: 'Bearer $token'
+    HttpHeaders.authorizationHeader: 'Bearer $token'.replaceAll('"', '')
   };
 
   Future<LoginResponse> login(String username, String password) async {
