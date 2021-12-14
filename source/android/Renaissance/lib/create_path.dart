@@ -263,12 +263,15 @@ class _CreatePathPageState extends State<CreatePathPage> {
                     List<String> splitted = topicController.text.split(",");
 
                     List<Tag> topicsSubmit = [];
-                    for (var item in splitted) {
-                      List<Tag> resultTags =
-                          await HttpService.shared.searchTopic(item.trim());
 
-                      resultTags = [resultTags[0]];
-                      topicsSubmit = topicsSubmit + resultTags;
+                    for (var item in splitted) {
+
+                      try {
+                        List<Tag> resultTags = await HttpService.shared.searchTopic(item.trim());
+                        resultTags = [resultTags[0]];
+                        topicsSubmit = topicsSubmit + resultTags;
+                      } on Exception catch(e) {
+                      }
                     }
 
                     for (var i = 0; i < topicsSubmit.length; i++) {
