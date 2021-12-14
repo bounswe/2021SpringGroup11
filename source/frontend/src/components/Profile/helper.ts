@@ -4,6 +4,7 @@ import {
   GET_ENROLLED_PATHS_URL,
   GET_FOLLOWED_PATHS_URL,
   GET_USER_URL,
+  WORDCLOUD_PATHS_URL,
 } from '../../utils/endpoints';
 
 export const getUserData = async (username: string) => {
@@ -17,6 +18,12 @@ export const getUserEnrolledData = async (username: string) => {
 };
 export const getUserFavPathsData = async (username: string) => {
   const { data } = await post(`${GET_FOLLOWED_PATHS_URL}`, { username });
+  return data;
+};
+export const getPathPhotoData = async (path_id: string) => {
+  const { data } = await post(`${WORDCLOUD_PATHS_URL}`, { path_id });
+  // console.log('🚀 ~ file: helper.ts ~ line 25 ~ getPathPhotoData ~ data', data);
+
   return data;
 };
 

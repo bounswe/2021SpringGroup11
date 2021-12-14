@@ -33,8 +33,8 @@ export interface ITopic {
 }
 export const getTopicDataByTopicID = async (topicID: number) => {
   // TODO ? backend endpoint ?
-  // const topic: ITopic[] = (await get(`${GET_TOPIC_BY_TOPIC_ID_URL + topicID}/`)).data;
-  const topic = getFakeTopics(1, { id: topicID })[0];
+  const topic: ITopic[] = (await get(`${GET_TOPIC_BY_TOPIC_ID_URL + topicID}/`)).data;
+  // const topic = getFakeTopics(1, { id: topicID })[0];
   return topic;
 };
 

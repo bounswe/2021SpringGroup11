@@ -29,8 +29,9 @@ import PhotoCamera from '@mui/icons-material/PhotoCamera';
 import { toast } from 'react-toastify';
 
 import NavBar from '../NavBar';
-import { getProfileData, getUserData, updateUserData } from './helper';
+import { getPathPhotoData, getProfileData, getUserData, updateUserData } from './helper';
 import auth from '../../utils/auth';
+import faker from 'faker';
 
 interface Props {
   history: any;
@@ -149,17 +150,19 @@ const Profile = (props: Props) => {
             <div style={{ color: 'white' }}>{user.username}</div>
           </div>
         </div>
-        <Button
-          style={{
-            color: 'white',
-            marginLeft: 'auto',
-            // padding: '0 20px',
-            flex: 1,
-          }}
-          onClick={() => seteditProfilePopup(true)}
-        >
-          Edit Your Profile
-        </Button>
+        {!username && (
+          <Button
+            style={{
+              color: 'white',
+              marginLeft: 'auto',
+              // padding: '0 20px',
+              flex: 1,
+            }}
+            onClick={() => seteditProfilePopup(true)}
+          >
+            Edit Your Profile
+          </Button>
+        )}
       </div>
       <ProfileContent user={user} resources={resources} favorites={favorites} />
       <Modal
@@ -453,6 +456,7 @@ interface Resource {
   isEnrolled: boolean;
   isFollowed: boolean;
   photo: string;
+  id: string;
 }
 interface ResourceCardProps {
   resource: Resource;
@@ -462,55 +466,79 @@ interface ResourceCardProps {
   color: string;
 }
 
-export const ResourceCard = (props: ResourceCardProps) => (
-  <>
-    <Card onClick={props.onClick} sx={{ width: '200px', background: props.color, margin: '5px' }}>
-      <CardContent>
-        <img src={props.resource.photo} style={{ width: '100%', height: '150px' }} alt="" />
-        <Typography sx={{ fontSize: 14, whiteSpace: 'nowrap' }} color="text.secondary" gutterBottom>
-          {props.resource.title}
-        </Typography>
-        <div
-          style={{
-            alignItems: 'center',
-            display: 'flex',
-            flex: 1,
+export const ResourceCard = (props: ResourceCardProps) => {
+  const [img, setimg] = useState('https://c.tenor.com/I6kN-6X7nhAAAAAj/loading-buffering.gif');
+  useEffect(() => {
+    (async () => {
+      if (props.resource.photo) {
+        setimg(
+          (props.resource.photo.startsWith('data') ? '' : 'data:image/png;base64,') +
+            props.resource.photo,
+        );
+      } else {
+        try {
+          const wc = await getPathPhotoData(props.resource.id);
+          setimg((wc.startsWith('data') ? '' : 'data:image/png;base64,') + wc);
+        } catch (error) {
+          setimg(faker.image.imageUrl(64, 64, undefined, true));
+        }
+      }
+    })();
+  }, []);
+  return (
+    <>
+      <Card onClick={props.onClick} sx={{ width: '200px', background: props.color, margin: '5px' }}>
+        <CardContent>
+          <img src={img} style={{ width: '100%', height: '150px' }} alt="" />
+          <Typography
+            sx={{ fontSize: 14, whiteSpace: 'nowrap' }}
+            color="text.secondary"
+            gutterBottom
+          >
+            {props.resource.title}
+          </Typography>
+          <div
+            style={{
+              alignItems: 'center',
+              display: 'flex',
+              flex: 1,
 
-            justifyContent: 'space-evenly',
-            borderRadius: '10px',
-            background: 'white',
-            padding: '5px',
-          }}
-        >
-          {[
-            { text: 'Effort', value: props.resource.effort },
-            { text: 'Rating', value: props.resource.rating },
-          ].map((item) => (
-            <div
-              style={{
-                alignItems: 'center',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'space-around',
-              }}
-            >
-              <div style={{ color: 'green' }}>{item.text}</div>
-              <div>{item.value}</div>
-            </div>
-          ))}
-        </div>
-      </CardContent>
-      <CardActions>
-        <Button
-          sx={{ backgroundColor: 'rgba(255,255,255,0.7)', color: 'black' }}
-          fullWidth
-          size="medium"
-          onClick={props.onButtonClick}
-        >
-          {props.buttonText}
-        </Button>
-      </CardActions>
-    </Card>
-  </>
-);
+              justifyContent: 'space-evenly',
+              borderRadius: '10px',
+              background: 'white',
+              padding: '5px',
+            }}
+          >
+            {[
+              { text: 'Effort', value: props.resource.effort },
+              { text: 'Rating', value: props.resource.rating },
+            ].map((item) => (
+              <div
+                style={{
+                  alignItems: 'center',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'space-around',
+                }}
+              >
+                <div style={{ color: 'green' }}>{item.text}</div>
+                <div>{item.value}</div>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+        <CardActions>
+          <Button
+            sx={{ backgroundColor: 'rgba(255,255,255,0.7)', color: 'black' }}
+            fullWidth
+            size="medium"
+            onClick={props.onButtonClick}
+          >
+            {props.buttonText}
+          </Button>
+        </CardActions>
+      </Card>
+    </>
+  );
+};
 export default Profile;

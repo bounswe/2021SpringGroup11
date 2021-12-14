@@ -61,7 +61,11 @@ const Profile = (props: Props) => {
       // simulate api request waiting
       setTimeout(async () => {
         settopic(await getTopicDataByTopicID(topicID));
-        setrelatedTopics(await getRelatedTopicsByTopicID(topicID));
+        try {
+          setrelatedTopics(await getRelatedTopicsByTopicID(topicID));
+        } catch (error) {
+          setrelatedTopics([]);
+        }
         setpaths(await getPathsByTopicID(topicID));
         setLoading(false);
       }, 10);
@@ -99,7 +103,12 @@ const Profile = (props: Props) => {
             color={topic.isFav ? 'success' : 'error'}
             onClick={async () => {
               const newState = !topic.isFav;
-              await updateFavTopic(topic.id, newState);
+              // TODO:
+              try {
+                await updateFavTopic(topic.id, newState);
+              } catch (error) {
+                console.error(error);
+              }
               toast.success(
                 `${newState ? 'Favorited' : 'Unfavorited'} successfully, Topic:${topic.name}`,
                 {
@@ -117,24 +126,28 @@ const Profile = (props: Props) => {
           />
         </IconButton>
       </div>
-      <h1>Related Topics</h1>
-      <Paper
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          flexWrap: 'wrap',
-          listStyle: 'none',
-          p: 0.5,
-          m: 0,
-          flexDirection: 'row',
-        }}
-      >
-        {relatedTopics.map((relTop) => (
-          <ListItem sx={{ margin: '10px', width: 'unset' }}>
-            <Chip onClick={() => history.push(`/topic/${relTop.id}`)} label={relTop.name} />
-          </ListItem>
-        ))}
-      </Paper>
+
+      <>
+        <h1>Related Topics</h1>
+        <Paper
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            flexWrap: 'wrap',
+            listStyle: 'none',
+            p: 0.5,
+            m: 0,
+            flexDirection: 'row',
+          }}
+        >
+          {relatedTopics?.length === 0 && <h3>-empty-</h3>}
+          {relatedTopics.slice(0, 16).map((relTop) => (
+            <ListItem sx={{ margin: '10px', width: 'unset' }}>
+              <Chip onClick={() => history.push(`/topic/${relTop.id}`)} label={relTop.name} />
+            </ListItem>
+          ))}
+        </Paper>
+      </>
 
       <h1>Paths</h1>
       <div
@@ -156,6 +169,7 @@ const Profile = (props: Props) => {
               isEnrolled: path.isEnrolled,
               isFollowed: path.isFav,
               photo: path.photo,
+              id: path._id,
             }}
             onClick={() => {
               history.push(`/path/${path._id}`);
