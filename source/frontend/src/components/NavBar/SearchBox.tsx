@@ -33,6 +33,8 @@ import {
   searchTopic,
   searchUser,
 } from './search.util';
+import faker from 'faker';
+import { getPathPhotoData } from '../Profile/helper';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -186,12 +188,7 @@ const SearchBox = (props: Props) => {
                         }}
                       >
                         {' '}
-                        <img
-                          style={{
-                            height: '100%',
-                          }}
-                          src={`${pathSearchItem.photo}`}
-                        />
+                        <WordCloudImg id={pathSearchItem._id} photo={`${pathSearchItem.photo}`} />
                         <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
                           <h3>{pathSearchItem.title}</h3>
                           <br />
@@ -218,6 +215,35 @@ const SearchBox = (props: Props) => {
         </div>
       )}
     </Search>
+  );
+};
+
+const WordCloudImg = ({ id, photo }) => {
+  const [img, setimg] = useState('https://c.tenor.com/I6kN-6X7nhAAAAAj/loading-buffering.gif');
+  useEffect(() => {
+    (async () => {
+      if (photo) {
+        setimg((photo.startsWith('data') ? '' : 'data:image/png;base64,') + photo);
+
+        setimg(`data:image/png;base64,${photo}`);
+      } else {
+        try {
+          const wc = await getPathPhotoData(id);
+          setimg((wc.startsWith('data') ? '' : 'data:image/png;base64,') + wc);
+        } catch (error) {
+          setimg(faker.image.imageUrl(64, 64, undefined, true));
+        }
+      }
+    })();
+  }, []);
+  return (
+    <img
+      style={{
+        height: '64px',
+        width: '64px',
+      }}
+      src={`${img}`}
+    />
   );
 };
 
