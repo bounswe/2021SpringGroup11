@@ -373,6 +373,8 @@ class Wordcloud(APIView):
         text+=path["description"]+"\n"
         text+=path["description"]+"\n" #intentionally added twice to make it more important
         for m in path["milestones"]:
+            if type(m) == str:
+                continue
             text+=m["title"]+"\n"
             text+=m["title"]+"\n" # included twice to emphasize
             text+=m["body"]+"\n"
