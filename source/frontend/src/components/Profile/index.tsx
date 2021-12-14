@@ -24,9 +24,9 @@ import {
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Switch, Route, Link, useParams } from 'react-router-dom';
-import avatar from '../../images/avatar1.png';
 import MDEditor from '@uiw/react-md-editor';
 import PhotoCamera from '@mui/icons-material/PhotoCamera';
+import { toast } from 'react-toastify';
 
 import NavBar from '../NavBar';
 import { getProfileData, getUserData, updateUserData } from './helper';
@@ -64,7 +64,7 @@ const Profile = (props: Props) => {
         setStats(_stats);
         setFavorites(_favorites);
         setLoading(false);
-      }, 100);
+      }, 10);
     })();
   }, [username]);
 
@@ -95,7 +95,7 @@ const Profile = (props: Props) => {
           justifyContent: 'center',
         }}
       >
-        <img style={{ height: '80%' }} src={avatar} alt="" />
+        <img style={{ height: '80%' }} src={user.photo} alt="" />
       </div>
       <div
         style={{
@@ -164,7 +164,24 @@ const Profile = (props: Props) => {
       <ProfileContent user={user} resources={resources} favorites={favorites} />
       <Modal
         open={editProfilePopup}
-        onClose={() => seteditProfilePopup(false)}
+        onClose={async () => {
+          seteditProfilePopup(false);
+          setLoading(true);
+
+          const {
+            resources: _resources,
+            user: _user,
+            stats: _stats,
+            favorites: _favorites,
+          } = await getProfileData(username || auth.getAuthInfoFromSession()?.username || 'e');
+          console.log(_resources);
+
+          setResources(_resources);
+          setUser({ ..._user });
+          setStats(_stats);
+          setFavorites(_favorites);
+          setLoading(false);
+        }}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
@@ -183,14 +200,20 @@ const Profile = (props: Props) => {
             height: '90vh',
           }}
         >
-          <EditProfile username={username} />{' '}
+          <EditProfile seteditProfilePopup={seteditProfilePopup} username={username} />{' '}
         </Box>
       </Modal>
     </div>
   );
 };
 
-const EditProfile = ({ username }: { username: string }) => {
+const EditProfile = ({
+  username,
+  seteditProfilePopup,
+}: {
+  username: string;
+  seteditProfilePopup: Function;
+}) => {
   const [loading, setLoading] = useState(true);
 
   const [user, setUser] = useState(null);
@@ -219,8 +242,8 @@ const EditProfile = ({ username }: { username: string }) => {
       <div>
         <h2>Edit Profile</h2>
         {[
-          { label: 'Username', key: 'username' },
-          { label: 'Email', key: 'email' },
+          // { label: 'Username', key: 'username' },
+          // { label: 'Email', key: 'email' },
           { label: 'First Name', key: 'firstname' },
           { label: 'Last Name', key: 'lastname' },
         ].map(({ key, label }) => (
@@ -266,7 +289,17 @@ const EditProfile = ({ username }: { username: string }) => {
         <br />
         <Button
           onClick={() => {
-            updateUserData(user);
+            updateUserData(user).then((s) => {
+              toast.success('Saved', {
+                position: 'top-left',
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+              });
+            });
           }}
         >
           Save
@@ -304,7 +337,10 @@ const ProfileContent = (props: ProfileContentProps) => (
         }}
       >
         <div style={{ color: 'red' }}>{props.user.name}</div>
-        <div style={{ background: 'white', borderRadius: '5px' }}>{props.user.bio}</div>
+        <MDEditor.Markdown
+          style={{ background: 'white', borderRadius: '5px' }}
+          source={props.user.bio}
+        />
       </div>
     </div>
 

@@ -111,7 +111,7 @@ const SearchBox = (props: Props) => {
         inputProps={{ 'aria-label': 'search' }}
       />
       {searchText.trim() && (
-        <div style={{ position: 'relative' }}>
+        <div style={{ position: 'relative', overflowWrap: 'anywhere' }}>
           <div style={{ position: 'absolute', zIndex: 9, background: 'gray', width: '100%' }}>
             {searchResults ? (
               <>
@@ -124,7 +124,14 @@ const SearchBox = (props: Props) => {
                           history.push(`/profile/${userSearchItem.username}`);
                           setSearchText('');
                         }}
-                        style={{ display: 'flex', flexDirection: 'row' }}
+                        style={{
+                          display: 'flex',
+                          flexDirection: 'row',
+                          background: 'blue',
+                          margin: '1rem',
+                          borderStyle: 'double',
+                          borderRadius: '5px',
+                        }}
                       >
                         <img
                           style={{
@@ -143,12 +150,20 @@ const SearchBox = (props: Props) => {
                     return (
                       <div
                         onClick={() => {
-                          history.push(`/topic/${topicSearchItem.ID}`);
+                          history.push(`/topic/${topicSearchItem.id}`);
                           setSearchText('');
                         }}
-                        style={{ display: 'flex', flexDirection: 'row' }}
+                        style={{
+                          display: 'flex',
+                          flexDirection: 'column',
+                          background: 'purple',
+                          margin: '1rem',
+                          borderStyle: 'double',
+                          borderRadius: '5px',
+                        }}
                       >
                         <h2>#{topicSearchItem.name}</h2>
+                        <h5>{topicSearchItem.description}</h5>
                       </div>
                     );
                   }
@@ -158,10 +173,17 @@ const SearchBox = (props: Props) => {
                     return (
                       <div
                         onClick={() => {
-                          history.push(`/path/${pathSearchItem.ID}`);
+                          history.push(`/path/${pathSearchItem._id}`);
                           setSearchText('');
                         }}
-                        style={{ display: 'flex', flexDirection: 'row' }}
+                        style={{
+                          display: 'flex',
+                          flexDirection: 'row',
+                          background: 'green',
+                          margin: '1rem',
+                          borderStyle: 'double',
+                          borderRadius: '5px',
+                        }}
                       >
                         {' '}
                         <img
@@ -172,10 +194,8 @@ const SearchBox = (props: Props) => {
                         />
                         <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
                           <h3>{pathSearchItem.title}</h3>
-                          <h5>
-                            Rating:{pathSearchItem.rating}
-                            Effort:{pathSearchItem.effort}
-                          </h5>
+                          <br />
+                          <h5>{pathSearchItem.description}</h5>
                         </div>
                       </div>
                     );
