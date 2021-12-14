@@ -61,8 +61,7 @@ class _BottomNavigationPageState extends State<BottomNavigationPage> {
           Navigator(
             key: _notificationScreen,
             onGenerateRoute: (route) => MaterialPageRoute(
-                builder: (context) => PathPage(ID:'61b4a67a83be2933bd99d7a',title:'My title',description:'lorem ipsum ıvır zivir',topics: [Topic(ID:2,name:'Earth',description:'AS'),Topic(ID:3,name:'Writing',description:'AS')],creator_username: 'canberk42',created_at: 123123,creator_email: 'asdasd@asdasd.com',is_banned: false,is_deleted: false,isEnrolled: true,isFollowed: false,milestones: [Milestone(id: 'aa',title: 'Deneme1',body:'asdasda',isFinished: true),Milestone(id: 'aa',title: 'Deneme2',body:'aaaaa',isFinished: false)],),
-                settings: route),
+                builder: (context) => ExplorePage(), settings: route),
           ),
           Navigator(
             key: _profileScreen,

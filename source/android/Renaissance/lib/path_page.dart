@@ -15,22 +15,11 @@ import 'package:portakal/widget/milestone_widget.dart';
 import 'package:flutter_spinbox/material.dart'; // or flutter_spinbox.dart for both
 import 'package:portakal/models/topic_model.dart';
 import 'package:portakal/models/milestone_model.dart';
+import 'package:portakal/models/path.dart';
 
 class PathPage extends StatefulWidget {
-  final String? ID;
-  final String? title;
-  final String? description;
-  final List<Topic>? topics;
-  final String? creator_username;
-  final String? creator_email;
-  final int? created_at;
-  final String? photo;
-  final List<Milestone>? milestones;
-  final bool? is_banned;
-  final bool? is_deleted;
-  final bool? isFollowed;
-  final bool? isEnrolled;
-  const PathPage({ Key? key, this.ID,this.title,this.description,this.topics,this.creator_username,this.creator_email,this.created_at,this.photo,this.milestones,this.is_banned,this.is_deleted,this.isFollowed,this.isEnrolled}): super(key: key);
+  final Path? p;
+  const PathPage({ Key? key,this.p}): super(key: key);
 
   @override
   _PathPageState createState() => _PathPageState();
@@ -41,13 +30,13 @@ class _PathPageState extends State<PathPage> {
   var _image;
 
   void loadPhoto() async {
-    if (widget.photo == "") {
+    if (widget.p!.photo == "") {
       return;
     }
     setState(() {
       isLoading = true;
     });
-    _image = await FileConverter.getImageFromBase64(widget.photo!);
+    _image = await FileConverter.getImageFromBase64(widget.p!.photo!);
     setState(() {
       isLoading = false;
     });
@@ -78,6 +67,9 @@ class _PathPageState extends State<PathPage> {
 
   @override
   Widget build(BuildContext context) {
+    if(!isLoading && _image == null) {
+      loadPhoto();
+    }
     return Scaffold(
       backgroundColor: Colors.blue,
       body: Column(
@@ -110,7 +102,7 @@ class _PathPageState extends State<PathPage> {
                         Column(
                           children: [
                             Text(
-                              widget.title!,
+                              widget.p!.title!,
                               overflow: TextOverflow.ellipsis,
                               softWrap: true,
                               maxLines: 2,
@@ -119,7 +111,7 @@ class _PathPageState extends State<PathPage> {
                             ),
                             SizedBox(height: 5,),
                             Text(
-                                'Creator: '+widget.creator_username!,
+                                'Creator: '+widget.p!.creator_username!,
                               overflow: TextOverflow.ellipsis,
                               softWrap: true,
                               maxLines: 2,
@@ -158,7 +150,7 @@ class _PathPageState extends State<PathPage> {
                             scrollDirection: Axis.horizontal,
                             child: Row(
                               children: [
-                                ...(widget.topics! as List<Topic>)
+                                ...(widget.p!.topics! as List<Topic>)
                                     .map((topic) {
                                   return  ButtonTheme(
                                     height: 20.0,
@@ -207,7 +199,7 @@ class _PathPageState extends State<PathPage> {
                                 // for Vertical scrolling
                                 scrollDirection: Axis.vertical,
                                 child: Text(
-                                  widget.description!,
+                                  widget.p!.description!,
                                   style: TextStyle(fontSize: 14, height: 1.2,  fontStyle: FontStyle.italic),
                                 ),
                               ),
@@ -225,11 +217,11 @@ class _PathPageState extends State<PathPage> {
                               shape: StadiumBorder(),
                               onPrimary: Colors.white,
                             ),
-                            child: Text((isEnrollChanged?isEnrolled:widget.isEnrolled!)?"Enroll":"Unenroll"),
+                            child: Text((isEnrollChanged?isEnrolled:widget.p!.isEnrolled!)?"Enroll":"Unenroll"),
                             onPressed: () async{
-                              if ((isEnrollChanged?isEnrolled:widget.isEnrolled!)) {
+                              if ((isEnrollChanged?isEnrolled:widget.p!.isEnrolled!)) {
                                 try {
-                                  var response = await HttpService.shared.enroll(User.me!.username!, widget.ID!);
+                                  var response = await HttpService.shared.enroll(User.me!.username!, widget.p!.id!);
                                   if(!response){
                                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                                       content: Text(
@@ -247,7 +239,7 @@ class _PathPageState extends State<PathPage> {
                                 }
                               } else {
                                 try {
-                                  var response = await HttpService.shared.unenroll(User.me!.username!, widget.ID!);
+                                  var response = await HttpService.shared.unenroll(User.me!.username!, widget.p!.id!);
                                   if(!response){
                                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                                       content: Text(
@@ -266,7 +258,7 @@ class _PathPageState extends State<PathPage> {
                               setState(() {
                                 if(!isEnrollChanged){
                                   isEnrollChanged = true;
-                                  isEnrolled = !widget.isEnrolled!;
+                                  isEnrolled = !widget.p!.isEnrolled!;
                                 }
                                 else{
                                   isEnrollChanged = !isEnrollChanged;
@@ -279,9 +271,9 @@ class _PathPageState extends State<PathPage> {
                               InkWell(
 
                                   onTap: () async{
-                                    if ((isFavChanged?isFollowed:widget.isFollowed!)) {
+                                    if ((isFavChanged?isFollowed:widget.p!.isFollowed!)) {
                                       try {
-                                        var response = await HttpService.shared.fav_path(User.me!.username!, widget.ID!);
+                                        var response = await HttpService.shared.fav_path(User.me!.username!, widget.p!.id!);
                                         if(!response){
                                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                                             content: Text(
@@ -299,7 +291,7 @@ class _PathPageState extends State<PathPage> {
                                       }
                                     } else {
                                       try {
-                                        var response = await HttpService.shared.unfav_path(User.me!.username!, widget.ID!);
+                                        var response = await HttpService.shared.unfav_path(User.me!.username!, widget.p!.id!);
                                         if(!response){
                                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                                             content: Text(
@@ -319,7 +311,7 @@ class _PathPageState extends State<PathPage> {
 
                                       if(!isFavChanged){
                                         isFavChanged = true;
-                                        isFollowed = !widget.isFollowed!;
+                                        isFollowed = !widget.p!.isFollowed!;
                                       }
                                       else{
                                         isFollowed = !isFollowed;
@@ -335,9 +327,9 @@ class _PathPageState extends State<PathPage> {
                                     alignment: Alignment.center,
                                     child: Icon(
                                       // NEW from here...
-                                      (isFavChanged?isFollowed:widget.isFollowed!) ? Icons.favorite : Icons.favorite_border,
-                                      color: (isFavChanged?isFollowed:widget.isFollowed!) ? Colors.red : null,
-                                      semanticLabel: (isFavChanged?isFollowed:widget.isFollowed!) ? 'Remove from saved' : 'Save',
+                                      (isFavChanged?isFollowed:widget.p!.isFollowed!) ? Icons.favorite : Icons.favorite_border,
+                                      color: (isFavChanged?isFollowed:widget.p!.isFollowed!) ? Colors.red : null,
+                                      semanticLabel: (isFavChanged?isFollowed:widget.p!.isFollowed!) ? 'Remove from saved' : 'Save',
                                     ),
                                   )),
                               SizedBox(width:5),
@@ -381,7 +373,7 @@ class _PathPageState extends State<PathPage> {
                                                   child: Text('Rate Path'),
                                                   onPressed: ()async{
                                                     try {
-                                                      var response = await HttpService.shared.rate_path(User.me!.username!, widget.ID!,rating);
+                                                      var response = await HttpService.shared.rate_path(User.me!.username!, widget.p!.id!,rating);
                                                       if(!response){
                                                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                                                           content: Text(
@@ -420,7 +412,7 @@ class _PathPageState extends State<PathPage> {
                                                   child: Text('Rate Effort'),
                                                   onPressed: ()async{
                                                     try {
-                                                      var response = await HttpService.shared.effort_path(User.me!.username!, widget.ID!,effort);
+                                                      var response = await HttpService.shared.effort_path(User.me!.username!, widget.p!.id!,effort);
                                                       if(!response){
                                                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                                                           content: Text(
@@ -480,7 +472,7 @@ class _PathPageState extends State<PathPage> {
               ListView(
                 physics: BouncingScrollPhysics(),
     children: [
-      ...(widget.milestones! as List<Milestone>)
+      ...(widget.p!.milestones! as List<Milestonee>)
           .map((milestone) {
         return   MilestoneContainer(milestone.id!,milestone.title!,milestone.body!,milestone.isFinished!);
       }).toList()

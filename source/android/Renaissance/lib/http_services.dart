@@ -9,8 +9,12 @@ import 'package:portakal/models/get_follow_response.dart';
 import 'dart:convert';
 
 import 'package:portakal/models/login_response.dart';
+
+import 'package:portakal/models/milestone.dart';
+import 'package:portakal/models/milestone_model.dart';
 import 'package:portakal/models/tag.dart';
 import 'package:portakal/models/path.dart';
+import 'package:portakal/models/topic_model.dart';
 import 'package:portakal/token.dart';
 import 'package:jwt_decode/jwt_decode.dart';
 
@@ -184,6 +188,31 @@ class HttpService {
       throw Exception(res.body);
     }
   }
+
+  Future<Path> getPath(String path_id) async {
+    String url = baseUrl + '/path/get-path/$path_id/';
+    Response res = await get(Uri.parse(url), headers: headers);
+
+    if (res.statusCode == 200) {
+      var temp = jsonDecode(res.body);
+      List<Milestonee> milestoness = [];
+      List<Topic> topicss = [];
+
+      (temp["milestones"])
+        .map((tag) {
+    milestoness.add( Milestonee.fromJson(tag));
+    }).toList();
+
+      (temp["topics"])
+          .map((tag) {
+        topicss.add( Topic.fromJson(tag));
+      }).toList();
+      return Path(id:path_id,title: temp['title'],description: temp['description'],topics: topicss,creator_username: temp['creator_username'],creator_email: temp['creator_email'],created_at:1.0*temp['created_at'],photo:temp['photo'],milestones: milestoness,rating: 7.3,effort: 8.2,isEnrolled: temp['isEnrolled'], isFollowed: temp['isFollowed']);
+    } else {
+      throw Exception(res.body);
+    }
+  }
+
 
   Future<User> editUser(
       String firstName, String lastName, String bio, String? photo) async {

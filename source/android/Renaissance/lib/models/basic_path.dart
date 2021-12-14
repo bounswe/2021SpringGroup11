@@ -8,6 +8,6 @@ class BasicPath {
     this.title, this.id, this.photo, this.effort, this.rating
 });
   factory BasicPath.fromJSON(Map<String, dynamic> json) {
-    return BasicPath(title: json['title'], id: json['path_id'], photo: json['photo'], effort: json['effort'], rating: json['rating']);
+    return BasicPath(title: json['title'], id: json['_id'], photo: json['photo'], effort: json['effort'], rating: json['rating']);
   }
 }
