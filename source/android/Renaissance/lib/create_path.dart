@@ -289,6 +289,7 @@ class _CreatePathPageState extends State<CreatePathPage> {
                       if (topicController.text == "")
                         throw Exception('Please give some topic!');
 
+
                       for (var item in _titleControllers)
                         if (item.text == "")
                           throw Exception('Please fill all milestone titles!');
