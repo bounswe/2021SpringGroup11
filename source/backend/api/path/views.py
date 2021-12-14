@@ -407,6 +407,9 @@ class GetPath(APIView):
         path['_id'] = str(path['_id'])
         path['isFollowed'] = follow is not None
         path['isEnrolled'] = enroll is not None
+        rating, effort = get_rate_n_effort(path['_id'])
+        path['rating'] = rating
+        path['effort'] = effort
 
         new_path_topics = []
         for path_topic in path['topics']:
@@ -656,5 +659,8 @@ class MyPaths(APIView):
 
         for path in paths:
             path['_id'] = str(path['_id'])
+            rating, effort = get_rate_n_effort(path['_id'])
+            path['rating'] = rating
+            path['effort'] = effort
 
         return Response(paths)
