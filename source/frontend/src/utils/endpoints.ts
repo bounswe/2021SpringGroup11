@@ -14,4 +14,5 @@ export const SEARCH_TOPIC_URL = `${baseUrl}topic/search-topic/`; // /search-topi
 export const SEARCH_PATH_URL = `${baseUrl}topic/search-path/`; // /search-path/<search_text>
 export const GET_RELATED_TOPICS_BY_TOPIC_ID_URL = `${baseUrl}topic/related-topic/`; // /related-topic/<topic:int>
 
+export const ENROLL_PATH_URL = `${baseUrl}path/enroll-path/`;
 export const GET_PATHS_BY_TOPIC_ID_URL = `${baseUrl}path/related-path/`; /// /path/related-path/<topic:int> Wikidata tag number

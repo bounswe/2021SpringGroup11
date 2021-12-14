@@ -2,6 +2,7 @@ import { Button, Typography } from '@material-ui/core';
 import { makeStyles } from '@mui/styles';
 import React = require('react');
 import { Grid } from '@mui/material';
+import history from '../../../utils/history';
 
 interface Props {
   items: {
@@ -87,7 +88,7 @@ const TagItem = (props: tagProps) => {
           paddingLeft: '10px',
         }}
       >
-        <Typography variant="h4" align={'center'}>
+        <Typography variant="h4" align="center">
           {item.name}
         </Typography>
         <Button
@@ -98,7 +99,7 @@ const TagItem = (props: tagProps) => {
             marginRight: '10px',
           }}
         >
-          <Typography align={'center'}>Follow</Typography>
+          <Typography align="center">Follow</Typography>
         </Button>
       </div>
     </Grid>
@@ -111,12 +112,15 @@ const PathItem = (props: pathProps) => {
 
   return (
     <div className={classes.pathRoot}>
-      <img className={classes.pathPic} src={item.pic} alt={'path-item'} />
+      <img className={classes.pathPic} src={item.pic} alt="path-item" />
       <div style={{ display: 'flex', flexDirection: 'row' }}>
         <div style={{ display: 'flex', flexDirection: 'column', width: '75%' }}>
-          <Typography variant="h5" align={'center'}>
-            {item.name}
-          </Typography>
+          <Button onClick={() => history.push('/path/61b7337ff74bd48c1653a145')}>
+            <Typography variant="h5" align="center">
+              {item.name}
+            </Typography>
+          </Button>
+
           <div
             style={{
               display: 'flex',
@@ -125,15 +129,15 @@ const PathItem = (props: pathProps) => {
               alignItems: 'center',
             }}
           >
-            <Typography style={{ color: '#fff500' }} variant="h6" align={'center'}>
+            <Typography style={{ color: '#fff500' }} variant="h6" align="center">
               Effort
-              <Typography style={{ color: '#ffffff' }} variant="h6" align={'center'}>
+              <Typography style={{ color: '#ffffff' }} variant="h6" align="center">
                 {item.effort}
               </Typography>
             </Typography>
-            <Typography style={{ color: '#fff500' }} variant="h6" align={'center'}>
+            <Typography style={{ color: '#fff500' }} variant="h6" align="center">
               Rating
-              <Typography style={{ color: '#ffffff' }} variant="h6" align={'center'}>
+              <Typography style={{ color: '#ffffff' }} variant="h6" align="center">
                 {item.rating}
               </Typography>
             </Typography>
@@ -148,7 +152,7 @@ const PathItem = (props: pathProps) => {
             padding: '0 40px',
           }}
         >
-          <Typography style={{ color: '#F25115' }} variant="h6" align={'center'}>
+          <Typography style={{ color: '#F25115' }} variant="h6" align="center">
             Enroll
           </Typography>
         </Button>
@@ -176,7 +180,7 @@ const HomeTabPanel = (props: Props) => {
       </div>
       <div className={classes.panel}>
         <div className={classes.tagHeader}>
-          <Typography variant="h3" align={'center'}>
+          <Typography variant="h3" align="center">
             Paths
           </Typography>
         </div>
