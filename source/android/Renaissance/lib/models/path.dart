@@ -1,7 +1,7 @@
 import 'package:portakal/models/basic_path.dart';
 import 'package:portakal/models/milestone.dart';
 
-class Pathh {
+class Path {
   final String? id;
   final String? title;
   final String? description;
@@ -13,12 +13,12 @@ class Pathh {
   final List<Milestone>? milestones;
   final double? rating;
   final double? effort;
-  const Pathh({
+  const Path({
     this.id, this.title, this.description, this.topics, this.creator_username, this.creator_email, this.created_at, this.photo, this.milestones, this.rating, this.effort
 });
 
-  factory Pathh.fromJson(Map<String, dynamic> json) {
-    return Pathh(id: json['_id'], title: json['title'], description: json['description'], topics: json['topics'], creator_username: json['creator_username'], created_at: json['created_at'],
+  factory Path.fromJson(Map<String, dynamic> json) {
+    return Path(id: json['_id'], title: json['title'], description: json['description'], topics: json['topics'], creator_username: json['creator_username'], created_at: json['created_at'],
       photo: json['photo'], milestones: (json['milestones'] as List<Map<String, dynamic>>).map((json) => Milestone.fromJson(json)).toList(), rating: json['rating'], effort: json['effort'],
         creator_email: json['creator_email']);
   }
