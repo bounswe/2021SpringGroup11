@@ -26,7 +26,7 @@ import {
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Switch, Route, Link, useParams } from 'react-router-dom';
 import avatar from '../../images/avatar1.png';
-import FavoriteIcon from '@mui/icons-material/Favorite';
+
 import NavBar from '../NavBar';
 import auth from '../../utils/auth';
 import {
@@ -35,16 +35,13 @@ import {
   getTopicDataByTopicID,
   IPath,
   ITopic,
-  updateFavTopic,
 } from './helper';
 import { getFakeTopics } from './fakeData';
 import { ResourceCard } from '../Profile';
-import { toast } from 'react-toastify';
 
 interface Props {
   history: any;
 }
-
 const Profile = (props: Props) => {
   const { history } = props;
   const { topicID } = useParams();
@@ -61,14 +58,10 @@ const Profile = (props: Props) => {
       // simulate api request waiting
       setTimeout(async () => {
         settopic(await getTopicDataByTopicID(topicID));
-        try {
-          setrelatedTopics(await getRelatedTopicsByTopicID(topicID));
-        } catch (error) {
-          setrelatedTopics([]);
-        }
+        setrelatedTopics(await getRelatedTopicsByTopicID(topicID));
         setpaths(await getPathsByTopicID(topicID));
         setLoading(false);
-      }, 10);
+      }, 1000);
     })();
   }, [topicID]);
 
@@ -86,68 +79,30 @@ const Profile = (props: Props) => {
   }
   return (
     <div>
-      <NavBar title={`Topic:${topic.name}`} history={history}></NavBar>
-
-      <div
-        style={{
+      <NavBar title={`Topic:${topicID}`} history={history}></NavBar>
+      <div>Topic</div>
+      <div>
+        <h1>{topic.name}</h1>
+        <Button>Fav</Button>
+      </div>
+      <h1>Related Topics</h1>
+      <Paper
+        sx={{
           display: 'flex',
-          flexDirection: 'row',
-          width: '100%',
-          alignItems: 'center',
           justifyContent: 'center',
+          flexWrap: 'wrap',
+          listStyle: 'none',
+          p: 0.5,
+          m: 0,
+          flexDirection: 'row',
         }}
       >
-        <h1>{topic.name}</h1>
-        <IconButton aria-label="favorite">
-          <FavoriteIcon
-            color={topic.isFav ? 'success' : 'error'}
-            onClick={async () => {
-              const newState = !topic.isFav;
-              // TODO:
-              try {
-                await updateFavTopic(topic.id, newState);
-              } catch (error) {
-                console.error(error);
-              }
-              toast.success(
-                `${newState ? 'Favorited' : 'Unfavorited'} successfully, Topic:${topic.name}`,
-                {
-                  position: 'top-left',
-                  autoClose: 5000,
-                  hideProgressBar: false,
-                  closeOnClick: true,
-                  pauseOnHover: true,
-                  draggable: true,
-                  progress: undefined,
-                },
-              );
-              settopic({ ...topic, isFav: newState });
-            }}
-          />
-        </IconButton>
-      </div>
-
-      <>
-        <h1>Related Topics</h1>
-        <Paper
-          sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            flexWrap: 'wrap',
-            listStyle: 'none',
-            p: 0.5,
-            m: 0,
-            flexDirection: 'row',
-          }}
-        >
-          {relatedTopics?.length === 0 && <h3>-empty-</h3>}
-          {relatedTopics.slice(0, 16).map((relTop) => (
-            <ListItem sx={{ margin: '10px', width: 'unset' }}>
-              <Chip onClick={() => history.push(`/topic/${relTop.id}`)} label={relTop.name} />
-            </ListItem>
-          ))}
-        </Paper>
-      </>
+        {relatedTopics.map((relTop) => (
+          <ListItem sx={{ margin: '10px', width: 'unset' }}>
+            <Chip onClick={() => history.push(`/topic/${relTop.ID}`)} label={relTop.name} />
+          </ListItem>
+        ))}
+      </Paper>
 
       <h1>Paths</h1>
       <div
@@ -169,15 +124,11 @@ const Profile = (props: Props) => {
               isEnrolled: path.isEnrolled,
               isFollowed: path.isFav,
               photo: path.photo,
-              id: path._id,
             }}
-            onClick={() => {
-              history.push(`/path/${path._id}`);
-            }}
+            onClick={() => {}}
             buttonText={path.isEnrolled ? 'Unenroll' : 'Enroll'}
             onButtonClick={() => {
-              // alert('TODO');
-              history.push(`/path/${path._id}`);
+              alert('TODO');
             }}
             color="#9EE97A"
           />

@@ -32,18 +32,20 @@ const searchUser = async ({ searchText }: { searchText: string }) => {
 };
 
 const searchTopic = async ({ searchText }: { searchText: string }) => {
-  const { data }: { data: ITopic[] } = await get(`${SEARCH_TOPIC_URL + searchText.trim()}/`);
-  console.log('🚀 ~ file: search.util.ts ~ line 13 ~ searchTopic ~ data', data);
+  // TODO backend connection
+  //   const { data } = await get(`${SEARCH_TOPIC_URL + searchText.trim()}/`);
+  //   console.log('🚀 ~ file: search.util.ts ~ line 13 ~ searchTopic ~ data', data);
 
-  // const datas = getFakeTopics().filter((d) => d.name.includes(searchText));
+  const data = getFakeTopics().filter((d) => d.name.includes(searchText));
   return data.map((t) => ({ ...t, type: 'topic' })) as ITopicSearchResult[];
 };
 
 const searchPath = async ({ searchText }: { searchText: string }) => {
-  const { data }: { data: IPath[] } = await get(`${SEARCH_PATH_URL + searchText.trim()}/`);
-  console.log('🚀 ~ file: search.util.ts ~ line 13 ~ searchPath ~ data', data);
+  // TODO backend connection
+  //   const { data } = await get(`${SEARCH_PATH_URL + searchText.trim()}/`);
+  //   console.log('🚀 ~ file: search.util.ts ~ line 13 ~ searchPath ~ data', data);
 
-  // const data = getFakePaths().filter((d) => d.title.includes(searchText));
+  const data = getFakePaths().filter((d) => d.title.includes(searchText));
   return data.map((t) => ({ ...t, type: 'path' })) as IPathSearchResult[];
 };
 
