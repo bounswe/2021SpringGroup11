@@ -42,7 +42,7 @@ def get_rate_n_effort(path_id: str):
     if efforts:
         effort /= len(efforts)
 
-    return rating, effort
+    return float(rating), float(effort)
 
 def path_is_enrolled(path_id: str, username: str) -> bool:
     with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
