@@ -4,7 +4,7 @@ import 'package:portakal/models/tag.dart';
 import 'package:portakal/my_colors.dart';
 
 class TagContainer extends StatefulWidget {
-  TagContainer(this.tag);
+  TagContainer({Key? key,this.tag}): super(key:key);
   var tag;
   @override
   State<TagContainer> createState() => _TagContainerState();

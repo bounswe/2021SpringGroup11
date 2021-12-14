@@ -230,12 +230,36 @@ class _PathPageState extends State<PathPage> {
                               if ((isEnrollChanged?isEnrolled:widget.isEnrolled!)) {
                                 try {
                                   var response = await HttpService.shared.enroll(User.me!.username!, widget.ID!);
+                                  if(!response){
+                                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                      content: Text(
+                                        'An error occured please try again later.',
+                                        style: TextStyle(
+                                            decorationColor: Colors.greenAccent,
+                                            fontSize: 25,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ));
+                                    return;
+                                  }
                                 } on Exception catch (error) {
 
                                 }
                               } else {
                                 try {
                                   var response = await HttpService.shared.unenroll(User.me!.username!, widget.ID!);
+                                  if(!response){
+                                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                      content: Text(
+                                        'An error occured please try again later.',
+                                        style: TextStyle(
+                                            decorationColor: Colors.greenAccent,
+                                            fontSize: 25,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ));
+                                    return;
+                                  }
                                 } on Exception catch (error) {
                                 }
                               }
@@ -258,12 +282,36 @@ class _PathPageState extends State<PathPage> {
                                     if ((isFavChanged?isFollowed:widget.isFollowed!)) {
                                       try {
                                         var response = await HttpService.shared.fav_path(User.me!.username!, widget.ID!);
+                                        if(!response){
+                                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                            content: Text(
+                                              'An error occured please try again later.',
+                                              style: TextStyle(
+                                                  decorationColor: Colors.greenAccent,
+                                                  fontSize: 25,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ));
+                                          return;
+                                        }
                                       } on Exception catch (error) {
 
                                       }
                                     } else {
                                       try {
                                         var response = await HttpService.shared.unfav_path(User.me!.username!, widget.ID!);
+                                        if(!response){
+                                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                            content: Text(
+                                              'An error occured please try again later.',
+                                              style: TextStyle(
+                                                  decorationColor: Colors.greenAccent,
+                                                  fontSize: 25,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ));
+                                          return;
+                                        }
                                       } on Exception catch (error) {
                                       }
                                     }
@@ -274,7 +322,7 @@ class _PathPageState extends State<PathPage> {
                                         isFollowed = !widget.isFollowed!;
                                       }
                                       else{
-                                        isFavChanged = !isFavChanged;
+                                        isFollowed = !isFollowed;
                                       }
                                     });
                                   },
@@ -334,6 +382,18 @@ class _PathPageState extends State<PathPage> {
                                                   onPressed: ()async{
                                                     try {
                                                       var response = await HttpService.shared.rate_path(User.me!.username!, widget.ID!,rating);
+                                                      if(!response){
+                                                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                                          content: Text(
+                                                            'An error occured please try again later.',
+                                                            style: TextStyle(
+                                                                decorationColor: Colors.greenAccent,
+                                                                fontSize: 25,
+                                                                fontWeight: FontWeight.bold),
+                                                          ),
+                                                        ));
+                                                        return;
+                                                      }
                                                     } on Exception catch (error) {
                                                     }
                                                   },
@@ -361,6 +421,18 @@ class _PathPageState extends State<PathPage> {
                                                   onPressed: ()async{
                                                     try {
                                                       var response = await HttpService.shared.effort_path(User.me!.username!, widget.ID!,effort);
+                                                      if(!response){
+                                                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                                          content: Text(
+                                                            'An error occured please try again later.',
+                                                            style: TextStyle(
+                                                                decorationColor: Colors.greenAccent,
+                                                                fontSize: 25,
+                                                                fontWeight: FontWeight.bold),
+                                                          ),
+                                                        ));
+                                                        return;
+                                                      }
                                                     } on Exception catch (error) {
                                                     }
                                                   },
