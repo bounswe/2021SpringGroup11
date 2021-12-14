@@ -39,6 +39,8 @@ dependencies:
   shared_preferences: ^2.0.8
   font_awesome_flutter: ^9.2.0
   jwt_decode: ^0.3.1
+  comment_box: ^0.0.16
+  flutter_spinbox: ^0.7.0
 
 
 dev_dependencies:

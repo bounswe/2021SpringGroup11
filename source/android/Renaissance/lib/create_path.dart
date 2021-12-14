@@ -39,6 +39,15 @@ class _CreatePathPageState extends State<CreatePathPage> {
     _descFields = [];
   }
 
+  void _deleteMilestone(int i) {
+    setState(() {
+      _titleControllers.removeAt(i);
+      _titleFields.removeAt(i);
+      _descControllers.removeAt(i);
+      _descFields.removeAt(i);
+    });
+  }
+
   @override
   void dispose() {
     for (final controller in _titleControllers) {
@@ -105,6 +114,30 @@ class _CreatePathPageState extends State<CreatePathPage> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Milestone " + (i + 1).toString(),
+                      style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: MyColors.darkGray),
+                    ),
+                    TextButton(
+                      onPressed: () => _deleteMilestone(i),
+                      style: TextButton.styleFrom(
+                        backgroundColor: Colors.redAccent,
+                        shape: CircleBorder(),
+                      ),
+                      child: Icon(
+                        Icons.close,
+                        size: 20.0,
+                        color: Colors.black,
+                      ),
+                    )
+                  ],
+                ),
                 Text(
                   "Title",
                   style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
@@ -117,10 +150,7 @@ class _CreatePathPageState extends State<CreatePathPage> {
                 _descFields[i],
               ],
             ),
-            decoration: InputDecoration(
-              labelText: "Milestone " + (i + 1).toString(),
-              labelStyle: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-            ),
+            decoration: InputDecoration(),
           ),
         )
     ];
@@ -244,107 +274,123 @@ class _CreatePathPageState extends State<CreatePathPage> {
               _milestones(),
               _addTile(),
               MaterialButton(
-                onPressed: () async {
-                  try {
-                    setState(() {
-                      _isLoading = true;
-                    });
-
-                    List<Map<String, String>> milestones = [];
-                    List<Map<String, String>> topics = [];
-
-                    for (var i = 0; i < _titleControllers.length; i++) {
-                      milestones.add({
-                        "title": _titleControllers[i].text,
-                        "body": _descControllers[i].text
+                  onPressed: () async {
+                    try {
+                      setState(() {
+                        _isLoading = true;
                       });
-                    }
 
-                    List<String> splitted = topicController.text.split(",");
+                      if (titleController.text == "")
+                        throw Exception('Please give a title!');
 
-                    List<Tag> topicsSubmit = [];
+                      if (descriptionController.text == "")
+                        throw Exception('Please give a description!');
 
-                    for (var item in splitted) {
+                      if (topicController.text == "")
+                        throw Exception('Please give some topic!');
 
-                      try {
-                        List<Tag> resultTags = await HttpService.shared.searchTopic(item.trim());
+
+                      for (var item in _titleControllers)
+                        if (item.text == "")
+                          throw Exception('Please fill all milestone titles!');
+
+                      for (var item in _descControllers)
+                        if (item.text == "")
+                          throw Exception(
+                              'Please fill all milestone descriptions!');
+
+                      List<Map<String, String>> milestones = [];
+                      List<Map<String, String>> topics = [];
+
+                      for (var i = 0; i < _titleControllers.length; i++) {
+                        milestones.add({
+                          "title": _titleControllers[i].text,
+                          "body": _descControllers[i].text
+                        });
+                      }
+
+                      List<String> splitted = topicController.text.split(",");
+
+                      List<Tag> topicsSubmit = [];
+                      for (var item in splitted) {
+                        List<Tag> resultTags =
+                            await HttpService.shared.searchTopic(item.trim());
+
                         resultTags = [resultTags[0]];
                         topicsSubmit = topicsSubmit + resultTags;
-                      } on Exception catch(e) {
                       }
-                    }
 
-                    for (var i = 0; i < topicsSubmit.length; i++) {
-                      print(topicsSubmit[i].name);
-                      print(topicsSubmit[i].description);
-                    }
+                      for (var i = 0; i < topicsSubmit.length; i++) {
+                        print(topicsSubmit[i].name);
+                        print(topicsSubmit[i].description);
+                      }
 
-                    List<Map<String, Object>> sendTopic = [];
-                    for (var i = 0; i < topicsSubmit.length; i++) {
-                      sendTopic.add({
-                        "ID": int.parse(topicsSubmit[i].id as String),
-                        "name": topicsSubmit[i].name as String,
-                        "description": topicsSubmit[i].description as String
-                      });
-                    }
+                      List<Map<String, Object>> sendTopic = [];
+                      for (var i = 0; i < topicsSubmit.length; i++) {
+                        sendTopic.add({
+                          "ID": int.parse(topicsSubmit[i].id as String),
+                          "name": topicsSubmit[i].name as String,
+                          "description": topicsSubmit[i].description as String
+                        });
+                      }
 
-                    User response = await HttpService.shared.createPath(
-                      titleController.text,
-                      descriptionController.text,
-                      milestones,
-                      _image == null
-                          ? ""
-                          : FileConverter.getBase64StringFile(_image),
-                      sendTopic,
-                    );
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text(
-                        'Successfully created ${titleController.text}',
-                        style: TextStyle(
-                            decorationColor: Colors.greenAccent,
-                            fontSize: 25,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ));
-
-                    titleController.clear();
-                    descriptionController.clear();
-                    topicController.clear();
-                    clearMilestones();
-                    _image = null;
-
-                    setState(() {
-                      _isLoading = false;
-                    });
-                  } on Exception catch (error) {
-                    setState(() {
-                      _isLoading = false;
-                    });
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text(
-                        '$error',
-                        style: TextStyle(
-                            decorationColor: Colors.greenAccent,
-                            fontSize: 25,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ));
-                  }
-                },
-                child: _isLoading
-                    ? Container(
-                        width: 24,
-                        height: 24,
-                        padding: const EdgeInsets.all(2.0),
-                        child: const CircularProgressIndicator(
-                          color: Colors.white,
-                          strokeWidth: 3,
+                      User response = await HttpService.shared.createPath(
+                        titleController.text,
+                        descriptionController.text,
+                        milestones,
+                        _image == null
+                            ? ""
+                            : FileConverter.getBase64StringFile(_image),
+                        sendTopic,
+                      );
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text(
+                          'Successfully created ${titleController.text}',
+                          style: TextStyle(
+                              decorationColor: Colors.greenAccent,
+                              fontSize: 25,
+                              fontWeight: FontWeight.bold),
                         ),
-                      )
-                    : Text('Save'),
-                shape: StadiumBorder(),
-                color: MyColors.red,
-              ),
+                      ));
+
+                      titleController.clear();
+                      descriptionController.clear();
+                      topicController.clear();
+                      clearMilestones();
+                      _image = null;
+
+                      setState(() {
+                        _isLoading = false;
+                      });
+                    } on Exception catch (error) {
+                      setState(() {
+                        _isLoading = false;
+                      });
+
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text(
+                          '${error.toString().substring(11)}',
+                          style: TextStyle(
+                              decorationColor: Colors.greenAccent,
+                              fontSize: 25,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ));
+                    }
+                  },
+                  child: _isLoading
+                      ? Container(
+                          width: 24,
+                          height: 24,
+                          padding: const EdgeInsets.all(2.0),
+                          child: const CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 3,
+                          ),
+                        )
+                      : Text('Save'),
+                  shape: StadiumBorder(),
+                  color: Colors.greenAccent),
             ],
           )),
     );

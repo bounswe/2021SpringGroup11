@@ -50,6 +50,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.15.0"
+  comment_box:
+    dependency: "direct main"
+    description:
+      name: comment_box
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.16"
   cross_file:
     dependency: transitive
     description:
@@ -111,6 +118,14 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.5"
+  flutter_spinbox:
+    dependency: "direct main"
+    description:
+      name: flutter_spinbox
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.7.0"
+
   flutter_test:
     dependency: "direct dev"
     description: flutter
