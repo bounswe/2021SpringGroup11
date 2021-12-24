@@ -13,6 +13,7 @@ __pycache__/
 .env
 .idea
 .vscode
+.coverage
 
 **/.venv/**
 **/__pycache__

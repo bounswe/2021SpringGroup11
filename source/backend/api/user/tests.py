@@ -17,12 +17,24 @@ DELETEDUSER_JWT_DATA = {
     'exp': int(time.time()) + 60*60*24
 }
 
+ADMINUSER_JWT_DATA = {
+    'username': "test_admin",
+    'email': "test@test.com",
+    'isAdmin': True,
+    'exp': int(time.time()) + 60*60*24
+}
+
+
 AUTHENTICATED_NORMALUSER_HEADERS = {
     "HTTP_AUTHORIZATION": create_jwt(NORMALUSER_JWT_DATA),
 }
 
 AUTHENTICATED_DELETEDUSER_HEADERS = {
     "HTTP_AUTHORIZATION": create_jwt(DELETEDUSER_JWT_DATA),
+}
+
+AUTHENTICATED_NORMALUSER_HEADERS = {
+    "HTTP_AUTHORIZATION": create_jwt(ADMINUSER_JWT_DATA),
 }
 
 UNAUTHENTICATED_NORMALUSER_HEADERS = {
@@ -68,3 +80,33 @@ class EditUserTest(TestCase):
         )
         
         self.assertEquals(response.status_code, 400)
+
+
+class SearchUserTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+
+    def test_200_code(self):
+        response = self.client.get(
+            reverse('search_user', kwargs={'search_text': 'test'})
+        )
+
+        self.assertEquals(response.status_code, 200)
+
+"""
+class BanUserTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+    
+    def test_200_code(self):
+        data = {'username': 'banned_user'}
+    
+        response = self.client.post(
+            reverse('ban_user'),
+            data,
+            **AUTHENTICATED_NORMALUSER_HEADERS,
+            content_type="application/json"
+        )
+        
+        self.assertEquals(response.status_code, 200)
+"""
