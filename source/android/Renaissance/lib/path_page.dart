@@ -44,8 +44,8 @@ class _PathPageState extends State<PathPage> {
 
   bool isFavChanged = false;
   bool isEnrollChanged = false;
-  bool isFollowed = false;
-  bool isEnrolled = false;
+  late var isFollowed = widget.p!.isFollowed!;
+  late var isEnrolled = widget.p!.isEnrolled!;
   double rating = 5.0;
   double effort = 5.0;
   var paths = [
@@ -269,15 +269,9 @@ class _PathPageState extends State<PathPage> {
                               shape: StadiumBorder(),
                               onPrimary: Colors.white,
                             ),
-                            child: Text((isEnrollChanged
-                                    ? isEnrolled
-                                    : widget.p!.isEnrolled!)
-                                ? "Enroll"
-                                : "Unenroll"),
+                            child: Text(!isEnrolled ? "Enroll" : "Unenroll"),
                             onPressed: () async {
-                              if ((isEnrollChanged
-                                  ? isEnrolled
-                                  : widget.p!.isEnrolled!)) {
+                              if (!isEnrolled) {
                                 try {
                                   var response = await HttpService.shared
                                       .enroll(
@@ -317,12 +311,7 @@ class _PathPageState extends State<PathPage> {
                                 } on Exception catch (error) {}
                               }
                               setState(() {
-                                if (!isEnrollChanged) {
-                                  isEnrollChanged = true;
-                                  isEnrolled = !widget.p!.isEnrolled!;
-                                } else {
-                                  isEnrollChanged = !isEnrollChanged;
-                                }
+                                isEnrolled = !isEnrolled;
                               });
                             },
                           ),
@@ -330,9 +319,7 @@ class _PathPageState extends State<PathPage> {
                             children: [
                               InkWell(
                                   onTap: () async {
-                                    if ((isFavChanged
-                                        ? isFollowed
-                                        : widget.p!.isFollowed!)) {
+                                    if (!isFollowed) {
                                       try {
                                         var response = await HttpService.shared
                                             .fav_path(User.me!.username!,
@@ -374,12 +361,7 @@ class _PathPageState extends State<PathPage> {
                                       } on Exception catch (error) {}
                                     }
                                     setState(() {
-                                      if (!isFavChanged) {
-                                        isFavChanged = true;
-                                        isFollowed = !widget.p!.isFollowed!;
-                                      } else {
-                                        isFollowed = !isFollowed;
-                                      }
+                                      isFollowed = !isFollowed;
                                     });
                                   },
                                   child: Container(
@@ -393,19 +375,11 @@ class _PathPageState extends State<PathPage> {
                                     alignment: Alignment.center,
                                     child: Icon(
                                       // NEW from here...
-                                      (isFavChanged
-                                              ? isFollowed
-                                              : widget.p!.isFollowed!)
+                                      isFollowed
                                           ? Icons.favorite
                                           : Icons.favorite_border,
-                                      color: (isFavChanged
-                                              ? isFollowed
-                                              : widget.p!.isFollowed!)
-                                          ? Colors.red
-                                          : null,
-                                      semanticLabel: (isFavChanged
-                                              ? isFollowed
-                                              : widget.p!.isFollowed!)
+                                      color: isFollowed ? Colors.red : null,
+                                      semanticLabel: isFollowed
                                           ? 'Remove from saved'
                                           : 'Save',
                                     ),
