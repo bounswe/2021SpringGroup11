@@ -93,12 +93,11 @@ class SearchUserTest(TestCase):
 
         self.assertEquals(response.status_code, 200)
 
-"""
 class BanUserTest(TestCase):
     def setUp(self):
         self.client = Client()
     
-    def test_200_code(self):
+    def test_403_code(self):
         data = {'username': 'banned_user'}
     
         response = self.client.post(
@@ -108,5 +107,308 @@ class BanUserTest(TestCase):
             content_type="application/json"
         )
         
+        self.assertEquals(response.status_code, 403)
+
+
+    def test_406_code(self):
+        data = {'username': 'banned_user'}
+    
+        response = self.client.post(
+            reverse('ban_user'),
+            data,
+            **AUTHENTICATED_ADMINUSER_HEADERS,
+            content_type="application/json"
+        )
+        
+        self.assertEquals(response.status_code, 406)
+
+class GetProfileTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+    
+    def test_200_code(self):
+        response = self.client.get(
+            reverse('get_profile', kwargs={'username': 'test'})
+        )
+
         self.assertEquals(response.status_code, 200)
-"""
+
+    def test_404_code_no_user(self):
+        response = self.client.get(
+            reverse('get_profile', kwargs={'username': 'test_no_user'})
+        )
+
+        self.assertEquals(response.status_code, 404)
+
+    def test_404_code_banned_user(self):
+        response = self.client.get(
+            reverse('get_profile', kwargs={'username': 'test_banned'})
+        )
+
+        self.assertEquals(response.status_code, 404)
+
+    def test_404_code_deleted_user(self):
+        response = self.client.get(
+            reverse('get_profile', kwargs={'username': 'test_deleted'})
+        )
+
+        self.assertEquals(response.status_code, 404)
+
+class ChangePasswordTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+    
+    def test_200_code(self):
+        data = {'password': 'test'}
+    
+        response = self.client.post(
+            reverse('change_password'),
+            data,
+            **AUTHENTICATED_NORMALUSER_HEADERS,
+            content_type="application/json"
+        )
+        
+        self.assertEquals(response.status_code, 200)
+    
+    def test_400_code(self):
+        data = {'password': 'test'}
+    
+        response = self.client.post(
+            reverse('change_password'),
+            data,
+            **AUTHENTICATED_DELETEDUSER_HEADERS,
+            content_type="application/json"
+        )
+        
+        self.assertEquals(response.status_code, 400)
+    
+    def test_403_code(self):
+        data = {'password': 'test'}
+    
+        response = self.client.post(
+            reverse('change_password'),
+            data,
+            **UNAUTHENTICATED_NORMALUSER_HEADERS,
+            content_type="application/json"
+        )
+        
+        self.assertEquals(response.status_code, 403)
+    
+class FollowUserTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+    
+    def test_200_code(self):
+        data = {'target': 'test_admin'}
+    
+        response = self.client.post(
+            reverse('follow_user'),
+            data,
+            **AUTHENTICATED_NORMALUSER_HEADERS,
+            content_type="application/json"
+        )
+        
+        self.assertEquals(response.status_code, 200)
+    
+    def test_400_code(self):
+        data = {}
+    
+        response = self.client.post(
+            reverse('follow_user'),
+            data,
+            **AUTHENTICATED_NORMALUSER_HEADERS,
+            content_type="application/json"
+        )
+        
+        self.assertEquals(response.status_code, 400)
+
+    def test_403_code(self):
+        data = {'target': 'test_admin'}
+    
+        response = self.client.post(
+            reverse('follow_user'),
+            data,
+            **UNAUTHENTICATED_NORMALUSER_HEADERS,
+            content_type="application/json"
+        )
+        
+        self.assertEquals(response.status_code, 403)
+
+    def test_409_code(self):
+        data = {'target': 'test_admin'}
+    
+        response = self.client.post(
+            reverse('follow_user'),
+            data,
+            **AUTHENTICATED_NORMALUSER_HEADERS,
+            content_type="application/json"
+        )
+        
+        self.assertEquals(response.status_code, 409)
+
+class UnfollowUserTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+    
+    def test_200_code(self):
+        data = {'target': 'test_admin'}
+    
+        response = self.client.post(
+            reverse('unfollow_user'),
+            data,
+            **AUTHENTICATED_NORMALUSER_HEADERS,
+            content_type="application/json"
+        )
+        
+        self.assertEquals(response.status_code, 200)
+    
+    def test_400_code(self):
+        data = {}
+    
+        response = self.client.post(
+            reverse('unfollow_user'),
+            data,
+            **AUTHENTICATED_NORMALUSER_HEADERS,
+            content_type="application/json"
+        )
+        
+        self.assertEquals(response.status_code, 400)
+
+    def test_403_code(self):
+        data = {'target': 'test_admin'}
+    
+        response = self.client.post(
+            reverse('unfollow_user'),
+            data,
+            **UNAUTHENTICATED_NORMALUSER_HEADERS,
+            content_type="application/json"
+        )
+        
+        self.assertEquals(response.status_code, 403)
+
+    def test_409_code(self):
+        data = {'target': 'test_admin'}
+    
+        response = self.client.post(
+            reverse('unfollow_user'),
+            data,
+            **AUTHENTICATED_NORMALUSER_HEADERS,
+            content_type="application/json"
+        )
+        
+        self.assertEquals(response.status_code, 409)
+
+class GetFollowTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+    
+    def test_200_code(self):
+        response = self.client.get(
+            reverse('get_follow'),
+            **AUTHENTICATED_NORMALUSER_HEADERS,
+            content_type="application/json"
+        )
+        
+        self.assertEquals(response.status_code, 200)
+
+    def test_403_code(self):
+        response = self.client.get(
+            reverse('get_follow'),
+            **UNAUTHENTICATED_NORMALUSER_HEADERS,
+            content_type="application/json"
+        )
+        
+        self.assertEquals(response.status_code, 403)
+
+
+class GetRatingsTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+    
+    def test_200_code(self):
+        response = self.client.get(
+            reverse('get_ratings'),
+            **AUTHENTICATED_NORMALUSER_HEADERS,
+            content_type="application/json"
+        )
+        
+        self.assertEquals(response.status_code, 200)
+
+    def test_403_code(self):
+        response = self.client.get(
+            reverse('get_ratings'),
+            **UNAUTHENTICATED_NORMALUSER_HEADERS,
+            content_type="application/json"
+        )
+        
+        self.assertEquals(response.status_code, 403)
+
+class GetEnrollsTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+    
+    def test_200_code(self):
+        response = self.client.get(
+            reverse('get_enrolls'),
+            **AUTHENTICATED_NORMALUSER_HEADERS,
+            content_type="application/json"
+        )
+        
+        self.assertEquals(response.status_code, 200)
+
+    def test_403_code(self):
+        response = self.client.get(
+            reverse('get_enrolls'),
+            **UNAUTHENTICATED_NORMALUSER_HEADERS,
+            content_type="application/json"
+        )
+        
+        self.assertEquals(response.status_code, 403)
+
+class GetFavoritePathsTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+    
+    def test_200_code(self):
+        response = self.client.get(
+            reverse('get_favourite_paths'),
+            **AUTHENTICATED_NORMALUSER_HEADERS,
+            content_type="application/json"
+        )
+        
+        self.assertEquals(response.status_code, 200)
+
+    def test_403_code(self):
+        response = self.client.get(
+            reverse('get_favourite_paths'),
+            **UNAUTHENTICATED_NORMALUSER_HEADERS,
+            content_type="application/json"
+        )
+        
+        self.assertEquals(response.status_code, 403)
+
+class WordcloudTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+    
+    def test_200_code(self):
+        data = {'user': 'test'}
+        response = self.client.post(
+            reverse('wordcloud_user'),
+            data,
+            **AUTHENTICATED_NORMALUSER_HEADERS,
+            content_type="application/json"
+        )
+        
+        self.assertEquals(response.status_code, 200)
+
+    def test_403_code(self):
+        data = {'user': 'test'}
+        response = self.client.post(
+            reverse('wordcloud_user'),
+            data,
+            **UNAUTHENTICATED_NORMALUSER_HEADERS,
+            content_type="application/json"
+        )
+        
+        self.assertEquals(response.status_code, 403)
