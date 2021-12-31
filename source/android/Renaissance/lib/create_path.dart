@@ -42,6 +42,17 @@ class _CreatePathPageState extends State<CreatePathPage> {
     _typeOfController = [];
   }
 
+  int findIndex(int i) {
+    String type = _typeOfController[i];
+    int index = 1;
+    for (int ind = 0; ind < i; ind++) {
+      if (_typeOfController[ind] == type) {
+        index += 1;
+      }
+    }
+    return index;
+  }
+
   void _deleteItem(int i) {
     setState(() {
       _titleControllers.removeAt(i);
@@ -174,7 +185,7 @@ class _CreatePathPageState extends State<CreatePathPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      _typeOfController[i] + " " + (i + 1).toString(),
+                      _typeOfController[i] + " " + findIndex(i).toString(),
                       style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
