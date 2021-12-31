@@ -28,23 +28,27 @@ class _CreatePathPageState extends State<CreatePathPage> {
   List<TextEditingController> _descControllers = [];
   List<TextField> _descFields = [];
 
+  List<String> _typeOfController = [];
+
   TextEditingController titleController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   TextEditingController topicController = TextEditingController();
 
-  void clearMilestones() {
+  void clearItems() {
     _titleControllers = [];
     _titleFields = [];
     _descControllers = [];
     _descFields = [];
+    _typeOfController = [];
   }
 
-  void _deleteMilestone(int i) {
+  void _deleteItem(int i) {
     setState(() {
       _titleControllers.removeAt(i);
       _titleFields.removeAt(i);
       _descControllers.removeAt(i);
       _descFields.removeAt(i);
+      _typeOfController.removeAt(i);
     });
   }
 
@@ -63,48 +67,100 @@ class _CreatePathPageState extends State<CreatePathPage> {
   }
 
   Widget _addTile() {
-    return ListTile(
-      title: Icon(Icons.add),
-      onTap: () {
-        final titleController = TextEditingController();
-        final titleField = TextField(
-          controller: titleController,
-          maxLength: 50,
-          style: TextStyle(
-              color: MyColors.coolGray,
-              fontSize: 14.0,
-              fontWeight: FontWeight.w400),
-          decoration: InputDecoration(
-            border: OutlineInputBorder(),
-            hintText: "Title...",
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        IconButton(
+          icon: Icon(
+            Icons.add,
+            color: Colors.redAccent,
           ),
-        );
-        final descController = TextEditingController();
-        final descField = TextField(
-          controller: descController,
-          maxLength: 200,
-          maxLines: 5,
-          style: TextStyle(
-              color: MyColors.coolGray,
-              fontSize: 14.0,
-              fontWeight: FontWeight.w400),
-          decoration: InputDecoration(
-              border: OutlineInputBorder(),
-              hintText: "Description...",
-              contentPadding: EdgeInsets.all(10.0)),
-        );
+          onPressed: () {
+            final titleController = TextEditingController();
+            final titleField = TextField(
+              controller: titleController,
+              maxLength: 50,
+              style: TextStyle(
+                  color: MyColors.coolGray,
+                  fontSize: 14.0,
+                  fontWeight: FontWeight.w400),
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                hintText: " Task Title...",
+              ),
+            );
+            final descController = TextEditingController();
+            final descField = TextField(
+              controller: descController,
+              maxLength: 200,
+              maxLines: 5,
+              style: TextStyle(
+                  color: MyColors.coolGray,
+                  fontSize: 14.0,
+                  fontWeight: FontWeight.w400),
+              decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  hintText: " Task Description...",
+                  contentPadding: EdgeInsets.all(10.0)),
+            );
 
-        setState(() {
-          _titleControllers.add(titleController);
-          _titleFields.add(titleField);
-          _descControllers.add(descController);
-          _descFields.add(descField);
-        });
-      },
+            setState(() {
+              _titleControllers.add(titleController);
+              _titleFields.add(titleField);
+              _descControllers.add(descController);
+              _descFields.add(descField);
+              _typeOfController.add("Task");
+            });
+          },
+        ),
+        IconButton(
+          icon: Icon(
+            Icons.add,
+            color: Colors.orangeAccent,
+          ),
+          onPressed: () {
+            final titleController = TextEditingController();
+            final titleField = TextField(
+              controller: titleController,
+              maxLength: 50,
+              style: TextStyle(
+                  color: MyColors.coolGray,
+                  fontSize: 14.0,
+                  fontWeight: FontWeight.w400),
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                hintText: "Milestone Title...",
+              ),
+            );
+            final descController = TextEditingController();
+            final descField = TextField(
+              controller: descController,
+              maxLength: 200,
+              maxLines: 5,
+              style: TextStyle(
+                  color: MyColors.coolGray,
+                  fontSize: 14.0,
+                  fontWeight: FontWeight.w400),
+              decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  hintText: "Milestone Description...",
+                  contentPadding: EdgeInsets.all(10.0)),
+            );
+
+            setState(() {
+              _titleControllers.add(titleController);
+              _titleFields.add(titleField);
+              _descControllers.add(descController);
+              _descFields.add(descField);
+              _typeOfController.add("Milestone");
+            });
+          },
+        ),
+      ],
     );
   }
 
-  Widget _milestones() {
+  Widget _items() {
     final children = [
       for (var i = 0; i < _titleControllers.length; i++)
         Container(
@@ -118,14 +174,14 @@ class _CreatePathPageState extends State<CreatePathPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "Milestone " + (i + 1).toString(),
+                      _typeOfController[i] + " " + (i + 1).toString(),
                       style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
                           color: MyColors.darkGray),
                     ),
                     TextButton(
-                      onPressed: () => _deleteMilestone(i),
+                      onPressed: () => _deleteItem(i),
                       style: TextButton.styleFrom(
                         backgroundColor: Colors.redAccent,
                         shape: CircleBorder(),
@@ -139,12 +195,12 @@ class _CreatePathPageState extends State<CreatePathPage> {
                   ],
                 ),
                 Text(
-                  "Title",
+                  _typeOfController[i] + " Title",
                   style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
                 ),
                 _titleFields[i],
                 Text(
-                  "Description ",
+                  _typeOfController[i] + " Description ",
                   style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
                 ),
                 _descFields[i],
@@ -268,10 +324,10 @@ class _CreatePathPageState extends State<CreatePathPage> {
                     fontWeight: FontWeight.w400),
               ),
               Text(
-                'Milestones',
+                'Milestones and Tasks',
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
               ),
-              _milestones(),
+              _items(),
               _addTile(),
               MaterialButton(
                   onPressed: () async {
@@ -298,16 +354,17 @@ class _CreatePathPageState extends State<CreatePathPage> {
                           throw Exception(
                               'Please fill all milestone descriptions!');
 
-                      List<Map<String, String>> milestones = [];
+                      List<Map<String, String>> items = [];
                       List<Map<String, String>> topics = [];
 
                       for (var i = 0; i < _titleControllers.length; i++) {
-                        milestones.add({
+                        items.add({
                           "title": _titleControllers[i].text,
-                          "body": _descControllers[i].text
+                          "body": _descControllers[i].text,
+                          "type": _typeOfController[i],
                         });
                       }
-                      print(milestones);
+                      print(items);
 
                       List<String> splitted = topicController.text.split(",");
 
@@ -334,15 +391,15 @@ class _CreatePathPageState extends State<CreatePathPage> {
                         });
                       }
 
-                      User response = await HttpService.shared.createPath(
-                        titleController.text,
-                        descriptionController.text,
-                        milestones,
-                        _image == null
-                            ? ""
-                            : FileConverter.getBase64StringFile(_image),
-                        sendTopic,
-                      );
+                      // User response = await HttpService.shared.createPath(
+                      //   titleController.text,
+                      //   descriptionController.text,
+                      //   items,
+                      //   _image == null
+                      //       ? ""
+                      //       : FileConverter.getBase64StringFile(_image),
+                      //   sendTopic,
+                      // );
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                         content: Text(
                           'Successfully created ${titleController.text}',
@@ -356,7 +413,7 @@ class _CreatePathPageState extends State<CreatePathPage> {
                       titleController.clear();
                       descriptionController.clear();
                       topicController.clear();
-                      clearMilestones();
+                      clearItems();
                       _image = null;
 
                       setState(() {

@@ -197,7 +197,7 @@ class _SearchPageState extends State<SearchPage> {
             ],
           ),
           ...(paths[_pageIndex]["paths"] as List<BasicPath>).map((path) {
-            return CourseContainer(path);
+            return CourseContainer(key: Key(path.id!), path: path);
           }).toList(),
         ],
       ),
