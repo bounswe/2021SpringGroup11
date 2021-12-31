@@ -28,38 +28,23 @@ class _CreatePathPageState extends State<CreatePathPage> {
   List<TextEditingController> _descControllers = [];
   List<TextField> _descFields = [];
 
-  List<String> _typeOfController = [];
-
   TextEditingController titleController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   TextEditingController topicController = TextEditingController();
 
-  void clearItems() {
+  void clearMilestones() {
     _titleControllers = [];
     _titleFields = [];
     _descControllers = [];
     _descFields = [];
-    _typeOfController = [];
   }
 
-  int findIndex(int i) {
-    String type = _typeOfController[i];
-    int index = 1;
-    for (int ind = 0; ind < i; ind++) {
-      if (_typeOfController[ind] == type) {
-        index += 1;
-      }
-    }
-    return index;
-  }
-
-  void _deleteItem(int i) {
+  void _deleteMilestone(int i) {
     setState(() {
       _titleControllers.removeAt(i);
       _titleFields.removeAt(i);
       _descControllers.removeAt(i);
       _descFields.removeAt(i);
-      _typeOfController.removeAt(i);
     });
   }
 
@@ -78,100 +63,48 @@ class _CreatePathPageState extends State<CreatePathPage> {
   }
 
   Widget _addTile() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        IconButton(
-          icon: Icon(
-            Icons.add,
-            color: Colors.redAccent,
+    return ListTile(
+      title: Icon(Icons.add),
+      onTap: () {
+        final titleController = TextEditingController();
+        final titleField = TextField(
+          controller: titleController,
+          maxLength: 50,
+          style: TextStyle(
+              color: MyColors.coolGray,
+              fontSize: 14.0,
+              fontWeight: FontWeight.w400),
+          decoration: InputDecoration(
+            border: OutlineInputBorder(),
+            hintText: "Title...",
           ),
-          onPressed: () {
-            final titleController = TextEditingController();
-            final titleField = TextField(
-              controller: titleController,
-              maxLength: 50,
-              style: TextStyle(
-                  color: MyColors.coolGray,
-                  fontSize: 14.0,
-                  fontWeight: FontWeight.w400),
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                hintText: " Task Title...",
-              ),
-            );
-            final descController = TextEditingController();
-            final descField = TextField(
-              controller: descController,
-              maxLength: 200,
-              maxLines: 5,
-              style: TextStyle(
-                  color: MyColors.coolGray,
-                  fontSize: 14.0,
-                  fontWeight: FontWeight.w400),
-              decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: " Task Description...",
-                  contentPadding: EdgeInsets.all(10.0)),
-            );
+        );
+        final descController = TextEditingController();
+        final descField = TextField(
+          controller: descController,
+          maxLength: 200,
+          maxLines: 5,
+          style: TextStyle(
+              color: MyColors.coolGray,
+              fontSize: 14.0,
+              fontWeight: FontWeight.w400),
+          decoration: InputDecoration(
+              border: OutlineInputBorder(),
+              hintText: "Description...",
+              contentPadding: EdgeInsets.all(10.0)),
+        );
 
-            setState(() {
-              _titleControllers.add(titleController);
-              _titleFields.add(titleField);
-              _descControllers.add(descController);
-              _descFields.add(descField);
-              _typeOfController.add("Task");
-            });
-          },
-        ),
-        IconButton(
-          icon: Icon(
-            Icons.add,
-            color: Colors.orangeAccent,
-          ),
-          onPressed: () {
-            final titleController = TextEditingController();
-            final titleField = TextField(
-              controller: titleController,
-              maxLength: 50,
-              style: TextStyle(
-                  color: MyColors.coolGray,
-                  fontSize: 14.0,
-                  fontWeight: FontWeight.w400),
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                hintText: "Milestone Title...",
-              ),
-            );
-            final descController = TextEditingController();
-            final descField = TextField(
-              controller: descController,
-              maxLength: 200,
-              maxLines: 5,
-              style: TextStyle(
-                  color: MyColors.coolGray,
-                  fontSize: 14.0,
-                  fontWeight: FontWeight.w400),
-              decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: "Milestone Description...",
-                  contentPadding: EdgeInsets.all(10.0)),
-            );
-
-            setState(() {
-              _titleControllers.add(titleController);
-              _titleFields.add(titleField);
-              _descControllers.add(descController);
-              _descFields.add(descField);
-              _typeOfController.add("Milestone");
-            });
-          },
-        ),
-      ],
+        setState(() {
+          _titleControllers.add(titleController);
+          _titleFields.add(titleField);
+          _descControllers.add(descController);
+          _descFields.add(descField);
+        });
+      },
     );
   }
 
-  Widget _items() {
+  Widget _milestones() {
     final children = [
       for (var i = 0; i < _titleControllers.length; i++)
         Container(
@@ -185,14 +118,14 @@ class _CreatePathPageState extends State<CreatePathPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      _typeOfController[i] + " " + findIndex(i).toString(),
+                      "Milestone " + (i + 1).toString(),
                       style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
                           color: MyColors.darkGray),
                     ),
                     TextButton(
-                      onPressed: () => _deleteItem(i),
+                      onPressed: () => _deleteMilestone(i),
                       style: TextButton.styleFrom(
                         backgroundColor: Colors.redAccent,
                         shape: CircleBorder(),
@@ -206,12 +139,12 @@ class _CreatePathPageState extends State<CreatePathPage> {
                   ],
                 ),
                 Text(
-                  _typeOfController[i] + " Title",
+                  "Title",
                   style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
                 ),
                 _titleFields[i],
                 Text(
-                  _typeOfController[i] + " Description ",
+                  "Description ",
                   style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
                 ),
                 _descFields[i],
@@ -335,10 +268,10 @@ class _CreatePathPageState extends State<CreatePathPage> {
                     fontWeight: FontWeight.w400),
               ),
               Text(
-                'Milestones and Tasks',
+                'Milestones',
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
               ),
-              _items(),
+              _milestones(),
               _addTile(),
               MaterialButton(
                   onPressed: () async {
@@ -365,17 +298,16 @@ class _CreatePathPageState extends State<CreatePathPage> {
                           throw Exception(
                               'Please fill all milestone descriptions!');
 
-                      List<Map<String, String>> items = [];
+                      List<Map<String, String>> milestones = [];
                       List<Map<String, String>> topics = [];
 
                       for (var i = 0; i < _titleControllers.length; i++) {
-                        items.add({
+                        milestones.add({
                           "title": _titleControllers[i].text,
-                          "body": _descControllers[i].text,
-                          "type": _typeOfController[i],
+                          "body": _descControllers[i].text
                         });
                       }
-                      print(items);
+                      print(milestones);
 
                       List<String> splitted = topicController.text.split(",");
 
@@ -402,15 +334,15 @@ class _CreatePathPageState extends State<CreatePathPage> {
                         });
                       }
 
-                      // User response = await HttpService.shared.createPath(
-                      //   titleController.text,
-                      //   descriptionController.text,
-                      //   items,
-                      //   _image == null
-                      //       ? ""
-                      //       : FileConverter.getBase64StringFile(_image),
-                      //   sendTopic,
-                      // );
+                      User response = await HttpService.shared.createPath(
+                        titleController.text,
+                        descriptionController.text,
+                        milestones,
+                        _image == null
+                            ? ""
+                            : FileConverter.getBase64StringFile(_image),
+                        sendTopic,
+                      );
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                         content: Text(
                           'Successfully created ${titleController.text}',
@@ -424,7 +356,7 @@ class _CreatePathPageState extends State<CreatePathPage> {
                       titleController.clear();
                       descriptionController.clear();
                       topicController.clear();
-                      clearItems();
+                      clearMilestones();
                       _image = null;
 
                       setState(() {
