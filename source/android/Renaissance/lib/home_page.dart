@@ -67,16 +67,16 @@ class _HomePageState extends State<HomePage> {
         "tags": [
           Tag(
               name: "Youtube",
-              id: "4",
+              id: "42",
               description: "video platform",
               isFav: true),
           Tag(
               name: "Streaming",
-              id: "4",
+              id: "43",
               description: "twitch platform",
               isFav: false),
-          Tag(name: "Art", id: "4", description: "sculpture", isFav: true),
-          Tag(name: "Gaming", id: "4", description: "minecraft", isFav: true),
+          Tag(name: "Art", id: "44", description: "sculpture", isFav: true),
+          Tag(name: "Gaming", id: "45", description: "minecraft", isFav: true),
         ]
       },
     ];
@@ -103,7 +103,7 @@ class _HomePageState extends State<HomePage> {
               rating: 8.4,
               photo: ""),
           BasicPath(
-              id: "125",
+              id: "127",
               title: "Radio and Television Design",
               effort: 6,
               rating: 8.4,
@@ -292,7 +292,7 @@ class _HomePageState extends State<HomePage> {
               child: Row(
                 children: [
                   ...(tags[_pageIndex]["tags"] as List<Tag>).map((tag) {
-                    return TagContainer(tag);
+                    return TagContainer(key: Key(tag.id!), tag: tag);
                   }).toList(),
                 ],
               ),
@@ -308,7 +308,7 @@ class _HomePageState extends State<HomePage> {
             color: Colors.grey.shade300,
           ),
           ...(paths[_pageIndex]["paths"] as List<BasicPath>).map((path) {
-            return CourseContainer(path);
+            return CourseContainer(key: Key(path.id!), path: path);
           }).toList(),
         ],
       ),

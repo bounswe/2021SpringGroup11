@@ -4,12 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:portakal/file_converter.dart';
 import 'package:portakal/http_services.dart';
 import 'package:portakal/models/basic_path.dart';
+import 'package:portakal/models/path.dart';
 import 'package:portakal/my_colors.dart';
+import 'package:portakal/path_page.dart';
 
 class CourseContainer extends StatefulWidget {
-  CourseContainer(
-      this.path);
-  final BasicPath path;
+  CourseContainer({Key? key, required this.path}):super(key:key);
+
+final BasicPath path;
 
   @override
   State<CourseContainer> createState() => _CourseContainerState();
@@ -35,6 +37,9 @@ class _CourseContainerState extends State<CourseContainer> {
 
   @override
   Widget build(BuildContext context) {
+    if(!isLoading && _image == null) {
+      loadPhoto();
+    }
     return Container(
       height: 70,
       decoration: BoxDecoration(
@@ -45,8 +50,14 @@ class _CourseContainerState extends State<CourseContainer> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           InkWell(
-              onTap: () {
-                print("Course Clicked");
+              onTap: () async{
+
+                Path p= await HttpService.shared.getPath(widget.path.id!);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => PathPage(p:p)),
+                );
+
               },
               child: Container(
                 width: MediaQuery.of(context).size.width * 0.8,
