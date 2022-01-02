@@ -66,6 +66,8 @@ class CreatePath(APIView):
                 'is_deleted': is_deleted
             }).inserted_id
 
+            act_id=db.insert_one("activitystreams",activitystreams.activity_format(summary=f'{creator_username} created a new path named {title}.', username=creator_username, obj_id=str(id), obj_name=title)).inserted_id
+
         return Response({'pathID': str(id)}, status=status.HTTP_200_OK)
 
 class FinishMilestone(APIView):
