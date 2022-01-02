@@ -15,7 +15,7 @@ def activity_format(summary:str, username:str, obj_id:str, obj_name:str, action=
             "id":obj_id,
             "type":"Document",
             "name":obj_name
-        }
+        },
         "published":dt.fromtimestamp(time.time()).isoformat()
     }
     if aux:
