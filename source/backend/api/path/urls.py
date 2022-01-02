@@ -19,5 +19,5 @@ urlpatterns = [
     path('finish-path/', views.FinishPath.as_view(), name='finish_path'),
     path('finish-milestone/', views.FinishMilestone.as_view(), name='finish_milestone'),
     path('unfinish-milestone/', views.UnfinishMilestone.as_view(), name='unfinish_milestone'),
-    path('wordcloud/', views.Wordcloud.as_view(), name='wordcloud'),
+    path('wordcloud/', views.Wordcloud.as_view(), name='wordcloud_path'),
 ]
