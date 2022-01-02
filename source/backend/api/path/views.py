@@ -502,6 +502,10 @@ class FollowPath(APIView):
                 'path_id': target,
             })
 
+
+            act_id=db.insert_one("activitystreams",activitystreams.activity_format(summary=f'{username} started following the path {title}.', username=creator_username, obj_id=target, obj_name=title), action="Follow").inserted_id
+
+
         return Response('SUCCESSFUL')
 
 
