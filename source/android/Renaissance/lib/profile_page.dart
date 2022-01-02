@@ -1,9 +1,13 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:portakal/edit_profile.dart';
 import 'package:portakal/file_converter.dart';
 import 'package:portakal/follow_page.dart';
 import 'package:portakal/http_services.dart';
+import 'package:portakal/models/basic_path.dart';
+import 'package:portakal/models/path.dart';
 import 'dart:io';
 import 'package:portakal/my_colors.dart';
 import 'package:portakal/widget/profile_appbar_widget.dart';
@@ -13,8 +17,8 @@ import 'package:portakal/widget/profile_follow_widget.dart';
 import 'package:portakal/widget/course_container.dart';
 
 class ProfilePage extends StatefulWidget {
-  final User user;
-  const ProfilePage({ Key? key, required this.user }): super(key: key);
+  User user;
+  ProfilePage({ Key? key, required this.user }): super(key: key);
 
   @override
   _ProfilePageState createState() => _ProfilePageState();
@@ -22,20 +26,14 @@ class ProfilePage extends StatefulWidget {
 bool isFollowed = true;
 
 class _ProfilePageState extends State<ProfilePage> with EditProfileDelegate, FollowerWidgetDelegate {
+  late Future<List<BasicPath>> favPaths = HttpService.shared.getFavouritePaths(widget.user.username!);
+  late Future<List<BasicPath>> enrolledPaths = HttpService.shared.getEnrolledPaths(widget.user.username!);
 
   var paths = [
-    {"name": "Selam", "effort": 2, "rating": 10.0},
-    {"name": "Muz", "effort": 2, "rating": 10.0},
-    {"name": "Ahoy", "effort": 2, "rating": 10.0},
-    {"name": "Cam", "effort": 2, "rating": 10.0},
-    {"name": "Kar", "effort": 2, "rating": 11.0},
-    {"name": "Araba", "effort": 2, "rating": 10.0},
-    {"name": "Selam", "effort": 2, "rating": 10.0},
-    {"name": "Muz", "effort": 2, "rating": 10.0},
-    {"name": "Ahoy", "effort": 2, "rating": 11.0},
-    {"name": "Cam", "effort": 2, "rating": 1.0},
-    {"name": "Kar", "effort": 2, "rating": 10.0},
-    {"name": "Araba", "effort": 2, "rating": 10.0},
+    BasicPath(title: "Exxen", rating: 5.0, effort: 8.0),
+    BasicPath(title: "Netflix", rating: 5.0, effort: 8.0),
+    BasicPath(title: "Gemlik", rating: 5.0, effort: 8.0),
+    BasicPath(title: "Zeytin", rating: 5.0, effort: 8.0),
   ];
   bool loadingImage = false;
   File? profileImg;
@@ -86,35 +84,41 @@ class _ProfilePageState extends State<ProfilePage> with EditProfileDelegate, Fol
                         StatsWidget(0,0,0)
                       ]
                   ),
-                  Container(
-                    margin: EdgeInsets.only(top: 15),
-                    width: 315,
-                    padding: EdgeInsets.symmetric(horizontal: 5,vertical: 5),
-                    decoration: BoxDecoration(
-                        color: Color(0x99FFFFFF),
-                        borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                         'About',
-                          style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-                        ),
-                        Container(
-                          // adding margin
-                          height: 53,
-                          child: SingleChildScrollView(
-                            // for Vertical scrolling
-                            scrollDirection: Axis.vertical,
-                            child: Text(
-                              User.me!.bio ?? "No info yet.",
-                              style: TextStyle(fontSize: 14, height: 1.2,  fontStyle: FontStyle.italic),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      MaterialButton(onPressed: _pullRefresh, child: Text("Refresh", style: TextStyle(color: Colors.white60),), color: Colors.black54, ),
+                      Container(
+                        margin: EdgeInsets.only(top: 15),
+                        width: 315,
+                        padding: EdgeInsets.symmetric(horizontal: 5,vertical: 5),
+                        decoration: BoxDecoration(
+                            color: Color(0x99FFFFFF),
+                            borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                             'About',
+                              style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                             ),
-                          ),
+                            Container(
+                              // adding margin
+                              height: 53,
+                              child: SingleChildScrollView(
+                                // for Vertical scrolling
+                                scrollDirection: Axis.vertical,
+                                child: Text(
+                                  User.me!.bio ?? "No info yet.",
+                                  style: TextStyle(fontSize: 14, height: 1.2,  fontStyle: FontStyle.italic),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                   Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -127,7 +131,7 @@ class _ProfilePageState extends State<ProfilePage> with EditProfileDelegate, Fol
                                 borderRadius: BorderRadius.all(Radius.circular(50.0))
                             ),
                             child: Center(
-                                child: FollowerWidget(0,0, this)
+                                child: FollowerWidget(31, 31, this)
                             ),
                             margin: EdgeInsets.only(top: 10)
                         ),
@@ -174,16 +178,27 @@ class _ProfilePageState extends State<ProfilePage> with EditProfileDelegate, Fol
               child:Text('No Favourite Paths Yet.',
                   style: TextStyle(fontSize: 14, fontStyle: FontStyle.italic))
           ),
-          /*SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children:
-                paths.map((path) {
-                  return CourseContainer(path["name"] as String,
-                      path["effort"] as int, path["rating"] as double);
-                }).toList(),
-            ),
-          ),*/
+          FutureBuilder<List<BasicPath>>(
+            future: favPaths,
+            builder: (context, snapshot) {
+              if (snapshot.hasData == false) {
+                return SizedBox(
+                  child: CircularProgressIndicator(),
+                  height: 50.0,
+                  width: 50.0,
+                );;
+              } else {
+                return ListView.builder(
+                  physics: BouncingScrollPhysics(),
+                  itemCount: snapshot.data!.length,
+                  itemBuilder: (context, index) {
+                    BasicPath path = snapshot.data![index];
+                    return CourseContainer(path: path);
+                  },
+                );
+              }
+            }
+          ),
           InkWell(
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -197,11 +212,39 @@ class _ProfilePageState extends State<ProfilePage> with EditProfileDelegate, Fol
           child:Text('No Enrolled Paths Yet.',
               style: TextStyle(fontSize: 14, fontStyle: FontStyle.italic))
           ),
+          FutureBuilder<List<BasicPath>>(
+              future: enrolledPaths,
+              builder: (context, snapshot) {
+                if (snapshot.hasData == false) {
+                  return SizedBox(
+                    child: CircularProgressIndicator(),
+                    height: 50.0,
+                    width: 50.0,
+                  );
+                } else {
+                  print(snapshot.data!);
+                  return ListView.builder(
+                    physics: BouncingScrollPhysics(),
+                    itemCount: snapshot.data!.length,
+                    itemBuilder: (context, index) {
+                      BasicPath path = snapshot.data![index];
+                      return CourseContainer(path: path);
+                    },
+                  );
+                }
+              }
+          ),
         ],
       ),
     );
   }
 
+  Future<void> _pullRefresh() async {
+    User user = await HttpService.shared.getUser(widget.user.username!);
+    setState(() {
+      widget.user = user;
+    });
+  }
   @override
   void onSuccessfulSave() async {
     loadPhoto();

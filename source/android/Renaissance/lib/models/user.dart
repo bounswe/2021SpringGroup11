@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 class User {
   final String? username;
   final String? email;
@@ -15,6 +17,7 @@ class User {
 
   static User? me;
   factory User.fromJson(Map<String, dynamic> json) {
+    log(json.toString());
     return User(
         username: json['username'] as String?,
         email: json['email'] as String?,

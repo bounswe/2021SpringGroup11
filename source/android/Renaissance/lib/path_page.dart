@@ -3,11 +3,11 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:portakal/file_converter.dart';
 import 'package:portakal/http_services.dart';
+import 'package:portakal/models/Resource.dart';
 import 'package:portakal/models/user.dart';
 import 'package:portakal/my_colors.dart';
 import 'package:portakal/widget/comment_box.dart';
 import 'package:portakal/models/path.dart';
-import 'package:portakal/widget/profile_stats_widget.dart';
 import 'package:portakal/widget/profile_follow_widget.dart';
 import 'package:portakal/widget/course_container.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -16,6 +16,9 @@ import 'package:flutter_spinbox/material.dart'; // or flutter_spinbox.dart for b
 import 'package:portakal/models/topic_model.dart';
 import 'package:portakal/models/milestone_model.dart';
 import 'package:portakal/models/path.dart';
+import 'package:portakal/widget/resource_container.dart';
+
+import 'add_resource_page.dart';
 
 class PathPage extends StatefulWidget {
   final Path? p;
@@ -48,20 +51,6 @@ class _PathPageState extends State<PathPage> {
   late var isEnrolled = widget.p!.isEnrolled!;
   double rating = 5.0;
   double effort = 5.0;
-  var paths = [
-    {"name": "Selam", "effort": 2, "rating": 10.0},
-    {"name": "Muz", "effort": 2, "rating": 10.0},
-    {"name": "Ahoy", "effort": 2, "rating": 10.0},
-    {"name": "Cam", "effort": 2, "rating": 10.0},
-    {"name": "Kar", "effort": 2, "rating": 11.0},
-    {"name": "Araba", "effort": 2, "rating": 10.0},
-    {"name": "Selam", "effort": 2, "rating": 10.0},
-    {"name": "Muz", "effort": 2, "rating": 10.0},
-    {"name": "Ahoy", "effort": 2, "rating": 11.0},
-    {"name": "Cam", "effort": 2, "rating": 1.0},
-    {"name": "Kar", "effort": 2, "rating": 10.0},
-    {"name": "Araba", "effort": 2, "rating": 10.0},
-  ];
   final profilePhotoUrl = String;
 
   @override
@@ -549,8 +538,8 @@ class _PathPageState extends State<PathPage> {
               appBar: AppBar(
                 title: TabBar(
                   tabs: [
-                    Tab(text: 'Milestones'),
-                    Tab(text: 'Comments'),
+                    Tab(text: 'Tasks'),
+                    Tab(text: 'Resources'),
                   ],
                 ),
               ),
@@ -563,7 +552,28 @@ class _PathPageState extends State<PathPage> {
                           milestone.body!, milestone.isFinished!);
                     }).toList()
                   ]),
-                  Text("Under Development.")
+                  ListView(
+                    children: [
+                      Row(
+                        children: [
+                          Spacer(),
+                          MaterialButton(onPressed: (){
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => AddResourcePage()),
+                            );
+                          },
+                            color: MyColors.lightYellow,
+                            child: Text("ADD NEW RESOURCE"),
+                          ),
+                          Spacer()
+                        ],
+                      ),
+                      ResourceContainer(resource: Resource(username: "@tahsin", taskId: 10, description: "Allahi daha derinden ve yakindan tanimak icin gerekeni yapmaliyiz. Kurani Kerim Japonca meali tam da bunun icin, Link is below.", link: "hebele_hubele")),
+                      ResourceContainer(resource:  Resource(username: "@muhsin", taskId: 3, description: "Bence en iyi namaz 4 rekat kilinan namazdir. Ama sureleri bilmeden olmaz. Sure kitabi linkini birakiyorum.", link: "qurani_kerim.com"),),
+                      ResourceContainer(resource:  Resource(username: "@berkecan", taskId: 6, description: "Pdf dosyalarini acabilmenin sirri nedir? Cilegin serada mi tarlada mi yetistigini nasil anlariz? Ibrahim Tatlises terorist miydi?", link: "isiksu.inci"),),
+                    ],
+                  )
                 ],
               ),
             ),

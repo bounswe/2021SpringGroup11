@@ -307,17 +307,14 @@ class HttpService {
       'topics': topics,
       'photo': photo,
     });
-    //log(body);
-    log(HttpHeaders.authorizationHeader);
-    print(body);
     Response res = await post(Uri.parse(url), headers: headers, body: body);
+    log("${res.statusCode}");
     if (res.statusCode == 200) {
       return User.fromJson(jsonDecode(res.body));
-    } else if (res.statusCode == 403) {
-      //await refreshToken();
-      throw Exception("Please try again later.");
+    } else if (res.statusCode == 413){
+      throw Exception("Payload too large!");
     } else {
-      throw Exception("An Error Occured. Please try again later.");
+      throw Exception("An error occurred.");
     }
   }
 /*
@@ -445,7 +442,7 @@ class HttpService {
     }
   }
 
-  Future<List<BasicPath>> getFollowedPaths(String username) async {
+  Future<List<BasicPath>> getFavouritePaths(String username) async {
     String url = baseUrl + '/path/get-followed-paths/';
     final body = jsonEncode({'username': username});
     Response res = await post(Uri.parse(url), headers: headers, body: body);
