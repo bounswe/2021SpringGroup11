@@ -353,6 +353,8 @@ class HttpService {
   }
 
   Future<List<Tag>> searchTopic(String topicName) async {
+    topicName = topicName.replaceAll(" ", "-");
+    print(topicName);
     String url = baseUrl + '/topic/search-topic/$topicName/';
     Response res = await get(Uri.parse(url), headers: headers);
 

@@ -45,7 +45,6 @@ class _CreatePathPageState extends State<CreatePathPage> {
   TextEditingController titleController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   TextEditingController topicController = TextEditingController();
-  TextEditingController tagController = TextEditingController();
 
   void clearItems() {
     _titleControllers = [];
@@ -76,7 +75,48 @@ class _CreatePathPageState extends State<CreatePathPage> {
     });
   }
 
-  void _searchTag() {}
+  void _searchTopic() async {
+    List<Tag> resultTags =
+        await HttpService.shared.searchTopic(topicController.text.trim());
+
+    topicController.clear();
+    return showDialog(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Choose your Topic"),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: [
+                ...(resultTags as List<Tag>).map((tag) {
+                  return TagContainer(key: Key(tag.id!), tag: tag);
+                }).toList(),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            ElevatedButton(
+              child: const Text('Back'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+
+    // List<Map<String, Object>> sendTopic = [];
+    // for (var i = 0; i < topicsSubmit.length; i++) {
+    //   sendTopic.add({
+    //     "ID": int.parse(topicsSubmit[i].id as String),
+    //     "name": topicsSubmit[i].name as String,
+    //     "description": topicsSubmit[i].description as String
+    //   });
+    // }
+  }
+
   @override
   void dispose() {
     for (final controller in _titleControllers) {
@@ -358,8 +398,13 @@ class _CreatePathPageState extends State<CreatePathPage> {
                                   onPressed: () {
                                     setState(() {
                                       int indice = 0;
-                                      for (int i = 0; i < tags.length; i++) {}
-                                      //tags.removeAt(1);
+                                      for (int i = 0; i < tags.length; i++) {
+                                        if (tags[i].id == tag.id) {
+                                          break;
+                                        }
+                                      }
+
+                                      tags.removeAt(indice);
                                     });
                                   },
                                   icon: Icon(Icons.cancel_outlined),
@@ -392,8 +437,7 @@ class _CreatePathPageState extends State<CreatePathPage> {
                       ),
                     ),
                   ),
-                  IconButton(
-                      onPressed: () => {print("hi")}, icon: Icon(Icons.search))
+                  IconButton(onPressed: _searchTopic, icon: Icon(Icons.search))
                 ],
               ),
               Text(
