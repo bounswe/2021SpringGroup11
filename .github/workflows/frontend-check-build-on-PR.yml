@@ -36,10 +36,10 @@ jobs:
       - name: Production Build
         run: |
           cd source/frontend
-          CI='' npm run build -- --no-scope-hoist
-#      - name: Unit Tests
-#        run: |
-#          yarn test
+          CI=true yarn build
+      - name: Unit Tests
+        run: |
+          CI=true yarn test
 
 
       # Runs a single command using the runners shell
