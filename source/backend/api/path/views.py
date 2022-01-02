@@ -8,6 +8,7 @@ from heybooster.helpers.database.mongodb import MongoDBHelper
 from django.conf import settings
 from common.wordcloudgen import wordcloudgen
 from common.topicname import topicname
+import common.activitystreams as activitystreams
 from path.utils import get_related_topics, get_rate_n_effort, path_is_enrolled, path_is_followed
 from bson.objectid import ObjectId
 
@@ -64,6 +65,8 @@ class CreatePath(APIView):
                 'is_banned': is_banned,
                 'is_deleted': is_deleted
             }).inserted_id
+
+            act_id=db.insert_one("activitystreams",activitystreams.activity_format(summary=f'{creator_username} created a new path named {title}.', username=creator_username, obj_id=str(id), obj_name=title)).inserted_id
 
         return Response({'pathID': str(id)}, status=status.HTTP_200_OK)
 
