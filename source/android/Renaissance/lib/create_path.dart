@@ -7,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:portakal/file_converter.dart';
 import 'package:portakal/models/tag.dart';
 import 'package:portakal/widget/tag_container.dart';
+import 'package:portakal/widget/tag_desc_container.dart';
 import 'package:snippet_coder_utils/multi_images_utils.dart';
 
 import 'http_services.dart';
@@ -90,7 +91,7 @@ class _CreatePathPageState extends State<CreatePathPage> {
             child: ListBody(
               children: [
                 ...(resultTags as List<Tag>).map((tag) {
-                  return TagContainer(key: Key(tag.id!), tag: tag);
+                  return TagDescContainer(key: Key(tag.id!), tag: tag);
                 }).toList(),
               ],
             ),
