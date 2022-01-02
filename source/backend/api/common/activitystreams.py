@@ -1,10 +1,11 @@
 import time
 from datetime import datetime as dt
 
-def activity_format(summary:str, username:str, obj_id:str, obj_name:str, aux=None):
+def activity_format(summary:str, username:str, obj_id:str, obj_name:str, action="create", aux=None):
     res={
         "@context":"https://www.w3.org/ns/activitystreams",
         "summary":summary,
+        "type": action,
         "actor":{
             "type":"Person",
             "name":username,
@@ -23,7 +24,7 @@ def activity_format(summary:str, username:str, obj_id:str, obj_name:str, aux=Non
 
 def activity_decode(record:dict):
     res=dict()
-    for key in ["@context", "summary", "actor", "object", "published"]:
+    for key in ["@context", "summary", "type", "actor", "object", "published"]:
         res[key]=record[key]
     return res
 
