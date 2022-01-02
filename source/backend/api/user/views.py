@@ -159,8 +159,8 @@ class GetRatings(APIView):
         username = data['username']
 
         with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
-            rates = list(db.find('pathRating', query={'username': username}))
-            efforts = list(db.find('pathEffort', query={'username': username}))
+            rates = list(db.find('pathRating', query={'username': username}, projection={'_id': 0}))
+            efforts = list(db.find('pathEffort', query={'username': username}, projection={'_id': 0}))
 
         return Response(
             {
