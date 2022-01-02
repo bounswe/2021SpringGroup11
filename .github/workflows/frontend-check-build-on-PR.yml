@@ -36,7 +36,7 @@ jobs:
       - name: Production Build
         run: |
           cd source/frontend
-          CI=true yarn build
+          CI= yarn build
       - name: Unit Tests
         run: |
           CI=true yarn test
