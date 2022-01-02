@@ -664,3 +664,35 @@ class MyPaths(APIView):
             path['effort'] = effort
 
         return Response(paths)
+
+
+class AddResource(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        data = request.data
+        owner = data['username']
+        path_id = data['path_id']
+        milestone_id = data['milestone_id']
+        task_id = data['task_id']
+        link = data['link']
+        photo = data['photo']
+        created_at = int(time.time())
+
+        with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
+            db.update(
+                'path',
+                {'_id': ObjectId(path_id)},
+                { '$push': {'resources': {
+                            'milestone_id': milestone_id,
+                            'task_id': task_id,
+                            'user': owner,
+                            'link': link,
+                            'photo': photo,
+                            'created_at': created_at
+                        }
+                    }
+                }
+            )
+        
+        return Response('SUCCESS')
