@@ -258,6 +258,8 @@ class EnrollPath(APIView):
         target = data['path_id']
 
         with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
+            path = db.find_one('path', query={'_id': ObjectId(target)})
+
             relation = db.find_one('enroll', {
                 'username': username,
                 'path_id': target,
@@ -270,6 +272,15 @@ class EnrollPath(APIView):
                 'username': username,
                 'path_id': target,
             })
+            act_id=db.insert_one("activitystreams",
+                                 activitystreams.activity_format(summary=f'{username} enrolled the path {title}.',
+                                                                 username=username,
+                                                                 obj_id=target,
+                                                                 obj_name=path["title"],
+                                                                 action="Follow")).inserted_id
+
+
+
         
         return Response('SUCCESSFUL')
 
@@ -487,6 +498,8 @@ class FollowPath(APIView):
         target = data['path_id']
 
         with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
+            path = db.find_one('path', query={'_id': ObjectId(target)})
+
             relation = db.find_one('follow_path', {
                 'username': username,
                 'path_id': target,
@@ -501,7 +514,13 @@ class FollowPath(APIView):
             })
 
 
-            act_id=db.insert_one("activitystreams",activitystreams.activity_format(summary=f'{username} started following the path {title}.', username=creator_username, obj_id=target, obj_name=title), action="Follow").inserted_id
+            act_id=db.insert_one("activitystreams",
+                                 activitystreams.activity_format(
+                                     summary=f'{username} started following the path {title}.',
+                                     username=username,
+                                     obj_id=target,
+                                     obj_name=path["title"],
+                                     action="Follow")).inserted_id
 
 
         return Response('SUCCESSFUL')
