@@ -3,7 +3,7 @@ import { Grid, Typography } from '@mui/material/';
 import { makeStyles } from '@mui/styles';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 // @ts-ignore
-import avatarPlaceholder from '../../../images/avatarPlaceholder.png';
+// import avatarPlaceholder from '../../../images/avatarPlaceholder.png';
 // @ts-ignore
 import avatar from '../../../images/avatar1.png';
 import auth from '../../../utils/auth';
@@ -165,15 +165,15 @@ const ProfileBar = (props: Props) => {
 ProfileBar.defaultProps = {
   // eslint-disable-next-line react/default-props-match-prop-types
   user: {
-    username: auth.getAuthInfoFromSession().username,
-    title: auth.getAuthInfoFromSession().username === 'robertdown' ? 'GRANDMASTER' : 'BEGINNER',
+    username: auth.getAuthInfoFromSession()?.username,
+    title: auth.getAuthInfoFromSession()?.username === 'robertdown' ? 'GRANDMASTER' : 'BEGINNER',
     stats: {
-      enrolled: auth.getAuthInfoFromSession().username === 'robertdown' ? 145 : 0,
-      done: auth.getAuthInfoFromSession().username === 'robertdown' ? 103 : 0,
-      followings: auth.getAuthInfoFromSession().username === 'robertdown' ? 254 : 0,
-      followers: auth.getAuthInfoFromSession().username === 'robertdown' ? 645 : 0,
-      tags: auth.getAuthInfoFromSession().username === 'robertdown' ? 126 : 0,
-      resources: auth.getAuthInfoFromSession().username === 'robertdown' ? 54 : 0,
+      enrolled: auth.getAuthInfoFromSession()?.username === 'robertdown' ? 145 : 0,
+      done: auth.getAuthInfoFromSession()?.username === 'robertdown' ? 103 : 0,
+      followings: auth.getAuthInfoFromSession()?.username === 'robertdown' ? 254 : 0,
+      followers: auth.getAuthInfoFromSession()?.username === 'robertdown' ? 645 : 0,
+      tags: auth.getAuthInfoFromSession()?.username === 'robertdown' ? 126 : 0,
+      resources: auth.getAuthInfoFromSession()?.username === 'robertdown' ? 54 : 0,
     },
   },
 };

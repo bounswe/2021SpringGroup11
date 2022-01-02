@@ -86,5 +86,10 @@ module.exports = {
     'jest/prefer-to-have-length': 'warn',
     'jest/valid-expect': 'error',
     'no-param-reassign': 0,
+    'jest/require-hook': 0,
+    'react/jsx-props-no-spreading': 0,
+    'no-unused-expressions': 0,
+    'jsx-a11y/alt-text': 0,
+    'react/no-array-index-key': 0,
   },
 };

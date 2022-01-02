@@ -1,6 +1,6 @@
 import { Button, Typography } from '@material-ui/core';
 import { makeStyles } from '@mui/styles';
-import React = require('react');
+import React from 'react';
 import { Grid } from '@mui/material';
 import history from '../../../utils/history';
 
@@ -173,7 +173,7 @@ const HomeTabPanel = (props: Props) => {
           </Typography>
         </div>
         <Grid container className={classes.tags}>
-          {items.tags.map((item) => (
+          {items.tags.map((item: { name: string }) => (
             <TagItem item={item} />
           ))}
         </Grid>
@@ -185,9 +185,11 @@ const HomeTabPanel = (props: Props) => {
           </Typography>
         </div>
         <Grid container className={classes.paths}>
-          {items.paths.map((item) => (
-            <PathItem item={item} />
-          ))}
+          {items.paths.map(
+            (item: { name: string; pic: string; effort: string; rating: string }) => (
+              <PathItem item={item} />
+            ),
+          )}
         </Grid>
       </div>
     </div>

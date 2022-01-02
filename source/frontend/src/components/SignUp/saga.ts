@@ -1,12 +1,12 @@
 import { put, call, select, takeLatest } from 'redux-saga/effects';
 import { SIGNUP } from './constants';
-import history from '../../utils/history';
 import makeSelectSignUp from './selectors';
 import { SIGNUP_URL } from '../../utils/endpoints';
 import { post } from '../../utils/axios';
 import { signupFailure, signupSuccess } from './actions';
 
 export function* doSignUp() {
+  // @ts-ignore
   const signupData = yield select(makeSelectSignUp());
   const userData = {
     firstname: signupData.name,

@@ -1,12 +1,12 @@
 import { makeStyles, styled } from '@mui/styles';
-import React = require('react');
+import React from 'react';
 import { Tab, Tabs } from '@mui/material';
 import HomeTabPanel from './HomeTabPanel';
 import { items } from '../constants';
-interface Props {}
 interface StyledTabProps {
   label: string;
 }
+
 interface TabPanelProps {
   children?: React.ReactNode;
   index: number;
@@ -35,7 +35,7 @@ const useStyles = makeStyles(() => ({
 const TabPanel = (props: TabPanelProps) => {
   const { children, value, index, ...other } = props;
 
-  //TODO FIX THE ITEMS
+  // TODO FIX THE ITEMS
 
   return (
     <div
@@ -64,14 +64,12 @@ const StyledTab = styled((props: StyledTabProps) => <Tab disableRipple {...props
   },
 }));
 
-const a11yProps = (index: number) => {
-  return {
-    id: `vertical-tab-${index}`,
-    'aria-controls': `vertical-tabpanel-${index}`,
-  };
-};
+const a11yProps = (index: number) => ({
+  id: `vertical-tab-${index}`,
+  'aria-controls': `vertical-tabpanel-${index}`,
+});
 
-const Main = (props: Props) => {
+const Main = () => {
   const classes = useStyles();
 
   const [value, setValue] = React.useState(0);
@@ -86,7 +84,7 @@ const Main = (props: Props) => {
           orientation="vertical"
           variant="scrollable"
           value={value}
-          textColor={'secondary'}
+          textColor="secondary"
           onChange={handleChange}
         >
           <StyledTab label="Popular" {...a11yProps(0)} />

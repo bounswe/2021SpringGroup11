@@ -18,6 +18,7 @@ const useStyles = makeStyles(() => ({
     margin: '10px 5px',
   },
 }));
+
 const Tag = (props: Props) => {
   const { id, name } = props;
 

@@ -3,7 +3,7 @@ import store from '../store';
 
 const instance = axios.create();
 
-function checkStatus(response) {
+function checkStatus(response: any) {
   if (response.status >= 200 && response.status < 300) {
     return response;
   }
@@ -11,7 +11,7 @@ function checkStatus(response) {
   throw new Error(response.statusText);
 }
 
-export function post(url, options, config = {}) {
+export function post(url: any, options: any, config = {}) {
   const token = store.getState().login.authInfo && store.getState().login.authInfo.token;
   const header = {
     headers: {
@@ -24,7 +24,7 @@ export function post(url, options, config = {}) {
   return axios.post(url, options, { ...header, ...config }).then(checkStatus);
 }
 
-export function get(url, options?) {
+export function get(url: any, options?: any) {
   const token = store.getState().login.authInfo && store.getState().login.authInfo.token;
   const header = {
     headers: {

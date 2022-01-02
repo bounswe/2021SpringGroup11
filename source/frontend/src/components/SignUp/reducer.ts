@@ -14,7 +14,7 @@ export const initialState = {
   },
 };
 
-const signupReducer = (state = initialState, action) =>
+const signupReducer = (state = initialState, action: any) =>
   produce(state, (draft) => {
     switch (action.type) {
       case DEFAULT_ACTION:
