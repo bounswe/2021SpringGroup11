@@ -36,7 +36,7 @@ def get_topics(text: str):
             {
                 'name': entity['label'],
                 'id': int(entity['id'][1:]),
-                'description': entity['description']
+                'description': entity.get('description', 'No description provided')
             })
 
     return ret
