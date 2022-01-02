@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:portakal/file_converter.dart';
 import 'package:portakal/models/tag.dart';
+import 'package:portakal/widget/tag_container.dart';
 import 'package:snippet_coder_utils/multi_images_utils.dart';
 
 import 'http_services.dart';
@@ -33,6 +34,7 @@ class _CreatePathPageState extends State<CreatePathPage> {
   TextEditingController titleController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   TextEditingController topicController = TextEditingController();
+  TextEditingController tagController = TextEditingController();
 
   void clearItems() {
     _titleControllers = [];
@@ -63,6 +65,7 @@ class _CreatePathPageState extends State<CreatePathPage> {
     });
   }
 
+  void _searchTag() {}
   @override
   void dispose() {
     for (final controller in _titleControllers) {
@@ -325,18 +328,29 @@ class _CreatePathPageState extends State<CreatePathPage> {
                 'Topics',
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
               ),
-              TextField(
-                maxLength: 70,
-                maxLines: 2,
-                decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: "Topics",
-                    contentPadding: EdgeInsets.all(10.0)),
-                controller: topicController,
-                style: TextStyle(
-                    color: MyColors.coolGray,
-                    fontSize: 14.0,
-                    fontWeight: FontWeight.w400),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: TextField(
+                      maxLength: 70,
+                      maxLines: 2,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        hintText: "Topics",
+                        contentPadding: EdgeInsets.all(10.0),
+                      ),
+                      controller: topicController,
+                      style: TextStyle(
+                        color: MyColors.coolGray,
+                        fontSize: 14.0,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                      onPressed: () => {print("hi")}, icon: Icon(Icons.search))
+                ],
               ),
               Text(
                 'Tasks and Milestones',
