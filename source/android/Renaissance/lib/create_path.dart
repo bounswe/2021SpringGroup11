@@ -25,16 +25,7 @@ class _CreatePathPageState extends State<CreatePathPage> {
   var _image;
   bool _isLoading = false;
 
-  var tags = [
-    Tag(name: "Earth", id: "1", description: "earaarrrth", isFav: false),
-    Tag(name: "Sun", id: "11", description: "orbital", isFav: false),
-    Tag(
-        name: "Space",
-        id: "21",
-        description: "moth into the space",
-        isFav: false),
-    Tag(name: "Software", id: "31", description: "engineering.", isFav: false),
-  ];
+  var topics = <Tag>[];
 
   List<TextEditingController> _titleControllers = [];
   List<TextField> _titleFields = [];
@@ -91,7 +82,14 @@ class _CreatePathPageState extends State<CreatePathPage> {
             child: ListBody(
               children: [
                 ...(resultTags as List<Tag>).map((tag) {
-                  return TagDescContainer(key: Key(tag.id!), tag: tag);
+                  return InkWell(
+                      onTap: () {
+                        setState(() {
+                          topics.add(tag);
+                        });
+                        Navigator.of(context).pop();
+                      },
+                      child: (TagDescContainer(key: Key(tag.id!), tag: tag)));
                 }).toList(),
               ],
             ),
@@ -387,7 +385,7 @@ class _CreatePathPageState extends State<CreatePathPage> {
                   scrollDirection: Axis.horizontal,
                   child: Row(
                     children: [
-                      ...(tags as List<Tag>).map((tag) {
+                      ...(topics as List<Tag>).map((tag) {
                         return Container(
                             decoration: BoxDecoration(
                                 color: Colors.blue.shade200,
@@ -399,13 +397,13 @@ class _CreatePathPageState extends State<CreatePathPage> {
                                   onPressed: () {
                                     setState(() {
                                       int indice = 0;
-                                      for (int i = 0; i < tags.length; i++) {
-                                        if (tags[i].id == tag.id) {
+                                      for (int i = 0; i < topics.length; i++) {
+                                        if (topics[i].id == tag.id) {
                                           break;
                                         }
                                       }
 
-                                      tags.removeAt(indice);
+                                      topics.removeAt(indice);
                                     });
                                   },
                                   icon: Icon(Icons.cancel_outlined),
