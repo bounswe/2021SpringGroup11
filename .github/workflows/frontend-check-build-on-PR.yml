@@ -39,6 +39,7 @@ jobs:
           CI= yarn build
       - name: Unit Tests
         run: |
+          cd source/frontend
           CI=true yarn test
 
 
