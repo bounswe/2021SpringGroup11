@@ -36,7 +36,7 @@ jobs:
       - name: Production Build
         run: |
           cd source/frontend
-          npm run build -- --no-scope-hoist
+          CI='' npm run build -- --no-scope-hoist
 #      - name: Unit Tests
 #        run: |
 #          yarn test
