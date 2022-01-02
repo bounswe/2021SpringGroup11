@@ -1,8 +1,9 @@
 import time
 from datetime import datetime as dt
 
-def activity_format(summary:str, username:str, obj_id:str, obj_name:str, action="create", aux=None):
-    res={
+def activity_format(summary:str, username:str, obj_id:str, obj_name:str, action="Create", aux=None):
+
+  res={
         "@context":"https://www.w3.org/ns/activitystreams",
         "summary":summary,
         "type": action,
