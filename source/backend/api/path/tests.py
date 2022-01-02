@@ -334,3 +334,299 @@ class UnFollowPathTest(TestCase):
         )
         
         self.assertEquals(response.status_code, 409)
+
+class GetFollowedPathsTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+
+    def test_post_200_code(self):
+        data = {
+                'username' :  "test",
+                }
+    
+        response = self.client.post(
+            reverse('get_followed_paths'),
+            data,
+            **AUTHENTICATED_NORMALUSER_HEADERS,
+            content_type="application/json"
+        )
+        
+        self.assertEquals(response.status_code, 200)
+
+class GetEnrolledPathsTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+
+    def test_post_200_code(self):
+        data = {
+                'username' :  "test",
+                }
+    
+        response = self.client.post(
+            reverse('get_enrolled_paths'),
+            data,
+            **AUTHENTICATED_NORMALUSER_HEADERS,
+            content_type="application/json"
+        )
+        
+        self.assertEquals(response.status_code, 200)
+
+class EnrollPathTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+
+    def test_post_200_code(self):
+        data = {
+                'path_id' :  "61b864fffc7b6ca95de23214",
+                }
+    
+        response = self.client.post(
+            reverse('enroll_path'),
+            data,
+            **AUTHENTICATED_NORMALUSER_HEADERS,
+            content_type="application/json"
+        )
+        
+        self.assertEquals(response.status_code, 200)
+    
+    def test_403_code(self):
+        data = {
+                'path_id' :  "61b864fffc7b6ca95de23214",
+                }
+    
+        response = self.client.post(
+            reverse('enroll_path'),
+            data,
+            **UNAUTHENTICATED_NORMALUSER_HEADERS,
+            content_type="application/json"
+        )
+        
+        self.assertEquals(response.status_code, 403)
+    
+    def test_post_409_code(self):
+        data = {
+                'path_id' :  "61b864fffc7b6ca95de23214",
+                }
+    
+        response = self.client.post(
+            reverse('enroll_path'),
+            data,
+            **AUTHENTICATED_NORMALUSER_HEADERS,
+            content_type="application/json"
+        )
+        
+        self.assertEquals(response.status_code, 409)
+
+class UnenrollPathTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+
+    def test_post_200_code(self):
+        data = {
+                'path_id' :  "61b864fffc7b6ca95de23214",
+                }
+    
+        response = self.client.post(
+            reverse('unenroll_path'),
+            data,
+            **AUTHENTICATED_NORMALUSER_HEADERS,
+            content_type="application/json"
+        )
+        
+        self.assertEquals(response.status_code, 200)
+    
+    def test_403_code(self):
+        data = {
+                'path_id' :  "61b864fffc7b6ca95de23214",
+                }
+    
+        response = self.client.post(
+            reverse('unenroll_path'),
+            data,
+            **UNAUTHENTICATED_NORMALUSER_HEADERS,
+            content_type="application/json"
+        )
+        
+        self.assertEquals(response.status_code, 403)
+    
+    def test_post_409_code(self):
+        data = {
+                'path_id' :  "61b864fffc7b6ca95de23214",
+                }
+    
+        response = self.client.post(
+            reverse('unenroll_path'),
+            data,
+            **AUTHENTICATED_NORMALUSER_HEADERS,
+            content_type="application/json"
+        )
+        
+        self.assertEquals(response.status_code, 409)
+
+class GetRelatedPathTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+
+    def test_post_200_code(self):
+        response = self.client.get(
+            reverse('get_related_path', kwargs={"topic_id": '2'}),
+            **AUTHENTICATED_NORMALUSER_HEADERS,
+            content_type="application/json"
+        )
+        
+        self.assertEquals(response.status_code, 200)
+
+
+class SearchPathTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+
+    def test_post_200_code(self):
+        response = self.client.get(
+            reverse('search_path', kwargs={"search_text": 'earth'}),
+            **AUTHENTICATED_NORMALUSER_HEADERS,
+            content_type="application/json"
+        )
+        
+        self.assertEquals(response.status_code, 200)
+    
+
+    def test_post_200_code(self):
+        response = self.client.get(
+            reverse('search_path', kwargs={"search_text": 'earth'}),
+            **UNAUTHENTICATED_NORMALUSER_HEADERS,
+            content_type="application/json"
+        )
+        
+        self.assertEquals(response.status_code, 403)
+
+class FinishPathTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+
+    def test_post_200_code(self):
+        data = {
+                'path_id' :  "61b864fffc7b6ca95de23214",
+                }
+    
+        response = self.client.post(
+            reverse('finish_path'),
+            data,
+            **AUTHENTICATED_NORMALUSER_HEADERS,
+            content_type="application/json"
+        )
+        
+        self.assertEquals(response.status_code, 200)
+    
+    def test_403_code(self):
+        data = {
+                'path_id' :  "61b864fffc7b6ca95de23214",
+                }
+    
+        response = self.client.post(
+            reverse('finish_path'),
+            data,
+            **UNAUTHENTICATED_NORMALUSER_HEADERS,
+            content_type="application/json"
+        )
+        
+        self.assertEquals(response.status_code, 403)
+
+class FinishMilestoneTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+
+    def test_post_200_code(self):
+        data = {
+                'path_id' :  "61b864fffc7b6ca95de23214",
+                'milestone_id': "61b7337ff74bd48c1653a143"
+                }
+    
+        response = self.client.post(
+            reverse('finish_milestone'),
+            data,
+            **AUTHENTICATED_NORMALUSER_HEADERS,
+            content_type="application/json"
+        )
+        
+        self.assertEquals(response.status_code, 200)
+    
+    def test_403_code(self):
+        data = {
+                'path_id' :  "61b864fffc7b6ca95de23214",
+                }
+    
+        response = self.client.post(
+            reverse('finish_milestone'),
+            data,
+            **UNAUTHENTICATED_NORMALUSER_HEADERS,
+            content_type="application/json"
+        )
+        
+        self.assertEquals(response.status_code, 403)
+
+
+class UnFinishMilestoneTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+
+    def test_post_200_code(self):
+        data = {
+                'path_id' :  "61b864fffc7b6ca95de23214",
+                'milestone_id': "61b7337ff74bd48c1653a143"
+                }
+    
+        response = self.client.post(
+            reverse('unfinish_milestone'),
+            data,
+            **AUTHENTICATED_NORMALUSER_HEADERS,
+            content_type="application/json"
+        )
+        
+        self.assertEquals(response.status_code, 200)
+    
+    def test_403_code(self):
+        data = {
+                'path_id' :  "61b864fffc7b6ca95de23214",
+                }
+    
+        response = self.client.post(
+            reverse('unfinish_milestone'),
+            data,
+            **UNAUTHENTICATED_NORMALUSER_HEADERS,
+            content_type="application/json"
+        )
+        
+        self.assertEquals(response.status_code, 403)
+
+class WordcloudTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+
+    def test_post_200_code(self):
+        data = {
+                'path_id' :  "61b864fffc7b6ca95de23214",
+                }
+    
+        response = self.client.post(
+            reverse('wordcloud_path'),
+            data,
+            **AUTHENTICATED_NORMALUSER_HEADERS,
+            content_type="application/json"
+        )
+        
+        self.assertEquals(response.status_code, 200)
+    
+    def test_403_code(self):
+        data = {
+                'path_id' :  "61b864fffc7b6ca95de23214",
+                }
+    
+        response = self.client.post(
+            reverse('wordcloud_path'),
+            data,
+            **UNAUTHENTICATED_NORMALUSER_HEADERS,
+            content_type="application/json"
+        )
+        
+        self.assertEquals(response.status_code, 403)
