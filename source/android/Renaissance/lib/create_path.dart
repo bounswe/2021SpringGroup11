@@ -24,6 +24,17 @@ class _CreatePathPageState extends State<CreatePathPage> {
   var _image;
   bool _isLoading = false;
 
+  var tags = [
+    Tag(name: "Earth", id: "1", description: "earaarrrth", isFav: false),
+    Tag(name: "Sun", id: "11", description: "orbital", isFav: false),
+    Tag(
+        name: "Space",
+        id: "21",
+        description: "moth into the space",
+        isFav: false),
+    Tag(name: "Software", id: "31", description: "engineering.", isFav: false),
+  ];
+
   List<TextEditingController> _titleControllers = [];
   List<TextField> _titleFields = [];
   List<TextEditingController> _descControllers = [];
@@ -327,6 +338,39 @@ class _CreatePathPageState extends State<CreatePathPage> {
               Text(
                 'Topics',
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+              ),
+              Container(
+                width: double.infinity,
+                padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      ...(tags as List<Tag>).map((tag) {
+                        return Container(
+                            decoration: BoxDecoration(
+                                color: Colors.blue.shade200,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(15.0))),
+                            child: Row(children: [
+                              TagContainer(key: Key(tag.id!), tag: tag),
+                              IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      int indice = 0;
+                                      for (int i = 0; i < tags.length; i++) {}
+                                      //tags.removeAt(1);
+                                    });
+                                  },
+                                  icon: Icon(Icons.cancel_outlined),
+                                  color: Colors.redAccent,
+                                  splashRadius: 16,
+                                  iconSize: 26),
+                            ]));
+                      }).toList(),
+                    ],
+                  ),
+                ),
               ),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
