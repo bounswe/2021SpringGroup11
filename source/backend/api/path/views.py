@@ -8,6 +8,7 @@ from heybooster.helpers.database.mongodb import MongoDBHelper
 from django.conf import settings
 from common.wordcloudgen import wordcloudgen
 from common.topicname import topicname
+import common.activitystreams as activitystreams
 from path.utils import get_related_topics, get_rate_n_effort, path_is_enrolled, path_is_followed
 from bson.objectid import ObjectId
 
@@ -498,6 +499,10 @@ class FollowPath(APIView):
                 'username': username,
                 'path_id': target,
             })
+
+
+            act_id=db.insert_one("activitystreams",activitystreams.activity_format(summary=f'{username} started following the path {title}.', username=creator_username, obj_id=target, obj_name=title), action="Follow").inserted_id
+
 
         return Response('SUCCESSFUL')
 
