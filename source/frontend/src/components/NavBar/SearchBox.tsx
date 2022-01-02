@@ -1,39 +1,25 @@
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
+
 import React, { useEffect, useState } from 'react';
-import ExploreIcon from '@mui/icons-material/Explore';
-import NotificationsIcon from '@mui/icons-material/Notifications';
+// import ExploreIcon from '@mui/icons-material/Explore';
+// import NotificationsIcon from '@mui/icons-material/Notifications';
 import SearchIcon from '@mui/icons-material/Search';
-import SettingsIcon from '@mui/icons-material/Settings';
+// import SettingsIcon from '@mui/icons-material/Settings';
+import { alpha, Box, CircularProgress, InputBase, styled } from '@mui/material';
+import faker from 'faker';
 import history from '../../utils/history';
 
-import {
-  alpha,
-  AppBar,
-  Badge,
-  Box,
-  CircularProgress,
-  IconButton,
-  InputBase,
-  Menu,
-  MenuItem,
-  styled,
-  Toolbar,
-  Typography,
-} from '@mui/material';
-import { get } from '../../utils/axios';
-import { SEARCH_USER_URL } from '../../utils/endpoints';
+// import { get } from '../../utils/axios';
+// import { SEARCH_USER_URL } from '../../utils/endpoints';
 import {
   IPathSearchResult,
   ISearchResult,
   ITopicSearchResult,
   IUserSearchResult,
   search,
-  searchTopic,
-  searchUser,
 } from './search.util';
-import faker from 'faker';
 import { getPathPhotoData } from '../Profile/helper';
 
 const Search = styled('div')(({ theme }) => ({
@@ -73,9 +59,8 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     },
   },
 }));
-interface Props {}
 
-const SearchBox = (props: Props) => {
+const SearchBox = () => {
   const [searchText, setSearchText] = useState('');
 
   const [searchResults, setSearchResults] = useState<null | ISearchResult[]>(null);
@@ -218,7 +203,12 @@ const SearchBox = (props: Props) => {
   );
 };
 
-const WordCloudImg = ({ id, photo }) => {
+interface Props {
+  id: any;
+  photo: any;
+}
+
+const WordCloudImg = ({ id, photo }: Props) => {
   const [img, setimg] = useState('https://c.tenor.com/I6kN-6X7nhAAAAAj/loading-buffering.gif');
   useEffect(() => {
     (async () => {

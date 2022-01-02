@@ -1,4 +1,4 @@
-import { getFakePaths, getFakeTopics } from './fakeData';
+// import { getFakePaths, getFakeTopics } from './fakeData';
 import { get, post } from '../../utils/axios';
 import {
   FAV_TOPIC_URL,

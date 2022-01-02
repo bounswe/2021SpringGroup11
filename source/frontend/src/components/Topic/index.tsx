@@ -1,34 +1,12 @@
-import ExploreIcon from '@mui/icons-material/Explore';
-import NotificationsIcon from '@mui/icons-material/Notifications';
-import SearchIcon from '@mui/icons-material/Search';
-import SettingsIcon from '@mui/icons-material/Settings';
-import {
-  alpha,
-  AppBar,
-  Badge,
-  Box,
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  Chip,
-  CircularProgress,
-  IconButton,
-  InputBase,
-  ListItem,
-  Menu,
-  MenuItem,
-  Paper,
-  styled,
-  Toolbar,
-  Typography,
-} from '@mui/material';
+import { Box, Chip, CircularProgress, IconButton, ListItem, Paper } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import { BrowserRouter as Router, Switch, Route, Link, useParams } from 'react-router-dom';
-import avatar from '../../images/avatar1.png';
+import { useDispatch } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import { toast } from 'react-toastify';
+// import avatar from '../../images/avatar1.png';
 import NavBar from '../NavBar';
-import auth from '../../utils/auth';
+// import auth from '../../utils/auth';
 import {
   getPathsByTopicID,
   getRelatedTopicsByTopicID,
@@ -37,9 +15,8 @@ import {
   ITopic,
   updateFavTopic,
 } from './helper';
-import { getFakeTopics } from './fakeData';
+// import { getFakeTopics } from './fakeData';
 import { ResourceCard } from '../Profile';
-import { toast } from 'react-toastify';
 
 interface Props {
   history: any;
@@ -47,19 +24,25 @@ interface Props {
 
 const Profile = (props: Props) => {
   const { history } = props;
+  // @ts-ignore
   const { topicID } = useParams();
 
   const [loading, setLoading] = useState(true);
 
+  // @ts-ignore
   const [topic, settopic] = useState<ITopic>(null);
+  // @ts-ignore
   const [relatedTopics, setrelatedTopics] = useState<ITopic[]>(null);
+  // @ts-ignore
   const [paths, setpaths] = useState<IPath[]>(null);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     setLoading(true);
     (async () => {
       // simulate api request waiting
       setTimeout(async () => {
+        // @ts-ignore
         settopic(await getTopicDataByTopicID(topicID));
         try {
           setrelatedTopics(await getRelatedTopicsByTopicID(topicID));
@@ -75,7 +58,7 @@ const Profile = (props: Props) => {
   if (loading) {
     return (
       <div>
-        <NavBar history={history} title="Topic"></NavBar>
+        <NavBar history={history} title="Topic" dispatch={dispatch} />
         <Box
           sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '90vh' }}
         >
@@ -86,7 +69,7 @@ const Profile = (props: Props) => {
   }
   return (
     <div>
-      <NavBar title={`Topic:${topic.name}`} history={history}></NavBar>
+      <NavBar title={`Topic:${topic.name}`} history={history} dispatch={dispatch} />
 
       <div
         style={{
@@ -169,6 +152,7 @@ const Profile = (props: Props) => {
               isEnrolled: path.isEnrolled,
               isFollowed: path.isFav,
               photo: path.photo,
+              // @ts-ignore
               id: path._id,
             }}
             onClick={() => {

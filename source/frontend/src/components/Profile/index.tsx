@@ -1,11 +1,10 @@
+/* eslint-disable */
+
 import ExploreIcon from '@mui/icons-material/Explore';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import SearchIcon from '@mui/icons-material/Search';
 import SettingsIcon from '@mui/icons-material/Settings';
 import {
-  alpha,
-  AppBar,
-  Badge,
   Box,
   Button,
   Card,
@@ -13,39 +12,37 @@ import {
   CardContent,
   CircularProgress,
   IconButton,
-  InputBase,
-  Menu,
-  MenuItem,
   Modal,
-  styled,
   TextField,
-  Toolbar,
   Typography,
 } from '@mui/material';
+import { useDispatch } from 'react-redux';
 import React, { useEffect, useState } from 'react';
-import { BrowserRouter as Router, Switch, Route, Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import MDEditor from '@uiw/react-md-editor';
 import PhotoCamera from '@mui/icons-material/PhotoCamera';
 import { toast } from 'react-toastify';
 
+import faker from 'faker';
 import NavBar from '../NavBar';
 import { getPathPhotoData, getProfileData, getUserData, updateUserData } from './helper';
 import auth from '../../utils/auth';
-import faker from 'faker';
 
 interface Props {
   history: any;
 }
 const Profile = (props: Props) => {
   const { history } = props;
+  // @ts-ignore
   const { username } = useParams();
 
-  const [resources, setResources] = useState(null);
+  const [resources, setResources] = useState([]);
   const [user, setUser] = useState(null);
   const [stats, setStats] = useState(null);
-  const [favorites, setFavorites] = useState(null);
+  const [favorites, setFavorites] = useState([]);
 
   const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     setLoading(true);
@@ -60,9 +57,13 @@ const Profile = (props: Props) => {
         } = await getProfileData(username || auth.getAuthInfoFromSession()?.username || 'e');
         console.log(_resources);
 
+        // @ts-ignore
         setResources(_resources);
+        // @ts-ignore
         setUser({ ..._user });
+        // @ts-ignore
         setStats(_stats);
+        // @ts-ignore
         setFavorites(_favorites);
         setLoading(false);
       }, 10);
@@ -74,7 +75,7 @@ const Profile = (props: Props) => {
   if (loading) {
     return (
       <div>
-        <NavBar history={history} title="Profile"></NavBar>
+        <NavBar history={history} title="Profile" dispatch={dispatch} />
         <Box
           sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '90vh' }}
         >
@@ -85,8 +86,7 @@ const Profile = (props: Props) => {
   }
   return (
     <div>
-      <NavBar title="Profile" history={history}></NavBar>
-
+      <NavBar title="Profile" history={history} dispatch={dispatch} />
       <div
         style={{
           height: '15rem',
@@ -96,7 +96,14 @@ const Profile = (props: Props) => {
           justifyContent: 'center',
         }}
       >
-        <img style={{ height: '80%' }} src={user.photo} alt="" />
+        <img
+          style={{ height: '80%' }}
+          src={
+            // @ts-ignore
+            user?.photo
+          }
+          alt=""
+        />
       </div>
       <div
         style={{
@@ -119,19 +126,22 @@ const Profile = (props: Props) => {
             padding: '5px',
           }}
         >
-          {stats.map((item) => (
-            <div
-              style={{
-                alignItems: 'center',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'space-around',
-              }}
-            >
-              <div style={{ color: 'green' }}>{item.text}</div>
-              <div>{item.value}</div>
-            </div>
-          ))}
+          {
+            // @ts-ignore
+            stats?.map((item: any) => (
+              <div
+                style={{
+                  alignItems: 'center',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'space-around',
+                }}
+              >
+                <div style={{ color: 'green' }}>{item.text}</div>
+                <div>{item.value}</div>
+              </div>
+            ))
+          }
         </div>
         <div
           style={{
@@ -146,8 +156,18 @@ const Profile = (props: Props) => {
               justifyContent: 'space-around',
             }}
           >
-            <div style={{ color: 'red' }}>{user.experience}</div>
-            <div style={{ color: 'white' }}>{user.username}</div>
+            <div style={{ color: 'red' }}>
+              {
+                // @ts-ignore
+                user.experience
+              }
+            </div>
+            <div style={{ color: 'white' }}>
+              {
+                // @ts-ignore
+                user.username
+              }
+            </div>
           </div>
         </div>
         {!username && (
@@ -179,9 +199,13 @@ const Profile = (props: Props) => {
           } = await getProfileData(username || auth.getAuthInfoFromSession()?.username || 'e');
           console.log(_resources);
 
+          // @ts-ignore
           setResources(_resources);
+          // @ts-ignore
           setUser({ ..._user });
+          // @ts-ignore
           setStats(_stats);
+          // @ts-ignore
           setFavorites(_favorites);
           setLoading(false);
         }}
@@ -240,6 +264,7 @@ const EditProfile = ({
       </Box>
     );
   }
+  // @ts-ignore
   return (
     <>
       <div>
@@ -258,26 +283,45 @@ const EditProfile = ({
             label={label}
             name={key}
             autoComplete={key}
-            value={user[key]}
+            value={
+              // @ts-ignore
+              user[key]
+            }
+            // @ts-ignore
             onChange={(e) => setUser({ ...user, [key]: e.target.value })}
           />
         ))}
         <h3>Bio</h3>
         <MDEditor
           style={{ margin: '1rem' }}
-          value={user.bio}
+          value={
+            // @ts-ignore
+            user.bio
+          }
           onChange={(val) => {
-            setUser({ ...user, bio: val });
+            setUser({
+              // @ts-ignore
+              ...user,
+              bio: val,
+            });
           }}
         />
-        {user.photo ? <img width="100%" src={user.photo} alt="" /> : <h3></h3>}
+        {
+          // @ts-ignore
+          user.photo ? <img width="100%" src={user.photo} alt="" /> : <h3 />
+        }
         <label style={{ margin: '1rem' }} htmlFor="icon-button-file">
           <input
             onChange={(e) => {
               const reader = new FileReader();
+              // @ts-ignore
               reader.readAsDataURL(e.target.files[0]);
               reader.onloadend = () => {
-                setUser({ ...user, photo: reader.result });
+                setUser({
+                  // @ts-ignore
+                  ...user,
+                  photo: reader.result,
+                });
               };
             }}
             style={{ display: 'none' }}

@@ -1,5 +1,4 @@
-import React = require('react');
-import { useState } from 'react';
+import React, { useState } from 'react';
 import {
   Container,
   CssBaseline,
@@ -13,6 +12,7 @@ import {
   SnackbarContent,
   CircularProgress,
 } from '@mui/material/';
+
 import { makeStyles } from '@mui/styles';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { connect } from 'react-redux';
@@ -126,17 +126,17 @@ const SignUp = (props: Props) => {
       password: data.get('password'),
     };
 
-    const emailValidation = (email) => {
+    const emailValidation = (email: any) => {
       const regex =
         /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i;
-      if (!email || regex.test(email) === false) {
+      if (!email || !regex.test(email)) {
         setEmailError(true);
         return false;
       }
       setEmailError(false);
       return true;
     };
-    const passwordValidation = (password1, password2) => {
+    const passwordValidation = (password1: any, password2: any) => {
       if (password1 !== password2) {
         setPasswordError(true);
         return false;
@@ -145,7 +145,7 @@ const SignUp = (props: Props) => {
       return true;
     };
 
-    const nameValidation = (name) => {
+    const nameValidation = (name: any) => {
       if (name === '') {
         setNameError(true);
         return false;
@@ -154,7 +154,7 @@ const SignUp = (props: Props) => {
       return true;
     };
 
-    const surnameValidation = (surname) => {
+    const surnameValidation = (surname: any) => {
       if (surname === '') {
         setSurnameError(true);
         return false;
@@ -353,7 +353,7 @@ const SignUp = (props: Props) => {
 const mapStateToProps = createStructuredSelector({
   signup: makeSelectSignUp(),
 });
-function mapDispatchToProps(dispatch) {
+function mapDispatchToProps(dispatch: any) {
   return {
     dispatch,
   };

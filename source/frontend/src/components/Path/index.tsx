@@ -1,10 +1,8 @@
-import React = require('react');
-
 import { makeStyles } from '@mui/styles';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Button, Typography } from '@material-ui/core';
 import { LinearProgress } from '@mui/material';
 import makeSelectPath from './selectors';
@@ -179,7 +177,7 @@ const Path = (props: Props) => {
                     Tags
                   </Typography>
                   <div className={classes.tagContainer}>
-                    {path.topics.map((tag) => (
+                    {path.topics.map((tag: any) => (
                       <Tag id={tag.ID} name={tag.name} />
                     ))}
                   </div>
@@ -204,7 +202,7 @@ const Path = (props: Props) => {
               <Typography align="center" variant="h3">
                 MILESTONES
               </Typography>
-              {path.milestones.map((milestone) => (
+              {path.milestones.map((milestone: any) => (
                 <Milestone
                   key={milestone._id}
                   title={milestone.title}
@@ -231,7 +229,7 @@ const Path = (props: Props) => {
 const mapStateToProps = createStructuredSelector({
   path: makeSelectPath(),
 });
-function mapDispatchToProps(dispatch) {
+function mapDispatchToProps(dispatch: any) {
   return {
     dispatch,
   };

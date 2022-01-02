@@ -23,12 +23,12 @@ export const initialState = {
   password: '',
   remember: true,
   loginError: {},
-  authInfo: JSON.parse(sessionStorage.getItem('authInfo')),
+  authInfo: JSON.parse(<string>sessionStorage.getItem('authInfo')),
   mail: '',
   mailSentError: '',
 };
 
-const loginReducer = (state = initialState, action) =>
+const loginReducer = (state = initialState, action: any) =>
   produce(state, (draft) => {
     switch (action.type) {
       case DEFAULT_ACTION:
@@ -89,6 +89,8 @@ const loginReducer = (state = initialState, action) =>
       case FORGOT_PASSWORD_FAILURE:
         draft.mailSentError = action.error;
         draft.loading = false;
+        break;
+      default:
         break;
     }
   });

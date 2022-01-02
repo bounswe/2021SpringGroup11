@@ -6,7 +6,7 @@ import { get, post } from '../../utils/axios';
 import {
   getPathSuccess,
   getPathFailure,
-  enrollPathSuccess,
+  // enrollPathSuccess,
   enrollPathFailure,
   getPath,
 } from './actions';
@@ -15,9 +15,12 @@ export interface sessionStorageUserData {
   username: string;
   token: string;
 }
+
 export function* getPathSaga() {
+  // @ts-ignore
   const pathData = yield select(makeSelectPath());
   try {
+    // @ts-ignore
     const response = yield call(get, `${GET_PATH_URL}${pathData.pathId}/`);
     if (response.data) {
       yield put(getPathSuccess(response.data));
@@ -30,9 +33,11 @@ export function* getPathSaga() {
 }
 
 export function* enrollPathSaga() {
+  // @ts-ignore
   const pathData = yield select(makeSelectPath());
 
   try {
+    // @ts-ignore
     const response = yield call(post, ENROLL_PATH_URL, {
       path_id: pathData.pathId,
     });

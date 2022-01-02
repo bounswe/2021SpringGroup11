@@ -19,7 +19,7 @@ export const initialState = {
   enrollError: undefined,
 };
 
-const pathReducer = (state = initialState, action) =>
+const pathReducer = (state = initialState, action: any) =>
   produce(state, (draft) => {
     switch (action.type) {
       case DEFAULT_ACTION:

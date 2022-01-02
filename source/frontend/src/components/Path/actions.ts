@@ -14,42 +14,42 @@ export function defaultAction() {
   };
 }
 
-export function getPath(pathId) {
+export function getPath(pathId: any) {
   return {
     type: GET_PATH,
     pathId,
   };
 }
 
-export function getPathSuccess(path) {
+export function getPathSuccess(path: any) {
   return {
     type: GET_PATH_SUCCESS,
     path,
   };
 }
 
-export function getPathFailure(error) {
+export function getPathFailure(error: any) {
   return {
     type: GET_PATH_FAILURE,
     error,
   };
 }
 
-export function enrollPath(pathId) {
+export function enrollPath(pathId: any) {
   return {
     type: ENROLL_PATH,
     pathId,
   };
 }
 
-export function enrollPathSuccess(response) {
+export function enrollPathSuccess(response: any) {
   return {
     type: ENROLL_PATH_SUCCESS,
     response,
   };
 }
 
-export function enrollPathFailure(error) {
+export function enrollPathFailure(error: any) {
   return {
     type: ENROLL_PATH_FAILURE,
     error,

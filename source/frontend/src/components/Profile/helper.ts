@@ -20,8 +20,8 @@ export const getUserFavPathsData = async (username: string) => {
   const { data } = await post(`${GET_FOLLOWED_PATHS_URL}`, { username });
   return data;
 };
-export const getPathPhotoData = async (path_id: string) => {
-  const { data } = await post(`${WORDCLOUD_PATHS_URL}`, { path_id });
+export const getPathPhotoData = async (pathId: string) => {
+  const { data } = await post(`${WORDCLOUD_PATHS_URL}`, { pathId });
   // console.log('🚀 ~ file: helper.ts ~ line 25 ~ getPathPhotoData ~ data', data);
 
   return data;
@@ -65,8 +65,11 @@ export const getProfileData = async (username: string) => {
     bio: profileData.bio,
   };
 
+  // @ts-ignore
   const resources = []
+    // @ts-ignore
     .concat(enrolledpathsIDs.map((s) => ({ ...s, isEnrolled: true })))
+    // @ts-ignore
     .concat(favpathsIDs.map((s) => ({ ...s, isFollowed: true })));
   const favorites = [
     { text: 'Topics', value: '126' },

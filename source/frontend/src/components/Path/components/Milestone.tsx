@@ -38,7 +38,7 @@ const Milestone = (props: Props) => {
   const handleShowBody = () => {
     setShowBody(!showBody);
   };
-  const handleClick = (event) => {
+  const handleClick = (event: any) => {
     event.persist();
     onClick(!checked);
     setChecked(!checked);

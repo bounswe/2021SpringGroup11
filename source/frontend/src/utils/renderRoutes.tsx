@@ -1,4 +1,5 @@
 import { Switch, Route, Redirect } from 'react-router-dom';
+import React from 'react';
 import auth from './auth';
 import _routes from '../routes';
 const renderRoutes = () => (

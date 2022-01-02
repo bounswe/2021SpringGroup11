@@ -31,16 +31,16 @@ class Auth {
 
   getAuthInfoFromSession(): sessionStorageUserData | null {
     const authInfo = sessionStorage.getItem('authInfo');
-    return JSON.parse(authInfo);
+    return JSON.parse(<string>authInfo);
   }
 
-  setAuthInfoToLocalStorage(authInfo) {
+  setAuthInfoToLocalStorage(authInfo: any) {
     localStorage.setItem('authInfo', JSON.stringify(authInfo));
   }
 
   getAuthInfoFromLocalStorage() {
     const authInfo = localStorage.getItem('authInfo');
-    return JSON.parse(authInfo);
+    return JSON.parse(<string>authInfo);
   }
 }
 

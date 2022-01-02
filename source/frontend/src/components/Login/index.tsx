@@ -1,4 +1,4 @@
-import React = require('react');
+import * as React from 'react';
 import { useState } from 'react';
 import {
   Container,
@@ -15,16 +15,17 @@ import {
 import { makeStyles } from '@mui/styles';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 // @ts-ignore
+import { createStructuredSelector } from 'reselect';
+import { connect } from 'react-redux';
+import { compose } from 'redux';
+// @ts-ignore
 import loginBottomRight from '../../images/login-bottom-right.png';
 // @ts-ignore
 import loginTopLeft from '../../images/login-top-left.png';
 // @ts-ignore
 import logo from '../../images/logo.png';
 import { forgotPassword, doLogin } from './actions';
-import { connect } from 'react-redux';
-import { compose } from 'redux';
 import makeSelectLogin from './selectors';
-import { createStructuredSelector } from 'reselect';
 import ForgotPassModal from './components/ForgotPassModal';
 interface Props {
   history: any;
@@ -113,8 +114,8 @@ const Login = (props: Props) => {
   return (
     <>
       <Container className={classes.root} maxWidth="xs">
-        <img className={classes.imgTopLeft} src={loginTopLeft} alt={'ellipses'} />
-        <img className={classes.imgBottomRight} src={loginBottomRight} alt={'ellipse'} />
+        <img className={classes.imgTopLeft} src={loginTopLeft} alt="ellipses" />
+        <img className={classes.imgBottomRight} src={loginBottomRight} alt="ellipse" />
         <CssBaseline />
         <Box
           sx={{
@@ -125,7 +126,7 @@ const Login = (props: Props) => {
             alignItems: 'center',
           }}
         >
-          <img className={classes.logo} src={logo} alt={'logo'} />
+          <img className={classes.logo} src={logo} alt="logo" />
           <Typography className={classes.textCred} component="h1" variant="h5">
             Enter Your Credentials
           </Typography>
@@ -193,7 +194,7 @@ const Login = (props: Props) => {
                 </Button>
               </Grid>
               <Grid item>
-                <Typography className={classes.textAcc}>Don't have an account?</Typography>
+                <Typography className={classes.textAcc}>Don`t have an account?</Typography>
                 <Button
                   onClick={() => history.push('/signup')}
                   size="medium"
@@ -227,7 +228,7 @@ const Login = (props: Props) => {
 const mapStateToProps = createStructuredSelector({
   login: makeSelectLogin(),
 });
-function mapDispatchToProps(dispatch) {
+function mapDispatchToProps(dispatch: any) {
   return {
     dispatch,
   };
