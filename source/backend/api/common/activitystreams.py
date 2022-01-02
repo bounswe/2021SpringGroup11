@@ -24,7 +24,7 @@ def activity_format(summary:str, username:str, obj_id:str, obj_name:str, action=
 
 def activity_decode(record:dict):
     res=dict()
-    for key in ["@context", "summary", "actor", "object", "published"]:
+    for key in ["@context", "summary", "type", "actor", "object", "published"]:
         res[key]=record[key]
     return res
 
