@@ -13,6 +13,45 @@ import common.activitystreams as activitystreams
 from bson.objectid import ObjectId
 import base64
 
+
+class GlobalActivityStreams(APIView):
+    #permission_classes = [IsAuthenticated]
+
+    def post(self,request):
+
+        with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
+            streams = list(db.find('activitystreams', query={ }))
+            streams=[activitystreams.activity_decode(s) for s in streams]
+        return Response(streams,status=status.HTTP_200_OK)
+
+
+class ActivityStreams(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self,request):
+        data=request.data
+        username=data["username"]
+
+
+        with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
+            followed_users = list(db.find('follow', query={'follower_username': username}))
+            followed_users=[f['followed_username'] for f in followed_users]
+            userq={"actor.name": {"$in": followed_users }}
+
+            followed_paths= list(db.find('follow_path', query={'username':username}))
+            followed_paths=[f["path_id"] for f in followed_paths]
+            pathq={"object.id": {"$in": followed_paths}}
+
+            favorited_topics=list(db.find('favorite', query={"username":username}))
+            favorited_topics=[f["ID"] for f in favorited_topics]
+            topicq={"object.id":{"$in": favorited_topics}}
+
+            streams = list(db.find('activitystreams', query={"$or": [userq, pathq, topicq]}))
+            streams=[activitystreams.activity_decode(s) for s in streams]
+        return Response(streams,status=status.HTTP_200_OK)
+
+
+
 class EditUser(APIView):
     """
         Edit User Class
@@ -47,7 +86,7 @@ class SearchUser(APIView):
             users = db.find(
                 'user', # TODO Create fulltext index on username
                 query={'$or': [{'$text': {'$search': search_text}}, {'username': {'$regex': search_text, '$options': 'i'}}]},
-                projection={'_id': 0, 'username': 1}
+                projection={'_id': 0, 'username': 1, 'photo': 1}
             ).limit(10)
 
         return Response(list(users), status=status.HTTP_200_OK)

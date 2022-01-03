@@ -3,6 +3,8 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
+    path('global-activity-streams/', views.GlobalActivityStreams.as_view(), name='global_activity_streams'),
+    path('activity-streams/', views.ActivityStreams.as_view(), name='activity_streams'),
     path('edit-user/', views.EditUser.as_view(), name='edit_user'),
     path('search-user/<slug:search_text>/', views.SearchUser.as_view(), name='search_user'),
     path('ban-user/', views.BanUser.as_view(), name='ban_user'),

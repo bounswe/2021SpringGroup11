@@ -1,5 +1,6 @@
 import time
 import base64
+import operator
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -276,11 +277,11 @@ class EnrollPath(APIView):
                 'path_id': target,
             })
             act_id=db.insert_one("activitystreams",
-                                 activitystreams.activity_format(summary=f'{username} enrolled the path {title}.',
+                                 activitystreams.activity_format(summary=f'{username} enrolled the path {path["title"]}.',
                                                                  username=username,
                                                                  obj_id=target,
                                                                  obj_name=path["title"],
-                                                                 action="Follow")).inserted_id
+                                                                 action="Join")).inserted_id
 
 
 
@@ -362,15 +363,58 @@ class FinishPath(APIView): #Caution: this endpoint marks the whole path as finis
                               'path_id': path_id,
                           })
 
+            relation = db.find_one('enroll', {
+                'username': username,
+                'path_id': path_id,
+            })
+
+            if not relation:
+                return Response('NOT_ENROLLED', status=status.HTTP_409_CONFLICT)
+
+            db.delete_one('enroll', {
+                'username': username,
+                'path_id': path_id,
+            })
+
             act_id=db.insert_one("activitystreams",
                                  activitystreams.activity_format(
                                      summary=f'{username} finished the path {path["title"]}.',
                                      username=username,
                                      obj_id=path_id,
                                      obj_name=path["title"],
-                                     action="Follow")).inserted_id
+                                     action="Create")).inserted_id
 
         return Response('SUCCESSFUL')
+
+class GetFinishedPaths(APIView):
+    # permission_classes = [IsAuthenticated]
+
+    """ requests username and returns all enrolled paths of the given username, tested """
+    def post(self, request):
+        data = request.data
+        username = data['username']
+
+        with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
+            finishedPaths = list(db.find('pathFinished', query={'username': username},  projection={'_id': 0}))
+            allPaths = list(
+                db.find('path', query={'_id': {'$in': [ObjectId(path['path_id']) for path in finishedPaths]}},
+                projection={
+                    '_id': 1,
+                    'title': 1,
+                    'photo': 1
+                }))
+
+        for path in allPaths:
+            path['_id'] = str(path['_id'])
+            rating, effort = get_rate_n_effort(path['_id'])
+            path['rating'] = rating
+            path['effort'] = effort
+            path['isFollowed'] = path_is_followed(path['_id'], username)
+
+        return Response(
+            allPaths,
+            status=status.HTTP_200_OK
+        )
 
 class Wordcloud(APIView):
     permission_classes = [IsAuthenticated]
@@ -529,7 +573,7 @@ class FollowPath(APIView):
 
             act_id=db.insert_one("activitystreams",
                                  activitystreams.activity_format(
-                                     summary=f'{username} started following the path {title}.',
+                                     summary=f'{username} started following the path {path["title"]}.',
                                      username=username,
                                      obj_id=target,
                                      obj_name=path["title"],
@@ -598,7 +642,7 @@ class GetFollowedPaths(APIView):
 
 
 class SearchPath(APIView):
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
 
     def get(self, request, search_text):
         data = request.data
@@ -619,6 +663,9 @@ class SearchPath(APIView):
             path['_id'] = str(path['_id'])
             path['isFollowed'] = False
             path['isEnrolled'] = False
+            rating, effort = get_rate_n_effort(path['_id'])
+            path['rating'] = rating
+            path['effort'] = effort
 
         for followed_path in followedPaths:
             for path in paths:
@@ -764,3 +811,184 @@ class AddResource(APIView):
 
         return Response('SUCCESSFUL')
 
+class GetPopular(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        # Algorithm 1 Using Activity Streams
+        data = request.data
+
+        username = data['username']
+
+        with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
+            streams = db.find('activitystreams', query={}).limit(500)
+
+            topic_dict = {}
+            path_dict = {}
+            topic_ids = []
+            path_ids = []
+
+            for stream in streams:
+                id = stream['object']['id']
+
+                if type(id) == int:
+                    if id in topic_dict.keys():
+                        topic_dict[id] += 1
+                    else:
+                        topic_dict[id] = 1
+                else:
+                    if id in path_dict.keys():
+                        path_dict[id] += 1
+                    else:
+                        path_dict[id] = 1
+
+            topic_dict = dict(sorted(  topic_dict.items(),
+                            key=operator.itemgetter(1),
+                            reverse=True))
+            path_dict = dict(sorted(  path_dict.items(),
+                            key=operator.itemgetter(1),
+                            reverse=True))
+            
+            for key, value in topic_dict.items():
+                topic_ids.append(key)
+                if len(topic_ids) >= 5:
+                    break
+            
+            for key, value in path_dict.items():
+                path_ids.append(ObjectId(key))
+                if len(path_ids) >= 5:
+                    break
+            
+            topics = db.find('topic', query={'ID': {'$in': topic_ids}})
+            paths = db.find('path', query={'_id': {'$in': path_ids}})
+
+            topics = list(topics)
+            paths = list(paths)
+
+            fav_topics = list(db.find('favorite', {'username': username, 'ID': {'$in': [topic['ID'] for topic in topics]}}))
+            
+            for topic in topics:
+                topic['_id'] = str(topic['_id'])
+                topic['isFav'] = False
+
+            for fav_topic in fav_topics:
+                for topic in topics:
+                    if topic['ID'] == fav_topic['ID']:
+                        topic['isFav'] = True
+
+            for path in paths:
+                path['_id'] = str(path['_id'])
+                rating, effort = get_rate_n_effort(path['_id'], db)
+                path['rating'] = rating
+                path['effort'] = effort
+                path['isEnrolled'] = path_is_enrolled(path['_id'], username, db)
+                path['isFollowed'] = path_is_followed(path['_id'], username, db)
+
+        return Response({'topics': topics, 'paths': paths})
+
+class GetNew(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        data = request.data
+
+        username = data['username']
+
+        with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
+            topics = list(db.find('topic', query={}).limit(5))
+            paths = list(db.find('path', query={}).limit(5))
+
+            fav_topics = list(db.find('favorite', {'username': username, 'ID': {'$in': [topic['ID'] for topic in topics]}}))
+            
+            for topic in topics:
+                topic['_id'] = str(topic['_id'])
+                topic['isFav'] = False
+
+            for fav_topic in fav_topics:
+                for topic in topics:
+                    if topic['ID'] == fav_topic['ID']:
+                        topic['isFav'] = True
+
+            for path in paths:
+                path['_id'] = str(path['_id'])
+                rating, effort = get_rate_n_effort(path['_id'], db)
+                path['rating'] = rating
+                path['effort'] = effort
+                path['isEnrolled'] = path_is_enrolled(path['_id'], username, db)
+                path['isFollowed'] = path_is_followed(path['_id'], username, db)
+
+        return Response({'topics': topics, 'paths': paths})
+
+class GetForYou(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        data = request.data
+
+        username = data['username']
+
+        with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
+            followed_users = list(db.find('follow', query={'follower_username': username}))
+            followed_users = [f['followed_username'] for f in followed_users]
+
+            topics = list(db.find('favorite', query={'username': {'$in': followed_users}}).limit(5))
+            paths = list(db.find('path', query={'creator_username': {'$in': followed_users}}).limit(5))
+
+            streams = db.find('activitystreams', query={}).limit(100)
+
+            topic_ids = []
+            path_ids = []
+
+            for stream in streams:
+                id = stream['object']['id']
+
+                if type(id) == int:
+                    if id not in topic_ids:
+                        topic_ids.append(id)
+                else:
+                    if id not in path_ids:
+                        path_ids.append(id)
+
+            used_topic_ids = [topic['ID'] for topic in topics]
+            used_path_ids = [str(path['_id']) for path in paths]
+
+            for topic_id in topic_ids:
+                if len(topics) >= 5:
+                    break
+                if topic_id in used_topic_ids:
+                    continue
+                used_topic_ids.append(topic_id)
+                data = db.find_one('topic', query={'ID': topic_id})
+                if data:
+                    topics.append(data)
+
+            for path_id in path_ids:
+                if len(paths) >= 5:
+                    break
+                if path_id in used_path_ids:
+                    continue
+                used_path_ids.append(path_id)
+                data = db.find_one('path', query={'_id': ObjectId(path_id)})
+                if data:
+                    paths.append(data)
+
+            fav_topics = list(db.find('favorite', {'username': username, 'ID': {'$in': [topic['ID'] for topic in topics]}}))
+            
+            for topic in topics:
+                topic['_id'] = str(topic['_id'])
+                topic['isFav'] = False
+
+            for fav_topic in fav_topics:
+                for topic in topics:
+                    if topic['ID'] == fav_topic['ID']:
+                        topic['isFav'] = True
+
+            for path in paths:
+                path['_id'] = str(path['_id'])
+                rating, effort = get_rate_n_effort(path['_id'], db)
+                path['rating'] = rating
+                path['effort'] = effort
+                path['isEnrolled'] = path_is_enrolled(path['_id'], username, db)
+                path['isFollowed'] = path_is_followed(path['_id'], username, db)
+
+        return Response({'topics': topics, 'paths': paths})
