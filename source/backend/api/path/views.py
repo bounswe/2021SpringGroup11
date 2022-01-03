@@ -279,7 +279,7 @@ class EnrollPath(APIView):
                                                                  username=username,
                                                                  obj_id=target,
                                                                  obj_name=path["title"],
-                                                                 action="Follow")).inserted_id
+                                                                 action="Join")).inserted_id
 
 
 
@@ -367,7 +367,7 @@ class FinishPath(APIView): #Caution: this endpoint marks the whole path as finis
                                      username=username,
                                      obj_id=path_id,
                                      obj_name=path["title"],
-                                     action="Follow")).inserted_id
+                                     action="Create")).inserted_id
 
         return Response('SUCCESSFUL')
 
