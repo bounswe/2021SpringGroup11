@@ -86,7 +86,7 @@ class SearchUser(APIView):
             users = db.find(
                 'user', # TODO Create fulltext index on username
                 query={'$or': [{'$text': {'$search': search_text}}, {'username': {'$regex': search_text, '$options': 'i'}}]},
-                projection={'_id': 0, 'username': 1}
+                projection={'_id': 0, 'username': 1, 'photo': 1}
             ).limit(10)
 
         return Response(list(users), status=status.HTTP_200_OK)
