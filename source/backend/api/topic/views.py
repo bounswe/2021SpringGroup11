@@ -5,6 +5,7 @@ from authentication.utils import IsAuthenticated, IsAdmin
 from heybooster.helpers.database.mongodb import MongoDBHelper
 from django.conf import settings
 from topic.utils import get_topics, get_related_topics, topicname
+import common.activitystreams as activitystreams
 
 class FavoriteTopic(APIView):
     permission_classes = [IsAuthenticated]
@@ -27,6 +28,15 @@ class FavoriteTopic(APIView):
                 'username': username,
                 'ID': target,
             })
+
+            target_name=topicname(target)
+            act_id=db.insert_one("activitystreams",
+                                 activitystreams.activity_format(summary=f'{username} favorited topic {target_name}.',
+                                                                 username=username,
+                                                                 obj_id=target,
+                                                                 obj_name=target_name,
+                                                                 action="Follow")).inserted_id
+
 
         return Response('SUCCESSFUL')
 

@@ -9,6 +9,7 @@ from common.models import User
 from common.data_check import check_data_keys
 from common.wordcloudgen import wordcloudgen
 from common.topicname import topicname
+import common.activitystreams as activitystreams
 from bson.objectid import ObjectId
 import base64
 
@@ -196,6 +197,12 @@ class FollowUser(APIView):
                 'follower_username': username,
                 'followed_username': target,
             })
+            act_id=db.insert_one("activitystreams",
+                                 activitystreams.activity_format(summary=f'{username} started following user {target}.',
+                                                                 username=username,
+                                                                 obj_id=target,
+                                                                 obj_name=target,
+                                                                 action="Follow")).inserted_id
 
         return Response('SUCCESSFUL')
 

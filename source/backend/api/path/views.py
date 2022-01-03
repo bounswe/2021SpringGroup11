@@ -8,6 +8,7 @@ from heybooster.helpers.database.mongodb import MongoDBHelper
 from django.conf import settings
 from common.wordcloudgen import wordcloudgen
 from common.topicname import topicname
+import common.activitystreams as activitystreams
 from path.utils import get_related_topics, get_rate_n_effort, path_is_enrolled, path_is_followed
 from bson.objectid import ObjectId
 
@@ -65,6 +66,8 @@ class CreatePath(APIView):
                 'is_banned': is_banned,
                 'is_deleted': is_deleted
             }).inserted_id
+
+            act_id=db.insert_one("activitystreams",activitystreams.activity_format(summary=f'{creator_username} created a new path named {title}.', username=creator_username, obj_id=str(id), obj_name=title)).inserted_id
 
         return Response({'pathID': str(id)}, status=status.HTTP_200_OK)
 
@@ -258,6 +261,8 @@ class EnrollPath(APIView):
         target = data['path_id']
 
         with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
+            path = db.find_one('path', query={'_id': ObjectId(target)})
+
             relation = db.find_one('enroll', {
                 'username': username,
                 'path_id': target,
@@ -270,6 +275,15 @@ class EnrollPath(APIView):
                 'username': username,
                 'path_id': target,
             })
+            act_id=db.insert_one("activitystreams",
+                                 activitystreams.activity_format(summary=f'{username} enrolled the path {title}.',
+                                                                 username=username,
+                                                                 obj_id=target,
+                                                                 obj_name=path["title"],
+                                                                 action="Follow")).inserted_id
+
+
+
         
         return Response('SUCCESSFUL')
 
@@ -340,11 +354,21 @@ class FinishPath(APIView): #Caution: this endpoint marks the whole path as finis
         path_id = data['path_id']
 
         with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
+            path = db.find_one('path', query={'_id': ObjectId(path_id)})
+
             db.insert_one('pathFinished',
                           {
                               'username': username,
                               'path_id': path_id,
                           })
+
+            act_id=db.insert_one("activitystreams",
+                                 activitystreams.activity_format(
+                                     summary=f'{username} finished the path {path["title"]}.',
+                                     username=username,
+                                     obj_id=path_id,
+                                     obj_name=path["title"],
+                                     action="Follow")).inserted_id
 
         return Response('SUCCESSFUL')
 
@@ -487,6 +511,8 @@ class FollowPath(APIView):
         target = data['path_id']
 
         with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
+            path = db.find_one('path', query={'_id': ObjectId(target)})
+
             relation = db.find_one('follow_path', {
                 'username': username,
                 'path_id': target,
@@ -499,6 +525,16 @@ class FollowPath(APIView):
                 'username': username,
                 'path_id': target,
             })
+
+
+            act_id=db.insert_one("activitystreams",
+                                 activitystreams.activity_format(
+                                     summary=f'{username} started following the path {title}.',
+                                     username=username,
+                                     obj_id=target,
+                                     obj_name=path["title"],
+                                     action="Follow")).inserted_id
+
 
         return Response('SUCCESSFUL')
 
