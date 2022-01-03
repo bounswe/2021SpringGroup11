@@ -11,7 +11,7 @@ import 'package:portakal/path_page.dart';
 class CourseContainer extends StatefulWidget {
   CourseContainer({Key? key, required this.path}):super(key:key);
 
-final BasicPath path;
+  final BasicPath path;
 
   @override
   State<CourseContainer> createState() => _CourseContainerState();
@@ -34,12 +34,13 @@ class _CourseContainerState extends State<CourseContainer> {
       isLoading = false;
     });
   }
-
+  bool isButtonLoading = false;
   @override
   Widget build(BuildContext context) {
     if(!isLoading && _image == null) {
       loadPhoto();
     }
+    already_saved = widget.path.isFollowed ?? false;
     return Container(
       height: 70,
       decoration: BoxDecoration(
@@ -51,8 +52,13 @@ class _CourseContainerState extends State<CourseContainer> {
         children: [
           InkWell(
               onTap: () async{
-
+                setState(() {
+                  isButtonLoading = true;
+                });
                 Path p= await HttpService.shared.getPath(widget.path.id!);
+                setState(() {
+                  isButtonLoading = false;
+                });
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => PathPage(p:p)),
@@ -64,7 +70,7 @@ class _CourseContainerState extends State<CourseContainer> {
                 decoration: BoxDecoration(
                     color: MyColors.blue,
                     borderRadius: BorderRadius.circular(15)),
-                child: Row(
+                child: isButtonLoading?CircularProgressIndicator(color: Colors.deepOrangeAccent,):Row(
                   children: [
                     ClipRRect(
                       borderRadius: BorderRadius.circular(15),
@@ -78,7 +84,7 @@ class _CourseContainerState extends State<CourseContainer> {
                       children: [
                         Container(
                             width: MediaQuery.of(context).size.width * 0.6,
-                            child: Text(widget.path.title!,
+                            child: Text(widget.path.title,
                                 overflow: TextOverflow.ellipsis,
                                 softWrap: true,
                                 maxLines: 2,
@@ -123,9 +129,9 @@ class _CourseContainerState extends State<CourseContainer> {
                   already_saved = !already_saved;
                 });
                 if (already_saved) {
-                  HttpService.shared.followPath(widget.path.id!);
+                  HttpService.shared.followPath(widget.path.id);
                 } else {
-                  HttpService.shared.unfollowPath(widget.path.id!);
+                  HttpService.shared.unfollowPath(widget.path.id);
                 }
               },
               child: Container(
