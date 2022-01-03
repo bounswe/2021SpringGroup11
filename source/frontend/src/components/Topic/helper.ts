@@ -33,9 +33,10 @@ export interface ITopic {
 }
 export const getTopicDataByTopicID = async (topicID: number) => {
   // TODO ? backend endpoint ?
-  const topic: ITopic[] = (await get(`${GET_TOPIC_BY_TOPIC_ID_URL + topicID}/`)).data;
+  const topic = (await get(`${GET_TOPIC_BY_TOPIC_ID_URL + topicID}/`)).data;
+  console.log('🚀 ~ file: helper.ts ~ line 37 ~ getTopicDataByTopicID ~ topic', topic);
   // const topic = getFakeTopics(1, { id: topicID })[0];
-  return topic;
+  return { ...topic, id: topic.ID } as ITopic;
 };
 
 export const getPathsByTopicID = async (topicID: number) => {
@@ -49,12 +50,12 @@ export const getPathsByTopicID = async (topicID: number) => {
 
 export const getRelatedTopicsByTopicID = async (topicID: number) => {
   // TODO :
-  const topics: ITopic[] = (await get(`${GET_RELATED_TOPICS_BY_TOPIC_ID_URL + topicID}/`)).data;
+  const topics = (await get(`${GET_RELATED_TOPICS_BY_TOPIC_ID_URL + topicID}/`)).data;
 
   // const topics = getFakeTopics(12);
   console.log('🚀 ~ file: helper.ts ~ line 49 ~ getRelatedTopicsByTopicID ~ topics', topics);
 
-  return topics;
+  return topics.map((t) => ({ ...t, id: t.ID })) as ITopic[];
 };
 
 export const updateFavTopic = async (topicID: number, newState: boolean) => {
