@@ -13,6 +13,17 @@ import common.activitystreams as activitystreams
 from bson.objectid import ObjectId
 import base64
 
+
+class GlobalActivityStreams(APIView):
+    #permission_classes = [IsAuthenticated]
+
+    def post(self,request):
+
+        with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
+            streams = list(db.find('activitystreams', query={ }))
+            streams=[activitystreams.activity_decode(s) for s in streams]
+        return Response(streams,status=status.HTTP_200_OK)
+
 class EditUser(APIView):
     """
         Edit User Class
