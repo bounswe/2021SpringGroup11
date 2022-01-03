@@ -277,7 +277,7 @@ class EnrollPath(APIView):
                 'path_id': target,
             })
             act_id=db.insert_one("activitystreams",
-                                 activitystreams.activity_format(summary=f'{username} enrolled the path {title}.',
+                                 activitystreams.activity_format(summary=f'{username} enrolled the path {path["title"]}.',
                                                                  username=username,
                                                                  obj_id=target,
                                                                  obj_name=path["title"],
@@ -920,7 +920,7 @@ class GetNew(APIView):
         return Response({'topics': topics, 'paths': paths})
 
 class GetForYou(APIView):
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
 
     def get(self, request):
         data = request.data
@@ -950,7 +950,7 @@ class GetForYou(APIView):
                         path_ids.append(id)
 
             used_topic_ids = [topic['ID'] for topic in topics]
-            used_path_ids = [path['ID'] for path in paths]
+            used_path_ids = [str(path['_id']) for path in paths]
 
             for topic_id in topic_ids:
                 if len(topics) >= 5:
@@ -968,7 +968,7 @@ class GetForYou(APIView):
                 if path_id in used_path_ids:
                     continue
                 used_path_ids.append(path_id)
-                data = db.find_one('path', query={'ID': path_id})
+                data = db.find_one('path', query={'_id': ObjectId(path_id)})
                 if data:
                     paths.append(data)
 
