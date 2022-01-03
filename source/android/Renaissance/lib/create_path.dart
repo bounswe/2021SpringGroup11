@@ -92,6 +92,8 @@ class _CreatePathPageState extends State<CreatePathPage> {
                       },
                       child: (TagDescContainer(key: Key(tag.id!), tag: tag)));
                 }).toList(),
+                if (resultTags.isEmpty)
+                  Text("There is no Topic matching your search!")
               ],
             ),
           ),
