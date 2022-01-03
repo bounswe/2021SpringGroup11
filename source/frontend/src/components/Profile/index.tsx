@@ -235,6 +235,7 @@ const Profile = (props: Props) => {
               marginLeft: 'auto',
               // padding: '0 20px',
               flex: 1,
+              backgroundColor: followings.includes(username) ? 'red' : 'green',
             }}
             onClick={async () => {
               if (followings.includes(username)) {
@@ -253,7 +254,7 @@ const Profile = (props: Props) => {
           >
             {followingProgress ? (
               <>
-                <CircularProgress />
+                <CircularProgress color="warning" />
               </>
             ) : followings.includes(username) ? (
               'Unfollow'
@@ -592,7 +593,9 @@ const ProfileContent = (props: ProfileContentProps) => (
           .map((resource) => (
             <ResourceCard
               resource={resource}
-              onClick={() => {}}
+              onClick={() => {
+                history.push(`/path/${resource._id}`);
+              }}
               buttonText={resource.isEnrolled ? 'Unenroll' : 'Enroll'}
               onButtonClick={() => {
                 alert('TODO');
@@ -678,7 +681,7 @@ interface Resource {
   isEnrolled: boolean;
   isFollowed: boolean;
   photo: string;
-  id: string;
+  _id: string;
 }
 interface ResourceCardProps {
   resource: Resource;
@@ -699,7 +702,7 @@ export const ResourceCard = (props: ResourceCardProps) => {
         );
       } else {
         try {
-          const wc = await getPathPhotoData(props.resource.id);
+          const wc = await getPathPhotoData(props.resource._id);
           setimg((wc.startsWith('data') ? '' : 'data:image/png;base64,') + wc);
         } catch (error) {
           setimg(faker.image.imageUrl(64, 64, undefined, true));
