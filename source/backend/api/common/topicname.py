@@ -6,4 +6,7 @@ def topicname(id:int):
     resp=requests.get(url)
     if not resp.ok:
         raise ConnectionError("Error fetching topic name from Wikidata API.")
-    return resp.json()["entities"][f'Q{id}']["labels"]["en"]["value"]
+    try:
+        return resp.json()["entities"][f'Q{id}']["labels"]["en"]["value"]
+    except:
+        return ''

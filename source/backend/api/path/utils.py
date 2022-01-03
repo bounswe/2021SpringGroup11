@@ -22,9 +22,6 @@ def get_related_topics(id:int):
             except:
                 pass
             
-            if len(ret) > 4:
-                break
-    
     return ret
 
 def get_rate_n_effort(path_id: str, db=None):

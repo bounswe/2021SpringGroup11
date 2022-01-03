@@ -1,22 +1,5 @@
 import requests
 
-
-def topicname(id:int):
-    """
-        Returns name of the topic
-        :id: id of the topic
-
-    """
-    
-    url=f'https://www.wikidata.org/w/api.php?action=wbgetentities&props=labels&ids=Q{id}&languages=en&format=json'
-    resp=requests.get(url)
-    
-    if not resp.ok:
-        raise ConnectionError("Error fetching topic name from Wikidata API.")
-    
-    return resp.json()["entities"][f'Q{id}']["labels"]["en"]["value"]
-
-
 def get_topics(text: str):
     """
         Returns 7 entiteties from wikidata 
@@ -58,7 +41,7 @@ def get_related_topics(id:int):
     for key, value in data.items():
         for item in value:
             try:
-                ret.append({"ID": int(item['mainsnak']['datavalue']['value']['id'][1:])})
+                ret.append(int(item['mainsnak']['datavalue']['value']['id'][1:]))
             except:
                 pass
     
@@ -70,4 +53,7 @@ def topicname(id:int):
     resp=requests.get(url)
     if not resp.ok:
         raise ConnectionError("Error fetching topic name from Wikidata API.")
-    return resp.json()["entities"][f'Q{id}']["labels"]["en"]["value"]
+    try:
+        return resp.json()["entities"][f'Q{id}']["labels"]["en"]["value"]
+    except:
+        return ''

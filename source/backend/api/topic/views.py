@@ -1,7 +1,7 @@
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from authentication.utils import IsAuthenticated, IsAdmin
+from authentication.utils import IsAuthenticated
 from heybooster.helpers.database.mongodb import MongoDBHelper
 from django.conf import settings
 from topic.utils import get_topics, get_related_topics, topicname
@@ -115,21 +115,22 @@ class RelatedTopics(APIView):
         data = request.data
         username = data['username']
         topic_id = int(topic_id)
-        topics = get_related_topics(topic_id)
-        
-        if len(topics) > 4:
-            topics = topics[:4]
-        
-        for topic in topics:
-            topic['isFav'] = False
-            topic['name'] = topicname(topic['ID'])
+        topic_ids = get_related_topics(topic_id)
+        topics = []
+
+        for _topic_id in topic_ids:
+            name = topicname(_topic_id)
+            if name:
+                topics.append({'ID': _topic_id, 'name': name, 'isFav': False})
+                if len(topics) == 5:
+                    break
 
         with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
             fav_topics = list(db.find('favorite', {'username': username, 'ID': {'$in': [topic['ID'] for topic in topics]}}))
 
         for fav_topic in fav_topics:
             for topic in topics:
-                if topic['id'] == fav_topic['ID']:
+                if topic['ID'] == fav_topic['ID']:
                     topic['isFav'] = True
 
         return Response(topics)
