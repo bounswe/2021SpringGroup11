@@ -344,6 +344,8 @@ const Profile = (props: Props) => {
             height: '90vh',
           }}
         >
+          <h1>followings</h1>
+
           {followings.map((followingUsername) => (
             <div
               onClick={() => {
@@ -385,6 +387,7 @@ const Profile = (props: Props) => {
             height: '90vh',
           }}
         >
+          <h1>followers</h1>
           {followers.map((followingUsername) => (
             <div
               onClick={() => {
