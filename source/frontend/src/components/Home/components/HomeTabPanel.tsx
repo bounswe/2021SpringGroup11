@@ -3,6 +3,7 @@ import { makeStyles } from '@mui/styles';
 import React from 'react';
 import { Grid } from '@mui/material';
 import history from '../../../utils/history';
+import { WordCloudImg } from '../../NavBar/SearchBox';
 
 interface Props {
   items: {
@@ -104,7 +105,7 @@ const TagItem = (props: tagProps) => {
             marginRight: '10px',
           }}
         >
-          <Typography align="center">Follow</Typography>
+          <Typography align="center">GO</Typography>
         </Button>
       </div>
     </Grid>
@@ -117,7 +118,9 @@ const PathItem = (props: pathProps) => {
 
   return (
     <div className={classes.pathRoot} onClick={() => history.push(`/path/${item.id}`)}>
-      <img className={classes.pathPic} src={item.pic} alt="path-item" />
+      {/* <img className={classes.pathPic} src={item.pic} alt="path-item" /> */}
+      <WordCloudImg className={classes.pathPic} photo={item.pic} id={item.id} full />
+
       <div style={{ display: 'flex', flexDirection: 'row' }}>
         <div style={{ display: 'flex', flexDirection: 'column', width: '75%' }}>
           <Button>
@@ -158,7 +161,7 @@ const PathItem = (props: pathProps) => {
           }}
         >
           <Typography style={{ color: '#F25115' }} variant="h6" align="center">
-            Enroll
+            GO
           </Typography>
         </Button>
       </div>
