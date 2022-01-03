@@ -26,15 +26,32 @@ class _SearchPageState extends State<SearchPage> {
   String _keyword = "";
   @override
   Widget build(BuildContext context) {
-    void _search() async {
+    void _searchT() async {
       var topics = await HttpService.shared.searchTopic(_keyword);
-      var paths = await HttpService.shared.searchPath(_keyword);
-      var users = await HttpService.shared.searchUser(_keyword);
+
       setState(() {
         _topics = topics;
+      });
+    }
+
+    void _searchP() async {
+      var paths = await HttpService.shared.searchPath(_keyword);
+      setState(() {
         _paths = paths;
+      });
+    }
+
+    void _searchU() async {
+      var users = await HttpService.shared.searchUser(_keyword);
+      setState(() {
         _users = users;
       });
+    }
+
+    void _search() async {
+      _searchT();
+      _searchP();
+      _searchU();
     }
 
     return Scaffold(
@@ -129,7 +146,7 @@ class _SearchPageState extends State<SearchPage> {
                     }).toList(),
                   if (_topics.isEmpty)
                     Text(
-                      "No Topic found !",
+                      "No Topic to show !",
                       style:
                           TextStyle(fontSize: 18, fontStyle: FontStyle.italic),
                     )
@@ -162,7 +179,7 @@ class _SearchPageState extends State<SearchPage> {
                     }).toList(),
                   if (_users.isEmpty)
                     Text(
-                      "No Path found !",
+                      "No User to show !",
                       style:
                           TextStyle(fontSize: 18, fontStyle: FontStyle.italic),
                     )
@@ -195,7 +212,7 @@ class _SearchPageState extends State<SearchPage> {
                 child: Row(
                   children: [
                     Text(
-                      "No Path Found!",
+                      "No Path to show!",
                       style:
                           TextStyle(fontSize: 18, fontStyle: FontStyle.italic),
                     )
