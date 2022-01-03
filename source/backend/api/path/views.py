@@ -642,7 +642,7 @@ class GetFollowedPaths(APIView):
 
 
 class SearchPath(APIView):
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request, search_text):
         data = request.data
@@ -651,8 +651,7 @@ class SearchPath(APIView):
         with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
             paths = list(db.find(
                 'path',  # TODO Create fulltext index on subtexts
-                query={'$or': [{'$text': {'$search': search_text}},
-                               {'title': {'$regex': search_text, '$options': 'i'}}]},
+                query={'$or': [{'title': {'$regex': search_text, '$options': 'i'}}]},
                 projection={}
             ).limit(10))
 
