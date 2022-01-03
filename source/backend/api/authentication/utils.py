@@ -38,6 +38,8 @@ class IsAuthenticated(BasePermission):
         if token_info:
             request.data.update({'email': token_info['email']})
             request.data.update({'username': token_info['username']})
+            # request.data['email'] = token_info['email']
+            # request.data['usermame'] = token_info['username']
             # request.data.update({'isAdmin': token_info['isAdmin']})
             return True
         else:

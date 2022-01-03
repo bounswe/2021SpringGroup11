@@ -21,6 +21,9 @@ def get_related_topics(id:int):
                 ret.append(int(item['mainsnak']['datavalue']['value']['id'][1:]))
             except:
                 pass
+            
+            if len(ret) > 4:
+                break
     
     return ret
 

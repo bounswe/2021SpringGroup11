@@ -159,8 +159,8 @@ class GetRatings(APIView):
         username = data['username']
 
         with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
-            rates = list(db.find('pathRating', query={'username': username}))
-            efforts = list(db.find('pathEffort', query={'username': username}))
+            rates = list(db.find('pathRating', query={'username': username}, projection={'_id': 0}))
+            efforts = list(db.find('pathEffort', query={'username': username}, projection={'_id': 0}))
 
         return Response(
             {
@@ -188,7 +188,7 @@ class FollowUser(APIView):
 
         with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
             follow = db.find_one('follow', query={'follower_username': username, 'followed_username': target})
-            print(follow)
+            
             if follow:
                 return Response('ALREADY_FOLLOWED', status=status.HTTP_409_CONFLICT)
 
@@ -262,7 +262,6 @@ class GetFavouritePaths(APIView):
                 'path_ids': [path_id['_id'] for path_id in path_ids]
             }
         )
-
 
 
 class Wordcloud(APIView):

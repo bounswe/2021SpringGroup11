@@ -106,6 +106,10 @@ class RelatedTopics(APIView):
         username = data['username']
         topic_id = int(topic_id)
         topics = get_related_topics(topic_id)
+        
+        if len(topics) > 4:
+            topics = topics[:4]
+        
         for topic in topics:
             topic['isFav'] = False
             topic['name'] = topicname(topic['ID'])
