@@ -9,6 +9,7 @@ import 'package:portakal/models/user.dart';
 import 'package:portakal/my_colors.dart';
 import 'package:portakal/widget/course_container.dart';
 import 'package:portakal/widget/tag_container.dart';
+import 'package:portakal/widget/tag_search_container.dart';
 import 'package:portakal/widget/user_container.dart';
 
 class SearchPage extends StatefulWidget {
@@ -105,7 +106,7 @@ class _SearchPageState extends State<SearchPage> {
             }).toList(),
           if (_topics.isNotEmpty)
             ...(_topics as List<Tag>).map((tag) {
-              return TagContainer(key: Key(tag.id!), tag: tag);
+              return TagSearchContainer(key: Key(tag.id!), tag: tag);
             }).toList(),
           if (_users.isNotEmpty)
             ...(_users as List<BasicUser>).map((user) {
