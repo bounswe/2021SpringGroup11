@@ -1,9 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:portakal/http_services.dart';
+import 'package:portakal/models/search_result.dart';
 import 'package:portakal/models/basic_path.dart';
 import 'package:portakal/models/tag.dart';
 
 import 'package:portakal/my_colors.dart';
+import 'package:portakal/search_page.dart';
 import 'package:portakal/widget/course_container.dart';
 import 'package:portakal/widget/tag_container.dart';
 
@@ -16,6 +19,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   var _pageIndex = 0;
+  var _results;
 
   @override
   Widget build(BuildContext context) {
@@ -186,45 +190,24 @@ class _HomePageState extends State<HomePage> {
     ];
     return Scaffold(
       appBar: AppBar(
-          backgroundColor: MyColors.blue,
-          leading: Image(
-            image: AssetImage('assets/logoOnly.png'),
+        backgroundColor: MyColors.blue,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            bottom: Radius.circular(20),
           ),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(
-              bottom: Radius.circular(20),
+        ),
+        title: Center(
+          child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+            Image(
+              image: AssetImage('assets/logoOnly.png'),
             ),
-          ),
-          title: Container(
-            height: 40,
-            margin: EdgeInsets.only(right: 10),
-            decoration: BoxDecoration(
-              color: Colors.transparent,
-              borderRadius: BorderRadius.circular(10),
-              border: Border.all(
-                color: Colors.white,
-                width: 1,
-              ),
-            ),
-            child: Center(
-              child: TextField(
-                style: TextStyle(
-                  color: Colors.white,
-                ),
-                decoration: InputDecoration(
-                    prefixIcon: Icon(
-                      Icons.search,
-                      color: Colors.white,
-                    ),
-                    hintText: 'Find something',
-                    hintStyle: TextStyle(
-                      color: Colors.white,
-                      fontStyle: FontStyle.italic,
-                    ),
-                    border: InputBorder.none),
-              ),
-            ),
-          )),
+            Text(
+              "Renaissance",
+              style: TextStyle(fontStyle: FontStyle.italic, fontSize: 24),
+            )
+          ]),
+        ),
+      ),
       body: ListView(
         physics: BouncingScrollPhysics(),
         children: [
@@ -276,7 +259,7 @@ class _HomePageState extends State<HomePage> {
             color: Colors.grey.shade300,
           ),
           ...(paths[_pageIndex]["paths"] as List<BasicPath>).map((path) {
-            return CourseContainer(key: Key(path.id!), path: path);
+            return CourseContainer(key: Key(path.id), path: path);
           }).toList(),
         ],
       ),
