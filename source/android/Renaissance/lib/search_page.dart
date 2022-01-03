@@ -100,18 +100,109 @@ class _SearchPageState extends State<SearchPage> {
           )),
       body: ListView(
         children: [
+          SizedBox(
+            //Use of SizedBox
+            height: 10,
+          ),
+          Container(
+            child: Text("TAGS",
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 25,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: 2.0)),
+            color: Colors.grey.shade300,
+          ),
+          Container(
+            width: double.infinity,
+            padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+            decoration: BoxDecoration(
+              color: Colors.grey.shade500,
+            ),
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: [
+                  if (_topics.isNotEmpty)
+                    ...(_topics as List<Tag>).map((tag) {
+                      return TagSearchContainer(key: Key(tag.id!), tag: tag);
+                    }).toList(),
+                  if (_topics.isEmpty)
+                    Text(
+                      "No Topic found !",
+                      style:
+                          TextStyle(fontSize: 18, fontStyle: FontStyle.italic),
+                    )
+                ],
+              ),
+            ),
+          ),
+          Container(
+            child: Text("Users",
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 25,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: 2.0)),
+            color: Colors.grey.shade300,
+          ),
+          Container(
+            width: double.infinity,
+            padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+            decoration: BoxDecoration(
+              color: Colors.grey.shade500,
+            ),
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: [
+                  if (_users.isNotEmpty)
+                    ...(_users as List<BasicUser>).map((user) {
+                      return UserContainer(user: user);
+                    }).toList(),
+                  if (_users.isEmpty)
+                    Text(
+                      "No Path found !",
+                      style:
+                          TextStyle(fontSize: 18, fontStyle: FontStyle.italic),
+                    )
+                ],
+              ),
+            ),
+          ),
+          Container(
+            child: Text("PATHS",
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 25,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: 2.0)),
+            color: Colors.grey.shade300,
+          ),
           if (_paths.isNotEmpty)
             ...(_paths as List<BasicPath>).map((path) {
               return CourseContainer(key: Key(path.id!), path: path);
             }).toList(),
-          if (_topics.isNotEmpty)
-            ...(_topics as List<Tag>).map((tag) {
-              return TagSearchContainer(key: Key(tag.id!), tag: tag);
-            }).toList(),
-          if (_users.isNotEmpty)
-            ...(_users as List<BasicUser>).map((user) {
-              return UserContainer(user: user);
-            }).toList(),
+          if (_paths.isEmpty)
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+              decoration: BoxDecoration(
+                color: Colors.grey.shade500,
+              ),
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    Text(
+                      "No Path Found!",
+                      style:
+                          TextStyle(fontSize: 18, fontStyle: FontStyle.italic),
+                    )
+                  ],
+                ),
+              ),
+            ),
         ],
       ),
     );
