@@ -45,7 +45,8 @@ class CreatePath(APIView):
             for milestone in milestones:
                 id = db.insert_one('milestone', {
                     'title': milestone['title'],
-                    'body': milestone['body']
+                    'body': milestone['body'],
+                    'type': milestone['type']
                 }).inserted_id
 
                 milestone_ids.append(str(id))
@@ -665,18 +666,49 @@ class MyPaths(APIView):
 
         return Response(paths)
 
+class FinishTask(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        data = request.data
+        username = data['username']
+        milestone_id = data['milestone_id']
+
+        with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
+            db.insert_one('finished_milestone', {
+                'username': username,
+                'milestone_id': milestone_id
+            })
+
+        return Response('SUCCESSFUL')
+
+class UnfinishTask(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        data = request.data
+        username = data['username']
+        milestone_id = data['milestone_id']
+
+        with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
+            db.delete_one('finished_milestone', {
+                'username': username,
+                'milestone_id': milestone_id
+            })
+
+        return Response('SUCCESSFUL')
 
 class AddResource(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
         data = request.data
-        owner = data['username']
+
         path_id = data['path_id']
-        milestone_id = data['milestone_id']
-        task_id = data['task_id']
+        username = data['username']
+        order = data['order']
         link = data['link']
-        photo = data['photo']
+        description = data['description']
         created_at = int(time.time())
 
         with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
@@ -684,11 +716,10 @@ class AddResource(APIView):
                 'path',
                 {'_id': ObjectId(path_id)},
                 { '$push': {'resources': {
-                            'milestone_id': milestone_id,
-                            'task_id': task_id,
-                            'user': owner,
+                            'username': username,
+                            'order': order,
                             'link': link,
-                            'photo': photo,
+                            'description': description,
                             'created_at': created_at
                         }
                     }

@@ -638,11 +638,10 @@ class AddResourceTest(TestCase):
 
     def test_post_200_code(self):
         data = {
-            "path_id":  "61b864fffc7b6ca95de23214",
-            "milestone_id": "61d1e3ec2377c51a4b99b149",
-            "task_id": "61d1e3ec2377c51a4b99b149",
+            "path_id": "61b864fffc7b6ca95de23214",
+            "order": 1,
             "link": "http://bounswe11.com.s3-website.us-east-2.amazonaws.com/",
-            "photo": ""
+            "description": "home page",
         }
     
         response = self.client.post(
@@ -656,11 +655,10 @@ class AddResourceTest(TestCase):
     
     def test_403_code(self):
         data = {
-            'path_id':  "61b864fffc7b6ca95de23214",
-            'milestone_id': "61d1e3ec2377c51a4b99b149",
-            'task_id': "61d1e3ec2377c51a4b99b149",
-            'link': "http://bounswe11.com.s3-website.us-east-2.amazonaws.com/",
-            'photo': ''
+            "path_id": "61b864fffc7b6ca95de23214",
+            "order": 1,
+            "link": "http://bounswe11.com.s3-website.us-east-2.amazonaws.com/",
+            "description": "home page",
         }
     
         response = self.client.post(
