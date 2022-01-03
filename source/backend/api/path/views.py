@@ -920,7 +920,7 @@ class GetNew(APIView):
         return Response({'topics': topics, 'paths': paths})
 
 class GetForYou(APIView):
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         data = request.data
