@@ -206,36 +206,41 @@ class HttpService {
     }
   }
 
+  Path processPath(input) {
+    List<Milestonee> milestoness = [];
+    List<Topic> topicss = [];
+
+    (input["milestones"]).map((tag) {
+      milestoness.add(Milestonee.fromJson(tag));
+    }).toList();
+
+    (input["topics"]).map((tag) {
+      topicss.add(Topic.fromJson(tag));
+    }).toList();
+    return Path(
+        id: input['_id'],
+        title: input['title'],
+        description: input['description'],
+        topics: topicss,
+        creator_username: input['creator_username'],
+        creator_email: input['creator_email'],
+        created_at: 1.0 * input['created_at'],
+        photo: input['photo'],
+        milestones: milestoness,
+        rating: input['rating'],
+        effort: input['effort'],
+        isEnrolled: input['isEnrolled'],
+        isFollowed: input['isFollowed']);
+  }
+
   Future<Path> getPath(String path_id) async {
     String url = baseUrl + '/path/get-path/$path_id/';
     Response res = await get(Uri.parse(url), headers: headers);
 
     if (res.statusCode == 200) {
       var temp = jsonDecode(res.body);
-      List<Milestonee> milestoness = [];
-      List<Topic> topicss = [];
 
-      (temp["milestones"]).map((tag) {
-        milestoness.add(Milestonee.fromJson(tag));
-      }).toList();
-
-      (temp["topics"]).map((tag) {
-        topicss.add(Topic.fromJson(tag));
-      }).toList();
-      return Path(
-          id: path_id,
-          title: temp['title'],
-          description: temp['description'],
-          topics: topicss,
-          creator_username: temp['creator_username'],
-          creator_email: temp['creator_email'],
-          created_at: 1.0 * temp['created_at'],
-          photo: temp['photo'],
-          milestones: milestoness,
-          rating: temp['rating'],
-          effort: temp['effort'],
-          isEnrolled: temp['isEnrolled'],
-          isFollowed: temp['isFollowed']);
+      return processPath(temp);
     } else {
       throw Exception(res.body);
     }
@@ -343,17 +348,18 @@ class HttpService {
     }
   }
 
-  Future<List<dynamic>> searchPath(String pathName) async {
+  Future<List<Path>> searchPath(String pathName) async {
     String url = baseUrl + '/path/search-path/$pathName/';
     Response res = await get(Uri.parse(url), headers: headers);
-
     if (res.statusCode == 200) {
-      for (var i in jsonDecode(res.body)) {
-        print(i);
+      var input = jsonDecode(res.body);
+      List<Path> result = [];
+      for (var inputLocal in jsonDecode(res.body)) {
+        result.add(processPath(inputLocal));
       }
 
-      print(jsonDecode(res.body));
-      return (jsonDecode(res.body));
+      print(result);
+      return (result);
     } else {
       throw Exception(res.body);
     }
