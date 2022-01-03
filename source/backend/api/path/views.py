@@ -841,18 +841,21 @@ class GetPopular(APIView):
             path_ids = []
 
             for stream in streams:
-                id = stream['object']['id']
+                try:
+                    id = stream['object']['id']
 
-                if type(id) == int:
-                    if id in topic_dict.keys():
-                        topic_dict[id] += 1
+                    if type(id) == int:
+                        if id in topic_dict.keys():
+                            topic_dict[id] += 1
+                        else:
+                            topic_dict[id] = 1
                     else:
-                        topic_dict[id] = 1
-                else:
-                    if id in path_dict.keys():
-                        path_dict[id] += 1
-                    else:
-                        path_dict[id] = 1
+                        if id in path_dict.keys():
+                            path_dict[id] += 1
+                        else:
+                            path_dict[id] = 1
+                except:
+                    continue
 
             topic_dict = dict(sorted(  topic_dict.items(),
                             key=operator.itemgetter(1),
@@ -952,14 +955,17 @@ class GetForYou(APIView):
             path_ids = []
 
             for stream in streams:
-                id = stream['object']['id']
+                try:
+                    id = stream['object']['id']
 
-                if type(id) == int:
-                    if id not in topic_ids:
-                        topic_ids.append(id)
-                else:
-                    if id not in path_ids:
-                        path_ids.append(id)
+                    if type(id) == int:
+                        if id not in topic_ids:
+                            topic_ids.append(id)
+                    else:
+                        if id not in path_ids:
+                            path_ids.append(id)
+                except:
+                    continue
 
             used_topic_ids = [topic['ID'] for topic in topics]
             used_path_ids = [str(path['_id']) for path in paths]
