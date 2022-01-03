@@ -362,6 +362,19 @@ class FinishPath(APIView): #Caution: this endpoint marks the whole path as finis
                               'path_id': path_id,
                           })
 
+            relation = db.find_one('enroll', {
+                'username': username,
+                'path_id': path_id,
+            })
+
+            if not relation:
+                return Response('NOT_ENROLLED', status=status.HTTP_409_CONFLICT)
+
+            db.delete_one('enroll', {
+                'username': username,
+                'path_id': path_id,
+            })
+
             act_id=db.insert_one("activitystreams",
                                  activitystreams.activity_format(
                                      summary=f'{username} finished the path {path["title"]}.',
@@ -371,6 +384,36 @@ class FinishPath(APIView): #Caution: this endpoint marks the whole path as finis
                                      action="Follow")).inserted_id
 
         return Response('SUCCESSFUL')
+
+class GetFinishedPaths(APIView):
+    # permission_classes = [IsAuthenticated]
+
+    """ requests username and returns all enrolled paths of the given username, tested """
+    def post(self, request):
+        data = request.data
+        username = data['username']
+
+        with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
+            finishedPaths = list(db.find('pathFinished', query={'username': username},  projection={'_id': 0}))
+            allPaths = list(
+                db.find('path', query={'_id': {'$in': [ObjectId(path['path_id']) for path in finishedPaths]}},
+                projection={
+                    '_id': 1,
+                    'title': 1,
+                    'photo': 1
+                }))
+
+        for path in allPaths:
+            path['_id'] = str(path['_id'])
+            rating, effort = get_rate_n_effort(path['_id'])
+            path['rating'] = rating
+            path['effort'] = effort
+            path['isFollowed'] = path_is_followed(path['_id'], username)
+
+        return Response(
+            allPaths,
+            status=status.HTTP_200_OK
+        )
 
 class Wordcloud(APIView):
     permission_classes = [IsAuthenticated]
@@ -598,7 +641,7 @@ class GetFollowedPaths(APIView):
 
 
 class SearchPath(APIView):
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
 
     def get(self, request, search_text):
         data = request.data
@@ -619,6 +662,9 @@ class SearchPath(APIView):
             path['_id'] = str(path['_id'])
             path['isFollowed'] = False
             path['isEnrolled'] = False
+            rating, effort = get_rate_n_effort(path['_id'])
+            path['rating'] = rating
+            path['effort'] = effort
 
         for followed_path in followedPaths:
             for path in paths:
