@@ -198,7 +198,7 @@ class _SearchPageState extends State<SearchPage> {
           ),
           if (_paths.isNotEmpty)
             ...(_paths as List<BasicPath>).map((path) {
-              return CourseContainer(key: Key(path.id!), path: path);
+              return CourseContainer(key: Key(path.id), path: path);
             }).toList(),
           if (_paths.isEmpty)
             Container(

@@ -7,6 +7,7 @@ import 'package:http/http.dart';
 import 'package:portakal/models/basic_path.dart';
 import 'package:portakal/models/basic_user.dart';
 import 'package:portakal/models/get_follow_response.dart';
+import 'package:portakal/models/home_page_response.dart';
 import 'dart:convert';
 
 import 'package:portakal/models/login_response.dart';
@@ -500,6 +501,36 @@ class HttpService {
       List<BasicPath> basicPaths =
           l.map((json) => BasicPath.fromJSON(json)).toList();
       return basicPaths;
+    } else {
+      throw Exception(res.body);
+    }
+  }
+
+  Future<HomePageResponse> popular() async {
+    String url = baseUrl + '/path/popular/';
+    Response res = await get(Uri.parse(url), headers: headers);
+    if (res.statusCode == 200) {
+      return HomePageResponse.fromJSON(json.decode(res.body));
+    } else {
+      throw Exception(res.body);
+    }
+  }
+
+  Future<HomePageResponse> forYou() async {
+    String url = baseUrl + '/path/foryou/';
+    Response res = await get(Uri.parse(url), headers: headers);
+    if (res.statusCode == 200) {
+      return HomePageResponse.fromJSON(json.decode(res.body));
+    } else {
+      throw Exception(res.body);
+    }
+  }
+
+  Future<HomePageResponse> news() async {
+    String url = baseUrl + '/path/new/';
+    Response res = await get(Uri.parse(url), headers: headers);
+    if (res.statusCode == 200) {
+      return HomePageResponse.fromJSON(json.decode(res.body));
     } else {
       throw Exception(res.body);
     }
