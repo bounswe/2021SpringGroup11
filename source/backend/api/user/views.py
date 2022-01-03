@@ -26,7 +26,7 @@ class GlobalActivityStreams(APIView):
 
 
 class ActivityStreams(APIView):
-    #permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def post(self,request):
         data=request.data
@@ -37,17 +37,14 @@ class ActivityStreams(APIView):
             followed_users = list(db.find('follow', query={'follower_username': username}))
             followed_users=[f['followed_username'] for f in followed_users]
             userq={"actor.name": {"$in": followed_users }}
-            print(followed_users)
 
             followed_paths= list(db.find('follow_path', query={'username':username}))
             followed_paths=[f["path_id"] for f in followed_paths]
             pathq={"object.id": {"$in": followed_paths}}
-            print(followed_paths)
 
             favorited_topics=list(db.find('favorite', query={"username":username}))
             favorited_topics=[f["ID"] for f in favorited_topics]
             topicq={"object.id":{"$in": favorited_topics}}
-            print(favorited_topics)
 
             streams = list(db.find('activitystreams', query={"$or": [userq, pathq, topicq]}))
             streams=[activitystreams.activity_decode(s) for s in streams]
