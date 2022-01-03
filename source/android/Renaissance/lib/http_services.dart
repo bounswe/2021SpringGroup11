@@ -277,7 +277,6 @@ class HttpService {
 
   Future<List<Tag>> getTopicList(String topic_id) async {
     String url = baseUrl + '/topic/related-topic/$topic_id/';
-    print(headers);
     Response res = await get(Uri.parse(url), headers: headers);
     if (res.statusCode == 200) {
       Iterable l = json.decode(res.body);
@@ -291,7 +290,6 @@ class HttpService {
 
   Future<List<BasicPath>> getPathList(String topic_id) async {
     String url = baseUrl + '/path/related-path/$topic_id/';
-    print(headers);
     Response res = await get(Uri.parse(url), headers: headers);
     if (res.statusCode == 200) {
       Iterable l = json.decode(res.body);

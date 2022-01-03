@@ -116,7 +116,7 @@ class _TopicPageState extends State<TopicPage> {
                                 // for Vertical scrolling
                                 scrollDirection: Axis.vertical,
                                 child: Text(
-                                  widget.t!.description!,
+                                  widget.t!.description??"No description provided.",
                                   style: TextStyle(
                                       fontSize: 14,
                                       height: 1.2,
