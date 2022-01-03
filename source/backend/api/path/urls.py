@@ -17,6 +17,7 @@ urlpatterns = [
     path('related-path/<slug:topic_id>/', views.GetRelatedPath.as_view(), name='get_related_path'),
     path('search-path/<slug:search_text>/', views.SearchPath.as_view(), name='search_path'),
     path('finish-path/', views.FinishPath.as_view(), name='finish_path'),
+    path('get-finished-paths/', views.GetFinishedPaths.as_view(), name='get_finished_paths'),
     path('finish-milestone/', views.FinishMilestone.as_view(), name='finish_milestone'),
     path('unfinish-milestone/', views.UnfinishMilestone.as_view(), name='unfinish_milestone'),
     path('finish-task/', views.FinishTask.as_view(), name='finish_task'),
