@@ -533,6 +533,24 @@ class FinishPathTest(TestCase):
         
         self.assertEquals(response.status_code, 403)
 
+class GetFinishedPathsTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+
+    def test_post_200_code(self):
+        data = {
+                'username' :  "test",
+                }
+    
+        response = self.client.post(
+            reverse('get_finished_paths'),
+            data,
+            **AUTHENTICATED_NORMALUSER_HEADERS,
+            content_type="application/json"
+        )
+        
+        self.assertEquals(response.status_code, 200)
+
 class FinishMilestoneTest(TestCase):
     def setUp(self):
         self.client = Client()
@@ -593,6 +611,73 @@ class UnFinishMilestoneTest(TestCase):
     
         response = self.client.post(
             reverse('unfinish_milestone'),
+            data,
+            **UNAUTHENTICATED_NORMALUSER_HEADERS,
+            content_type="application/json"
+        )
+        
+        self.assertEquals(response.status_code, 403)
+
+class FinishTaskTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+
+    def test_post_200_code(self):
+        data = {
+                "path_id" :  "61d1edbb4cba7b537b647a41",
+                "milestone_id": "61b7337ff74bd48c1653a143"
+                }
+    
+        response = self.client.post(
+            reverse('finish_task'),
+            data,
+            **AUTHENTICATED_NORMALUSER_HEADERS,
+            content_type="application/json"
+        )
+        
+        self.assertEquals(response.status_code, 200)
+    
+    def test_403_code(self):
+        data = {
+                'path_id' :  "61d1edbb4cba7b537b647a41",
+                }
+    
+        response = self.client.post(
+            reverse('finish_task'),
+            data,
+            **UNAUTHENTICATED_NORMALUSER_HEADERS,
+            content_type="application/json"
+        )
+        
+        self.assertEquals(response.status_code, 403)
+
+
+class UnFinishTaskTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+
+    def test_post_200_code(self):
+        data = {
+                'path_id' :  "61d1edbb4cba7b537b647a41",
+                'milestone_id': "61b7337ff74bd48c1653a143"
+                }
+    
+        response = self.client.post(
+            reverse('unfinish_task'),
+            data,
+            **AUTHENTICATED_NORMALUSER_HEADERS,
+            content_type="application/json"
+        )
+        
+        self.assertEquals(response.status_code, 200)
+    
+    def test_403_code(self):
+        data = {
+                'path_id' :  "61d1edbb4cba7b537b647a41",
+                }
+    
+        response = self.client.post(
+            reverse('unfinish_task'),
             data,
             **UNAUTHENTICATED_NORMALUSER_HEADERS,
             content_type="application/json"
