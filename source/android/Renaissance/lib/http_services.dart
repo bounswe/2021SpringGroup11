@@ -348,6 +348,7 @@ class HttpService {
     Response res = await get(Uri.parse(url), headers: headers);
 
     if (res.statusCode == 200) {
+      print(jsonDecode(res.body));
       return (jsonDecode(res.body));
     } else {
       throw Exception(res.body);
