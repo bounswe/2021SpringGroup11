@@ -6,11 +6,14 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:portakal/file_converter.dart';
 import 'package:portakal/models/tag.dart';
+import 'package:portakal/widget/tag_container.dart';
+import 'package:portakal/widget/tag_desc_container.dart';
 import 'package:snippet_coder_utils/multi_images_utils.dart';
 
 import 'http_services.dart';
 import 'models/user.dart';
 import 'my_colors.dart';
+import 'widget/tag_create_container.dart';
 
 class CreatePathPage extends StatefulWidget {
   const CreatePathPage({Key? key}) : super(key: key);
@@ -23,29 +26,97 @@ class _CreatePathPageState extends State<CreatePathPage> {
   var _image;
   bool _isLoading = false;
 
+  var _topics = <Tag>[];
+
   List<TextEditingController> _titleControllers = [];
   List<TextField> _titleFields = [];
   List<TextEditingController> _descControllers = [];
   List<TextField> _descFields = [];
 
+  List<String> _typeOfController = [];
+
   TextEditingController titleController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   TextEditingController topicController = TextEditingController();
 
-  void clearMilestones() {
+  void clearItems() {
     _titleControllers = [];
     _titleFields = [];
     _descControllers = [];
     _descFields = [];
+    _typeOfController = [];
   }
 
-  void _deleteMilestone(int i) {
+  int findIndex(int i) {
+    String type = _typeOfController[i];
+    int index = 1;
+    for (int ind = 0; ind < i; ind++) {
+      if (_typeOfController[ind] == type) {
+        index += 1;
+      }
+    }
+    return index;
+  }
+
+  void _deleteItem(int i) {
     setState(() {
       _titleControllers.removeAt(i);
       _titleFields.removeAt(i);
       _descControllers.removeAt(i);
       _descFields.removeAt(i);
+      _typeOfController.removeAt(i);
     });
+  }
+
+  Future<dynamic> _searchTopic() async {
+    List<Tag> resultTags =
+        await HttpService.shared.searchTopic(topicController.text.trim());
+
+    topicController.clear();
+    return showDialog(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Choose your Topic"),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: [
+                ...(resultTags as List<Tag>).map((tag) {
+                  return InkWell(
+                      onTap: () {
+                        setState(() {
+                          _topics.add(tag);
+                        });
+                        Navigator.of(context).pop();
+                      },
+                      child: (TagDescContainer(key: Key(tag.id!), tag: tag)));
+                }).toList(),
+                if (resultTags.isEmpty)
+                  Text("There is no Topic matching your search!")
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            ElevatedButton(
+              child: const Text('Back'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+
+    // List<Map<String, Object>> sendTopic = [];
+    // for (var i = 0; i < topicsSubmit.length; i++) {
+    //   sendTopic.add({
+    //     "ID": int.parse(topicsSubmit[i].id as String),
+    //     "name": topicsSubmit[i].name as String,
+    //     "description": topicsSubmit[i].description as String
+    //   });
+    // }
   }
 
   @override
@@ -63,48 +134,104 @@ class _CreatePathPageState extends State<CreatePathPage> {
   }
 
   Widget _addTile() {
-    return ListTile(
-      title: Icon(Icons.add),
-      onTap: () {
-        final titleController = TextEditingController();
-        final titleField = TextField(
-          controller: titleController,
-          maxLength: 50,
-          style: TextStyle(
-              color: MyColors.coolGray,
-              fontSize: 14.0,
-              fontWeight: FontWeight.w400),
-          decoration: InputDecoration(
-            border: OutlineInputBorder(),
-            hintText: "Title...",
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        TextButton(
+          child: Text('Add Task'),
+          style: TextButton.styleFrom(
+            primary: MyColors.coolGray,
+            backgroundColor: Colors.orangeAccent,
+            shape: const StadiumBorder(),
           ),
-        );
-        final descController = TextEditingController();
-        final descField = TextField(
-          controller: descController,
-          maxLength: 200,
-          maxLines: 5,
-          style: TextStyle(
-              color: MyColors.coolGray,
-              fontSize: 14.0,
-              fontWeight: FontWeight.w400),
-          decoration: InputDecoration(
-              border: OutlineInputBorder(),
-              hintText: "Description...",
-              contentPadding: EdgeInsets.all(10.0)),
-        );
+          onPressed: () {
+            final titleController = TextEditingController();
+            final titleField = TextField(
+              controller: titleController,
+              maxLength: 50,
+              style: TextStyle(
+                  color: MyColors.coolGray,
+                  fontSize: 14.0,
+                  fontWeight: FontWeight.w400),
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                hintText: " Task Title...",
+              ),
+            );
+            final descController = TextEditingController();
+            final descField = TextField(
+              controller: descController,
+              maxLength: 200,
+              maxLines: 5,
+              style: TextStyle(
+                  color: MyColors.coolGray,
+                  fontSize: 14.0,
+                  fontWeight: FontWeight.w400),
+              decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  hintText: " Task Description...",
+                  contentPadding: EdgeInsets.all(10.0)),
+            );
 
-        setState(() {
-          _titleControllers.add(titleController);
-          _titleFields.add(titleField);
-          _descControllers.add(descController);
-          _descFields.add(descField);
-        });
-      },
+            setState(() {
+              _titleControllers.add(titleController);
+              _titleFields.add(titleField);
+              _descControllers.add(descController);
+              _descFields.add(descField);
+              _typeOfController.add("Task");
+            });
+          },
+        ),
+        TextButton(
+          child: Text('Add Milestone'),
+          style: TextButton.styleFrom(
+            primary: MyColors.coolGray,
+            backgroundColor: Colors.amberAccent,
+            shape: const StadiumBorder(),
+          ),
+          onPressed: () {
+            final titleController = TextEditingController();
+            final titleField = TextField(
+              controller: titleController,
+              maxLength: 50,
+              style: TextStyle(
+                  color: MyColors.coolGray,
+                  fontSize: 14.0,
+                  fontWeight: FontWeight.w400),
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                hintText: "Milestone Title...",
+              ),
+            );
+            final descController = TextEditingController();
+            final descField = TextField(
+              controller: descController,
+              maxLength: 200,
+              maxLines: 5,
+              style: TextStyle(
+                  color: MyColors.coolGray,
+                  fontSize: 14.0,
+                  fontWeight: FontWeight.w400),
+              decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  hintText: "Milestone Description...",
+                  contentPadding: EdgeInsets.all(10.0)),
+            );
+
+            setState(() {
+              _titleControllers.add(titleController);
+              _titleFields.add(titleField);
+              _descControllers.add(descController);
+              _descFields.add(descField);
+              _typeOfController.add("Milestone");
+            });
+          },
+        ),
+      ],
     );
   }
 
-  Widget _milestones() {
+  Widget _items() {
     final children = [
       for (var i = 0; i < _titleControllers.length; i++)
         Container(
@@ -118,14 +245,14 @@ class _CreatePathPageState extends State<CreatePathPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "Milestone " + (i + 1).toString(),
+                      _typeOfController[i] + " " + findIndex(i).toString(),
                       style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
                           color: MyColors.darkGray),
                     ),
                     TextButton(
-                      onPressed: () => _deleteMilestone(i),
+                      onPressed: () => _deleteItem(i),
                       style: TextButton.styleFrom(
                         backgroundColor: Colors.redAccent,
                         shape: CircleBorder(),
@@ -139,12 +266,12 @@ class _CreatePathPageState extends State<CreatePathPage> {
                   ],
                 ),
                 Text(
-                  "Title",
+                  _typeOfController[i] + " Title",
                   style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
                 ),
                 _titleFields[i],
                 Text(
-                  "Description ",
+                  _typeOfController[i] + " Description ",
                   style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
                 ),
                 _descFields[i],
@@ -254,24 +381,80 @@ class _CreatePathPageState extends State<CreatePathPage> {
                 'Topics',
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
               ),
-              TextField(
-                maxLength: 70,
-                maxLines: 2,
-                decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: "Topics",
-                    contentPadding: EdgeInsets.all(10.0)),
-                controller: topicController,
-                style: TextStyle(
-                    color: MyColors.coolGray,
-                    fontSize: 14.0,
-                    fontWeight: FontWeight.w400),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      ...(_topics as List<Tag>).map((tag) {
+                        return Container(
+                            margin: EdgeInsets.symmetric(
+                                horizontal: 5, vertical: 2),
+                            decoration: BoxDecoration(
+                                color: Colors.blue.shade200,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(15.0))),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                TagCreateContainer(key: Key(tag.id!), tag: tag),
+                                IconButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        int indice = 0;
+                                        for (int i = 0;
+                                            i < _topics.length;
+                                            i++) {
+                                          if (_topics[i].id == tag.id) {
+                                            break;
+                                          }
+                                        }
+
+                                        _topics.removeAt(indice);
+                                      });
+                                    },
+                                    icon: Icon(Icons.cancel_outlined),
+                                    color: Colors.redAccent,
+                                    splashRadius: 16,
+                                    iconSize: 26),
+                              ],
+                            ));
+                      }).toList(),
+                    ],
+                  ),
+                ),
+              ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: TextField(
+                      maxLength: 70,
+                      maxLines: 2,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        hintText: "Topics",
+                        contentPadding: EdgeInsets.all(10.0),
+                      ),
+                      controller: topicController,
+                      style: TextStyle(
+                        color: MyColors.coolGray,
+                        fontSize: 14.0,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ),
+                  IconButton(onPressed: _searchTopic, icon: Icon(Icons.search))
+                ],
               ),
               Text(
-                'Milestones',
+                'Tasks and Milestones',
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
               ),
-              _milestones(),
+              _items(),
               _addTile(),
               MaterialButton(
                   onPressed: () async {
@@ -298,51 +481,37 @@ class _CreatePathPageState extends State<CreatePathPage> {
                           throw Exception(
                               'Please fill all milestone descriptions!');
 
-                      List<Map<String, String>> milestones = [];
+                      List<Map<String, String>> items = [];
                       List<Map<String, String>> topics = [];
 
                       for (var i = 0; i < _titleControllers.length; i++) {
-                        milestones.add({
+                        items.add({
                           "title": _titleControllers[i].text,
-                          "body": _descControllers[i].text
+                          "body": _descControllers[i].text,
+                          "type": _typeOfController[i],
                         });
                       }
-                      print(milestones);
 
                       List<String> splitted = topicController.text.split(",");
 
-                      List<Tag> topicsSubmit = [];
-                      for (var item in splitted) {
-                        List<Tag> resultTags =
-                            await HttpService.shared.searchTopic(item.trim());
-
-                        resultTags = [resultTags[0]];
-                        topicsSubmit = topicsSubmit + resultTags;
-                      }
-
-                      for (var i = 0; i < topicsSubmit.length; i++) {
-                        print(topicsSubmit[i].name);
-                        print(topicsSubmit[i].description);
-                      }
-
                       List<Map<String, Object>> sendTopic = [];
-                      for (var i = 0; i < topicsSubmit.length; i++) {
+                      for (var i = 0; i < _topics.length; i++) {
                         sendTopic.add({
-                          "ID": int.parse(topicsSubmit[i].id as String),
-                          "name": topicsSubmit[i].name as String,
-                          "description": topicsSubmit[i].description as String
+                          "ID": int.parse(_topics[i].id as String),
+                          "name": _topics[i].name as String,
+                          "description": _topics[i].description as String
                         });
                       }
 
-                      User response = await HttpService.shared.createPath(
-                        titleController.text,
-                        descriptionController.text,
-                        milestones,
-                        _image == null
-                            ? ""
-                            : FileConverter.getBase64StringFile(_image),
-                        sendTopic,
-                      );
+                      // User response = await HttpService.shared.createPath(
+                      //   titleController.text,
+                      //   descriptionController.text,
+                      //   items,
+                      //   _image == null
+                      //       ? ""
+                      //       : FileConverter.getBase64StringFile(_image),
+                      //   sendTopic,
+                      // );
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                         content: Text(
                           'Successfully created ${titleController.text}',
@@ -356,7 +525,7 @@ class _CreatePathPageState extends State<CreatePathPage> {
                       titleController.clear();
                       descriptionController.clear();
                       topicController.clear();
-                      clearMilestones();
+                      clearItems();
                       _image = null;
 
                       setState(() {
