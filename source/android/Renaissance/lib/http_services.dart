@@ -457,7 +457,7 @@ class HttpService {
     }
   }
 
-  Future<List<BasicPath>> getFollowedPaths(String username) async {
+  Future<List<BasicPath>> getFavouritePaths(String username) async {
     String url = baseUrl + '/path/get-followed-paths/';
     final body = jsonEncode({'username': username});
     Response res = await post(Uri.parse(url), headers: headers, body: body);

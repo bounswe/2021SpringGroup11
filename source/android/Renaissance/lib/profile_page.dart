@@ -12,9 +12,11 @@ import 'package:portakal/widget/profile_stats_widget.dart';
 import 'package:portakal/widget/profile_follow_widget.dart';
 import 'package:portakal/widget/course_container.dart';
 
+import 'models/basic_path.dart';
+
 class ProfilePage extends StatefulWidget {
-  final User user;
-  const ProfilePage({ Key? key, required this.user }): super(key: key);
+  User user;
+  ProfilePage({ Key? key, required this.user }): super(key: key);
 
   @override
   _ProfilePageState createState() => _ProfilePageState();
@@ -22,8 +24,8 @@ class ProfilePage extends StatefulWidget {
 bool isFollowed = true;
 
 class _ProfilePageState extends State<ProfilePage> with EditProfileDelegate, FollowerWidgetDelegate {
-
-
+  late Future<List<BasicPath>> favPaths = HttpService.shared.getFavouritePaths(widget.user.username!);
+  late Future<List<BasicPath>> enrolledPaths = HttpService.shared.getEnrolledPaths(widget.user.username!);
   bool loadingImage = false;
   File? profileImg;
 
