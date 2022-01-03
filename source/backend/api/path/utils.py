@@ -27,13 +27,17 @@ def get_related_topics(id:int):
     
     return ret
 
-def get_rate_n_effort(path_id: str):
+def get_rate_n_effort(path_id: str, db=None):
     rating = 0
     effort = 0
 
-    with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
+    if db:
         rates = list(db.find('pathRating', query={'path_id': path_id}))
         efforts = list(db.find('pathEffort', query={'path_id': path_id}))
+    else:
+        with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
+            rates = list(db.find('pathRating', query={'path_id': path_id}))
+            efforts = list(db.find('pathEffort', query={'path_id': path_id}))
 
     for rate in rates:
         rating += rate['rating']
@@ -47,14 +51,20 @@ def get_rate_n_effort(path_id: str):
 
     return float(rating), float(effort)
 
-def path_is_enrolled(path_id: str, username: str) -> bool:
-    with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
+def path_is_enrolled(path_id: str, username: str, db=None) -> bool:
+    if db:
         relation = db.find_one('enroll', query={'username': username, 'path_id': path_id})
+    else:
+        with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
+            relation = db.find_one('enroll', query={'username': username, 'path_id': path_id})
     
     return relation is not None
 
-def path_is_followed(path_id: str, username: str) -> bool:
-    with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
+def path_is_followed(path_id: str, username: str, db=None) -> bool:
+    if db:
         relation = db.find_one('follow_path', query={'username': username, 'path_id': path_id})
+    else:
+        with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
+            relation = db.find_one('follow_path', query={'username': username, 'path_id': path_id})
     
     return relation is not None

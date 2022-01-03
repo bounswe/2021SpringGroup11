@@ -669,3 +669,69 @@ class AddResourceTest(TestCase):
         )
         
         self.assertEquals(response.status_code, 403)
+
+class PopularTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+
+    def test_post_200_code(self):
+        response = self.client.get(
+            reverse('get_popular'),
+            **AUTHENTICATED_NORMALUSER_HEADERS,
+            content_type="application/json"
+        )
+        
+        self.assertEquals(response.status_code, 200)
+    
+    def test_403_code(self):
+        response = self.client.get(
+            reverse('get_popular'),
+            **UNAUTHENTICATED_NORMALUSER_HEADERS,
+            content_type="application/json"
+        )
+        
+        self.assertEquals(response.status_code, 403)
+
+class NewTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+
+    def test_post_200_code(self):
+        response = self.client.get(
+            reverse('get_new'),
+            **AUTHENTICATED_NORMALUSER_HEADERS,
+            content_type="application/json"
+        )
+        
+        self.assertEquals(response.status_code, 200)
+    
+    def test_403_code(self):
+        response = self.client.get(
+            reverse('get_new'),
+            **UNAUTHENTICATED_NORMALUSER_HEADERS,
+            content_type="application/json"
+        )
+        
+        self.assertEquals(response.status_code, 403)
+
+class ForYouTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+
+    def test_post_200_code(self):
+        response = self.client.get(
+            reverse('get_for_you'),
+            **AUTHENTICATED_NORMALUSER_HEADERS,
+            content_type="application/json"
+        )
+        
+        self.assertEquals(response.status_code, 200)
+    
+    def test_403_code(self):
+        response = self.client.get(
+            reverse('get_for_you'),
+            **UNAUTHENTICATED_NORMALUSER_HEADERS,
+            content_type="application/json"
+        )
+        
+        self.assertEquals(response.status_code, 403)
