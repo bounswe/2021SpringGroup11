@@ -348,18 +348,14 @@ class HttpService {
     }
   }
 
-  Future<List<Path>> searchPath(String pathName) async {
+  Future<List<BasicPath>> searchPath(String pathName) async {
     String url = baseUrl + '/path/search-path/$pathName/';
     Response res = await get(Uri.parse(url), headers: headers);
     if (res.statusCode == 200) {
-      var input = jsonDecode(res.body);
-      List<Path> result = [];
-      for (var inputLocal in jsonDecode(res.body)) {
-        result.add(processPath(inputLocal));
-      }
-
-      print(result);
-      return (result);
+      Iterable l = json.decode(res.body);
+      List<BasicPath> basicPaths =
+          l.map((json) => BasicPath.fromJSON(json)).toList();
+      return basicPaths;
     } else {
       throw Exception(res.body);
     }

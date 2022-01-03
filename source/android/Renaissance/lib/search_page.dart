@@ -29,7 +29,7 @@ class _SearchPageState extends State<SearchPage> {
       var users = await HttpService.shared.searchUser(_keyword);
       setState(() {
         _topics = topics;
-        //_paths = paths;
+        _paths = paths;
         _users = users;
       });
     }
@@ -97,10 +97,10 @@ class _SearchPageState extends State<SearchPage> {
           )),
       body: ListView(
         children: [
-          // if (_paths.isNotEmpty)
-          //   ...(_paths as List<BasicPath>).map((path) {
-          //     return CourseContainer(key: Key(path.id!), path: path);
-          //   }).toList(),
+          if (_paths.isNotEmpty)
+            ...(_paths as List<BasicPath>).map((path) {
+              return CourseContainer(key: Key(path.id!), path: path);
+            }).toList(),
           if (_topics.isNotEmpty)
             ...(_topics as List<Tag>).map((tag) {
               return TagContainer(key: Key(tag.id!), tag: tag);

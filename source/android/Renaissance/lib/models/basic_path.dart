@@ -10,7 +10,7 @@ class BasicPath {
         title: json['title'],
         id: json['_id'],
         photo: json['photo'],
-        effort: json['effort'] as double,
-        rating: json['rating'] as double);
+        effort: json['effort'],
+        rating: json['rating']);
   }
 }
