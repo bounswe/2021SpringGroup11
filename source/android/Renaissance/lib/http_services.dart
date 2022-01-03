@@ -181,6 +181,18 @@ class HttpService {
     return false;
   }
 
+  Future<bool> finish_path(String username, String id) async {
+    String url = baseUrl + '/path/finish-path/';
+    Response res = await post(Uri.parse(url),
+        headers: headers,
+        body:
+        jsonEncode({'username': username, 'path_id': id}));
+    if (res.statusCode == 200) {
+      return true;
+    }
+    return false;
+  }
+
   Future<bool> effort_path(String username, String id, double value) async {
     String url = baseUrl + '/path/effort-path/';
     Response res = await post(Uri.parse(url),

@@ -34,7 +34,7 @@ class _CourseContainerState extends State<CourseContainer> {
       isLoading = false;
     });
   }
-
+  bool isButtonLoading = false;
   @override
   Widget build(BuildContext context) {
     if(!isLoading && _image == null) {
@@ -51,8 +51,13 @@ class _CourseContainerState extends State<CourseContainer> {
         children: [
           InkWell(
               onTap: () async{
-
+                setState(() {
+                  isButtonLoading = true;
+                });
                 Path p= await HttpService.shared.getPath(widget.path.id!);
+                setState(() {
+                  isButtonLoading = false;
+                });
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => PathPage(p:p)),
@@ -64,7 +69,7 @@ class _CourseContainerState extends State<CourseContainer> {
                 decoration: BoxDecoration(
                     color: MyColors.blue,
                     borderRadius: BorderRadius.circular(15)),
-                child: Row(
+                child: isButtonLoading?CircularProgressIndicator(color: Colors.deepOrangeAccent,):Row(
                   children: [
                     ClipRRect(
                       borderRadius: BorderRadius.circular(15),

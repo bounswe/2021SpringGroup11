@@ -27,6 +27,7 @@ class PathPage extends StatefulWidget {
 
 class _PathPageState extends State<PathPage> {
   bool isLoading = false;
+
   var _image;
 
   void loadPhoto() async {
@@ -41,6 +42,9 @@ class _PathPageState extends State<PathPage> {
       isLoading = false;
     });
   }
+  bool isButtonEffortLoading = false;
+  bool isButtonRateLoading = false;
+  bool isButtonFinishLoading = false;
 
   bool isFavChanged = false;
   bool isEnrollChanged = false;
@@ -154,21 +158,21 @@ class _PathPageState extends State<PathPage> {
                                             children: <TextSpan>[
                                           TextSpan(
                                               text:
-                                                  widget.p!.rating!.toString(),
+                                                  widget.p!.rating!.toStringAsFixed(2),
                                               style: TextStyle(
                                                   fontSize: 14,
                                                   color: Colors.black))
                                         ])),
                                     RichText(
                                         text: TextSpan(
-                                            text: 'Effort: ',
+                                            text: 'Difficulty: ',
                                             style: TextStyle(
                                                 fontSize: 14,
                                                 color: Colors.deepOrange),
                                             children: <TextSpan>[
                                           TextSpan(
                                               text:
-                                                  widget.p!.effort!.toString(),
+                                                  widget.p!.effort!.toStringAsFixed(2),
                                               style: TextStyle(
                                                   fontSize: 14,
                                                   color: Colors.black))
@@ -389,138 +393,240 @@ class _PathPageState extends State<PathPage> {
                                   onTap: () {
                                     showDialog(
                                       context: context,
-                                      builder: (BuildContext context) => Dialog(
-                                        child: Container(
-                                          child: ListView(
-                                            shrinkWrap: true,
-                                            children: [
-                                              SizedBox(height: 20),
-                                              /*Container(padding: EdgeInsets.all(15),child:Text('Favorited: 1231',)),
+                                      builder: (BuildContext context) {
+                                        return StatefulBuilder(builder: (context, StateSetter setState) {
+                                          return Dialog(
+                                            child: Container(
+                                              child: ListView(
+                                                shrinkWrap: true,
+                                                children: [
+                                                  SizedBox(height: 20),
+                                                  /*Container(padding: EdgeInsets.all(15),child:Text('Favorited: 1231',)),
                                                 Container(padding: EdgeInsets.all(15),child:Text('Favorited: 1231',)),
                                                 Container(padding: EdgeInsets.all(15),child:Text('Favorited: 1231',)),
                                                 Container(padding: EdgeInsets.all(15),child:Text('Favorited: 1231',)),*/
-                                              Container(
-                                                  padding: EdgeInsets.symmetric(
-                                                      horizontal: 30,
-                                                      vertical: 10),
-                                                  child: SpinBox(
-                                                      min: 1.0,
-                                                      max: 10.0,
-                                                      value: 5.0,
-                                                      decimals: 1,
-                                                      step: 0.1,
-                                                      onChanged: (value) => {
+                                                  Container(
+                                                      padding: EdgeInsets.symmetric(
+                                                          horizontal: 30,
+                                                          vertical: 10),
+                                                      child: SpinBox(
+                                                          min: 1.0,
+                                                          max: 10.0,
+                                                          value: 5.0,
+                                                          decimals: 1,
+                                                          step: 0.1,
+                                                          onChanged: (value) => {
                                                             setState(() {
                                                               rating = value;
                                                             })
                                                           })),
-                                              ElevatedButton(
-                                                style: ElevatedButton.styleFrom(
-                                                  fixedSize: Size(
-                                                      MediaQuery.of(context)
+                                                  ElevatedButton(
+                                                    style: ElevatedButton.styleFrom(
+                                                      fixedSize: Size(
+                                                          MediaQuery.of(context)
                                                               .size
                                                               .width *
-                                                          0.3,
-                                                      15),
-                                                  shape: StadiumBorder(),
-                                                  onPrimary: Colors.white,
-                                                ),
-                                                child: Text('Rate Path'),
-                                                onPressed: () async {
-                                                  try {
-                                                    var response =
+                                                              0.3,
+                                                          15),
+                                                      shape: StadiumBorder(),
+                                                      onPrimary: Colors.white,
+                                                    ),
+                                                    child: isButtonRateLoading?CircularProgressIndicator(color:Colors.deepOrangeAccent):Text('Rate Path'),
+                                                    onPressed: () async {
+                                                      try {
+                                                        setState(() {
+                                                          isButtonRateLoading=true;
+                                                        });
+                                                        var response =
                                                         await HttpService
                                                             .shared
                                                             .rate_path(
-                                                                User.me!
-                                                                    .username!,
-                                                                widget.p!.id!,
-                                                                rating);
-                                                    if (!response) {
-                                                      ScaffoldMessenger.of(
+                                                            User.me!
+                                                                .username!,
+                                                            widget.p!.id!,
+                                                            rating);
+                                                        setState(() {
+                                                          isButtonRateLoading=false;
+                                                        });
+                                                        if (!response) {
+                                                          ScaffoldMessenger.of(
                                                               context)
-                                                          .showSnackBar(
+                                                              .showSnackBar(
                                                               SnackBar(
-                                                        content: Text(
-                                                          'An error occured please try again later.',
-                                                          style: TextStyle(
-                                                              decorationColor:
-                                                                  Colors
-                                                                      .greenAccent,
-                                                              fontSize: 25,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold),
-                                                        ),
-                                                      ));
-                                                      return;
-                                                    }
-                                                  } on Exception catch (error) {}
-                                                },
-                                              ),
-                                              Container(
-                                                  padding: EdgeInsets.symmetric(
-                                                      horizontal: 30,
-                                                      vertical: 10),
-                                                  child: SpinBox(
-                                                      min: 1.0,
-                                                      max: 10.0,
-                                                      value: 5.0,
-                                                      decimals: 1,
-                                                      step: 0.1,
-                                                      onChanged: (value) => {
+                                                                content: Text(
+                                                                  'An error occured please try again later.',
+                                                                  style: TextStyle(
+                                                                      decorationColor:
+                                                                      Colors
+                                                                          .greenAccent,
+                                                                      fontSize: 25,
+                                                                      fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                                ),
+                                                              ));
+                                                          return;
+                                                        }
+                                                      } on Exception catch (error) {
+                                                        setState(() {
+                                                          isButtonRateLoading=false;
+                                                        });
+                                                      }
+                                                    },
+                                                  ),
+                                                  Container(
+                                                      padding: EdgeInsets.symmetric(
+                                                          horizontal: 30,
+                                                          vertical: 10),
+                                                      child: SpinBox(
+                                                          min: 1.0,
+                                                          max: 10.0,
+                                                          value: 5.0,
+                                                          decimals: 1,
+                                                          step: 0.1,
+                                                          onChanged: (value) => {
                                                             setState(() {
                                                               effort = value;
                                                             })
                                                           })),
-                                              ElevatedButton(
-                                                style: ElevatedButton.styleFrom(
-                                                  fixedSize: Size(
-                                                      MediaQuery.of(context)
+                                                  ElevatedButton(
+                                                    style: ElevatedButton.styleFrom(
+                                                      fixedSize: Size(
+                                                          MediaQuery.of(context)
                                                               .size
                                                               .width *
-                                                          0.3,
-                                                      15),
-                                                  shape: StadiumBorder(),
-                                                  onPrimary: Colors.white,
-                                                ),
-                                                child: Text('Rate Effort'),
-                                                onPressed: () async {
-                                                  try {
-                                                    var response =
+                                                              0.3,
+                                                          15),
+                                                      shape: StadiumBorder(),
+                                                      onPrimary: Colors.white,
+                                                    ),
+                                                    child: isButtonEffortLoading?CircularProgressIndicator(color:Colors.deepOrangeAccent):Text('Rate Difficulty'),
+                                                    onPressed: () async {
+                                                      try {
+                                                        setState(() {
+                                                          isButtonEffortLoading=true;
+                                                        });
+                                                        var response =
                                                         await HttpService
                                                             .shared
                                                             .effort_path(
-                                                                User.me!
-                                                                    .username!,
-                                                                widget.p!.id!,
-                                                                effort);
-                                                    if (!response) {
-                                                      ScaffoldMessenger.of(
+                                                            User.me!
+                                                                .username!,
+                                                            widget.p!.id!,
+                                                            effort);
+                                                        setState(() {
+                                                          isButtonEffortLoading=false;
+                                                        });
+                                                        if (!response) {
+
+                                                          ScaffoldMessenger.of(
                                                               context)
-                                                          .showSnackBar(
+                                                              .showSnackBar(
                                                               SnackBar(
-                                                        content: Text(
-                                                          'An error occured please try again later.',
-                                                          style: TextStyle(
-                                                              decorationColor:
-                                                                  Colors
-                                                                      .greenAccent,
-                                                              fontSize: 25,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold),
-                                                        ),
-                                                      ));
-                                                      return;
-                                                    }
-                                                  } on Exception catch (error) {}
-                                                },
+                                                                content: Text(
+                                                                  'An error occured please try again later.',
+                                                                  style: TextStyle(
+                                                                      decorationColor:
+                                                                      Colors
+                                                                          .greenAccent,
+                                                                      fontSize: 25,
+                                                                      fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                                ),
+                                                              ));
+                                                          return;
+                                                        }
+                                                      } on Exception catch (error) {
+                                                        setState(() {
+                                                          isButtonEffortLoading=false;
+                                                        });
+                                                      }
+                                                    },
+                                                  ),
+                                                  ElevatedButton(
+                                                    style: ElevatedButton.styleFrom(
+                                                      fixedSize: Size(
+                                                          MediaQuery.of(context)
+                                                              .size
+                                                              .width *
+                                                              0.3,
+                                                          15),
+                                                      shape: StadiumBorder(),
+                                                      onPrimary: Colors.white,
+                                                    ),
+                                                    child: isButtonFinishLoading?CircularProgressIndicator(color:Colors.deepOrangeAccent):Text('Finish Path'),
+                                                    onPressed: () async {
+                                                      try {
+                                                        setState(() {
+                                                          isButtonFinishLoading=true;
+                                                        });
+                                                        var response =
+                                                        await HttpService
+                                                            .shared
+                                                            .finish_path(
+                                                            User.me!
+                                                                .username!,
+                                                            widget.p!.id!
+                                                        );
+                                                        if (!response) {
+                                                          setState(() {
+                                                            isButtonFinishLoading=false;
+                                                          });
+                                                          ScaffoldMessenger.of(
+                                                              context)
+                                                              .showSnackBar(
+                                                              SnackBar(
+                                                                content: Text(
+                                                                  'An error occured please try again later.',
+                                                                  style: TextStyle(
+                                                                      decorationColor:
+                                                                      Colors
+                                                                          .greenAccent,
+                                                                      fontSize: 25,
+                                                                      fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                                ),
+                                                              ));
+                                                          return;
+                                                        }
+                                                        else{
+                                                          setState(() {
+                                                            isButtonFinishLoading=false;
+                                                          });
+                                                          ScaffoldMessenger.of(
+                                                              context)
+                                                              .showSnackBar(
+                                                              SnackBar(
+                                                                content: Text(
+                                                                  'Successfully finished',
+                                                                  style: TextStyle(
+                                                                      decorationColor:
+                                                                      Colors
+                                                                          .greenAccent,
+                                                                      fontSize: 25,
+                                                                      fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                                ),
+                                                              ));
+                                                          return;
+                                                        }
+                                                      } on Exception catch (error) {
+                                                        setState(() {
+                                                          isButtonFinishLoading=false;
+                                                        });
+                                                      }
+                                                    },
+                                                  ),
+                                                ],
                                               ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
+                                            ),
+                                          );
+                                        }
+                                        );}
+
                                     );
                                   },
                                   child: Container(
