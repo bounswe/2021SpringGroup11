@@ -25,7 +25,7 @@ class _SearchPageState extends State<SearchPage> {
   Widget build(BuildContext context) {
     void _search() async {
       var topics = await HttpService.shared.searchTopic(_keyword);
-      //var paths = await HttpService.shared.searchPath(_keyword);
+      var paths = await HttpService.shared.searchPath(_keyword);
       var users = await HttpService.shared.searchUser(_keyword);
       setState(() {
         _topics = topics;

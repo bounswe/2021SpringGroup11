@@ -343,11 +343,15 @@ class HttpService {
     }
   }
 
-  Future<List<Object>> searchPath(String pathName) async {
+  Future<List<dynamic>> searchPath(String pathName) async {
     String url = baseUrl + '/path/search-path/$pathName/';
     Response res = await get(Uri.parse(url), headers: headers);
 
     if (res.statusCode == 200) {
+      for (var i in jsonDecode(res.body)) {
+        print(i);
+      }
+
       print(jsonDecode(res.body));
       return (jsonDecode(res.body));
     } else {
