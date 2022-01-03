@@ -16,6 +16,8 @@ import 'package:portakal/widget/profile_stats_widget.dart';
 import 'package:portakal/widget/profile_follow_widget.dart';
 import 'package:portakal/widget/course_container.dart';
 
+import 'models/basic_path.dart';
+
 class ProfilePage extends StatefulWidget {
   User user;
   ProfilePage({ Key? key, required this.user }): super(key: key);
@@ -29,15 +31,8 @@ class _ProfilePageState extends State<ProfilePage> with EditProfileDelegate, Fol
   late Future<List<BasicPath>> favPaths = HttpService.shared.getFavouritePaths(widget.user.username!);
   late Future<List<BasicPath>> enrolledPaths = HttpService.shared.getEnrolledPaths(widget.user.username!);
 
-  var paths = [
-    BasicPath(title: "Exxen", rating: 5.0, effort: 8.0),
-    BasicPath(title: "Netflix", rating: 5.0, effort: 8.0),
-    BasicPath(title: "Gemlik", rating: 5.0, effort: 8.0),
-    BasicPath(title: "Zeytin", rating: 5.0, effort: 8.0),
-  ];
   bool loadingImage = false;
   File? profileImg;
-  // https://stackoverflow.com/questions/62156996/how-to-decode-base64-string-to-image-file-with-flutter?rq=1 profil fotosu yukleme yap.
 
   void loadPhoto() async {
     if (User.me!.photo == null || User.me!.photo == "") { return ; }
@@ -81,7 +76,7 @@ class _ProfilePageState extends State<ProfilePage> with EditProfileDelegate, Fol
                           child: Image.file(profileImg!, width: 64, height: 64, fit: BoxFit.fitHeight,),
                           borderRadius: BorderRadius.circular(32.0),
                         ),
-                        StatsWidget(0,0,0)
+                        StatsWidget(55, 20, widget.user.finishedResourceCount!)
                       ]
                   ),
                   Row(
@@ -131,7 +126,7 @@ class _ProfilePageState extends State<ProfilePage> with EditProfileDelegate, Fol
                                 borderRadius: BorderRadius.all(Radius.circular(50.0))
                             ),
                             child: Center(
-                                child: FollowerWidget(31, 31, this)
+                                child: FollowerWidget(52, 91, this)
                             ),
                             margin: EdgeInsets.only(top: 10)
                         ),
@@ -166,74 +161,73 @@ class _ProfilePageState extends State<ProfilePage> with EditProfileDelegate, Fol
               )
           ),
           InkWell(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
+              child: const Padding(
+                padding: EdgeInsets.all(8.0),
                 child: Text('Favourite Paths',
                     style: TextStyle(fontSize: 14,decoration: TextDecoration.underline, fontWeight: FontWeight.bold, color: Colors.lightBlue)),
               ),
               onTap: () {},
           ),
-          Padding(
-              padding: const EdgeInsets.symmetric(vertical:0,horizontal:10),
-              child:Text('No Favourite Paths Yet.',
-                  style: TextStyle(fontSize: 14, fontStyle: FontStyle.italic))
-          ),
           FutureBuilder<List<BasicPath>>(
             future: favPaths,
             builder: (context, snapshot) {
               if (snapshot.hasData == false) {
-                return SizedBox(
-                  child: CircularProgressIndicator(),
-                  height: 50.0,
-                  width: 50.0,
-                );;
+                return const Padding(
+                    padding: EdgeInsets.symmetric(vertical:0,horizontal:10),
+                    child: Text('No Favourite Paths Yet.',
+                        style: TextStyle(fontSize: 14, fontStyle: FontStyle.italic))
+                );
               } else {
-                return ListView.builder(
-                  physics: BouncingScrollPhysics(),
-                  itemCount: snapshot.data!.length,
-                  itemBuilder: (context, index) {
-                    BasicPath path = snapshot.data![index];
-                    return CourseContainer(path: path);
-                  },
+                return Container(
+                  height: 80.0,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    physics: const BouncingScrollPhysics(),
+                    itemCount: snapshot.data!.length,
+                    itemBuilder: (context, index) {
+                      BasicPath path = snapshot.data![index];
+                      path.isFollowed = true;
+                      return CourseContainer(path: path);
+                    },
+                  ),
                 );
               }
             }
           ),
           InkWell(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
+              child: const Padding(
+                padding: EdgeInsets.all(8.0),
                 child: Text('Enrolled Paths',
                     style: TextStyle(fontSize: 14,decoration: TextDecoration.underline, fontWeight: FontWeight.bold, color: Colors.lightBlue)),
               ),
               onTap: () {}
           ),
-          Padding(
-          padding: const EdgeInsets.symmetric(vertical:0,horizontal:10),
-          child:Text('No Enrolled Paths Yet.',
-              style: TextStyle(fontSize: 14, fontStyle: FontStyle.italic))
-          ),
+
           FutureBuilder<List<BasicPath>>(
               future: enrolledPaths,
               builder: (context, snapshot) {
                 if (snapshot.hasData == false) {
-                  return SizedBox(
-                    child: CircularProgressIndicator(),
-                    height: 50.0,
-                    width: 50.0,
+                  return const Padding(
+                      padding: EdgeInsets.symmetric(vertical:0,horizontal:10),
+                      child: Text('No Enrolled Paths Yet.',
+                          style: TextStyle(fontSize: 14, fontStyle: FontStyle.italic))
                   );
                 } else {
-                  print(snapshot.data!);
-                  return ListView.builder(
-                    physics: BouncingScrollPhysics(),
-                    itemCount: snapshot.data!.length,
-                    itemBuilder: (context, index) {
-                      BasicPath path = snapshot.data![index];
-                      return CourseContainer(path: path);
-                    },
+                  return Container(
+                    height: 80.0,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      physics: BouncingScrollPhysics(),
+                      itemCount: snapshot.data!.length,
+                      itemBuilder: (context, index) {
+                        BasicPath path = snapshot.data![index];
+                        return CourseContainer(path: path);
+                      },
+                    ),
                   );
                 }
               }
-          ),
+          )
         ],
       ),
     );
@@ -241,8 +235,12 @@ class _ProfilePageState extends State<ProfilePage> with EditProfileDelegate, Fol
 
   Future<void> _pullRefresh() async {
     User user = await HttpService.shared.getUser(widget.user.username!);
+    Future<List<BasicPath>> favPaths = HttpService.shared.getFavouritePaths(widget.user.username!);
+    Future<List<BasicPath>> enrolledPaths = HttpService.shared.getEnrolledPaths(widget.user.username!);
     setState(() {
       widget.user = user;
+      this.favPaths = HttpService.shared.getFavouritePaths(widget.user.username!);
+      this.enrolledPaths = HttpService.shared.getEnrolledPaths(widget.user.username!);
     });
   }
   @override

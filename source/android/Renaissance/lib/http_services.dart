@@ -181,6 +181,16 @@ class HttpService {
     return false;
   }
 
+  Future<bool> finish_path(String username, String id) async {
+    String url = baseUrl + '/path/finish-path/';
+    Response res = await post(Uri.parse(url),
+        headers: headers,
+        body:
+        jsonEncode({'username': username, 'path_id': id}));
+      return res.statusCode == 200;
+    
+  }
+
   Future<bool> effort_path(String username, String id, double value) async {
     String url = baseUrl + '/path/effort-path/';
     Response res = await post(Uri.parse(url),
@@ -350,6 +360,8 @@ class HttpService {
   }
 
   Future<List<Tag>> searchTopic(String topicName) async {
+    topicName = topicName.replaceAll(" ", "-");
+    print(topicName);
     String url = baseUrl + '/topic/search-topic/$topicName/';
     Response res = await get(Uri.parse(url), headers: headers);
 
