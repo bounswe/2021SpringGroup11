@@ -5,13 +5,13 @@ import 'package:portakal/my_colors.dart';
 
 class TagContainer extends StatefulWidget {
   TagContainer({Key? key,this.tag}): super(key:key);
-  var tag;
+  Tag? tag;
   @override
   State<TagContainer> createState() => _TagContainerState();
 }
 
 class _TagContainerState extends State<TagContainer> {
-  late var isFav = widget.tag.isFav;
+  late var isFav = widget.tag!.isFav!;
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -19,10 +19,11 @@ class _TagContainerState extends State<TagContainer> {
           setState(() {
            isFav = !isFav;
           });
+
           if (isFav) {
-            HttpService.shared.favoriteTopic(widget.tag.id);
+            HttpService.shared.favoriteTopic(int.parse(widget.tag!.id!));
           } else {
-            HttpService.shared.unfavoriteTopic(widget.tag.id);
+            HttpService.shared.unfavoriteTopic(int.parse(widget.tag!.id!));
           }
         },
         child: Container(
@@ -36,7 +37,7 @@ class _TagContainerState extends State<TagContainer> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Text(widget.tag.name!,
+                  Text(widget.tag!.name!,
                       overflow: TextOverflow.clip,
                       maxLines: 1,
                       textAlign: TextAlign.center,

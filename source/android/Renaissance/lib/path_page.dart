@@ -3,8 +3,10 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:portakal/file_converter.dart';
 import 'package:portakal/http_services.dart';
+import 'package:portakal/models/basic_path.dart';
 import 'package:portakal/models/user.dart';
 import 'package:portakal/my_colors.dart';
+import 'package:portakal/topic_page.dart';
 import 'package:portakal/widget/comment_box.dart';
 import 'package:portakal/models/path.dart';
 import 'package:portakal/widget/profile_stats_widget.dart';
@@ -16,6 +18,8 @@ import 'package:flutter_spinbox/material.dart'; // or flutter_spinbox.dart for b
 import 'package:portakal/models/topic_model.dart';
 import 'package:portakal/models/milestone_model.dart';
 import 'package:portakal/models/path.dart';
+
+import 'models/tag.dart';
 
 class PathPage extends StatefulWidget {
   final Path? p;
@@ -208,8 +212,15 @@ class _PathPageState extends State<PathPage> {
                                                 buttonColor: Colors.orange,
                                                 child: RaisedButton(
                                                   shape: StadiumBorder(),
-                                                  onPressed: () {
-                                                    print(topic.ID);
+                                                  onPressed: () async{
+                                                    Tag temp_t= await HttpService.shared.getTopic(topic.ID!.toString());
+                                                    List<Tag> list_t= await HttpService.shared.getTopicList(topic.ID!.toString());
+                                                    List<BasicPath> list_p= await HttpService.shared.getPathList(topic.ID!.toString());
+
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(builder: (context) => TopicPage(t:temp_t,tags:list_t,paths: list_p,)),
+                                                    );
                                                   },
                                                   child: Text(topic.name!),
                                                 ),
