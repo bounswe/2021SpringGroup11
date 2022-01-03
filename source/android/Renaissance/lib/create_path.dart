@@ -68,7 +68,7 @@ class _CreatePathPageState extends State<CreatePathPage> {
     });
   }
 
-  void _searchTopic() async {
+  Future<dynamic> _searchTopic() async {
     List<Tag> resultTags =
         await HttpService.shared.searchTopic(topicController.text.trim());
 
@@ -491,7 +491,6 @@ class _CreatePathPageState extends State<CreatePathPage> {
                           "type": _typeOfController[i],
                         });
                       }
-                      print(items);
 
                       List<String> splitted = topicController.text.split(",");
 
