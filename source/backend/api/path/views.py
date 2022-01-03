@@ -361,7 +361,7 @@ class FinishPath(APIView): #Caution: this endpoint marks the whole path as finis
 
             act_id=db.insert_one("activitystreams",
                                  activitystreams.activity_format(
-                                     summary=f'{username} finished the path {title}.',
+                                     summary=f'{username} finished the path {path["title"]}.',
                                      username=username,
                                      obj_id=path_id,
                                      obj_name=path["title"],
