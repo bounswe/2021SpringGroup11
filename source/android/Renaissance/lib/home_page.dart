@@ -190,73 +190,24 @@ class _HomePageState extends State<HomePage> {
     ];
     return Scaffold(
       appBar: AppBar(
-          backgroundColor: MyColors.blue,
-          leading: Image(
-            image: AssetImage('assets/logoOnly.png'),
+        backgroundColor: MyColors.blue,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            bottom: Radius.circular(20),
           ),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(
-              bottom: Radius.circular(20),
+        ),
+        title: Center(
+          child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+            Image(
+              image: AssetImage('assets/logoOnly.png'),
             ),
-          ),
-          title: Container(
-            height: 40,
-            margin: EdgeInsets.only(right: 10),
-            decoration: BoxDecoration(
-              color: Colors.transparent,
-              borderRadius: BorderRadius.circular(10),
-              border: Border.all(
-                color: Colors.white,
-                width: 1,
-              ),
-            ),
-            child: Center(
-              child: TextField(
-                // onTap: () {
-                //   showSearch(
-                //     context: context,
-                //     delegate: CustomSearchDelegate(),
-                //   );
-                // },
-                onSubmitted: (value) async {
-                  try {
-                    print(value);
-                    _results = await HttpService.shared.searchUser(value);
-                    print(_results);
-                    Navigator.pushNamed(context, "/search",
-                        arguments: _results);
-                  } on Exception catch (error) {
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text(
-                        '$error',
-                        style: TextStyle(
-                            decorationColor: Colors.greenAccent,
-                            fontSize: 25,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ));
-                  }
-                },
-
-                //onSubmitted: (value) =>
-                //    {_results = HttpService.shared.searchUser(value)},
-                style: TextStyle(
-                  color: Colors.white,
-                ),
-                decoration: InputDecoration(
-                    prefixIcon: Icon(
-                      Icons.search,
-                      color: Colors.white,
-                    ),
-                    hintText: 'Find something',
-                    hintStyle: TextStyle(
-                      color: Colors.white,
-                      fontStyle: FontStyle.italic,
-                    ),
-                    border: InputBorder.none),
-              ),
-            ),
-          )),
+            Text(
+              "Renaissance",
+              style: TextStyle(fontStyle: FontStyle.italic, fontSize: 24),
+            )
+          ]),
+        ),
+      ),
       body: ListView(
         physics: BouncingScrollPhysics(),
         children: [
@@ -313,52 +264,5 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
     );
-  }
-}
-
-// Future<List<String>> fetch(String query) async {
-//   final results = await HttpService.shared.searchUser(query);
-//   return results;
-// }
-
-class CustomSearchDelegate extends SearchDelegate {
-  @override
-  List<Widget> buildActions(BuildContext context) {
-    return [
-      IconButton(
-        icon: Icon(Icons.clear),
-        onPressed: () {
-          query = '';
-        },
-      ),
-    ];
-  }
-
-  @override
-  Widget buildLeading(BuildContext context) {
-    return IconButton(
-      icon: Icon(Icons.arrow_back),
-      onPressed: () {
-        close(context, null);
-      },
-    );
-  }
-
-  @override
-  Widget buildResults(BuildContext context) {
-    // TODO: implement buildResults
-    var page = SearchPage();
-
-    //fetch(query).then((value) => {page.usernames = value});
-    //final results = "";
-    //Navigator.pushNamed(context, "/search", arguments: results);
-
-    return SearchPage();
-  }
-
-  @override
-  Widget buildSuggestions(BuildContext context) {
-    // TODO: implement buildSuggestions
-    return Scaffold();
   }
 }
