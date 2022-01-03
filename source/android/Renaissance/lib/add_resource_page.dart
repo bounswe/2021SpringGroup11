@@ -10,8 +10,8 @@ class AddResourcePage extends StatefulWidget {
 }
 
 class _AddResourcePageState extends State<AddResourcePage> {
-  TextEditingController descriptionController = TextEditingController();
-  TextEditingController linkController = TextEditingController();
+  TextEditingController _descriptionController = TextEditingController();
+  TextEditingController _linkController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +46,7 @@ class _AddResourcePageState extends State<AddResourcePage> {
                   fontSize: 14.0,
                   fontWeight: FontWeight.w400
                 ),
-                controller: descriptionController
+                controller: _descriptionController
               ),
               SizedBox(height: 20,),
               Text(
@@ -65,7 +65,7 @@ class _AddResourcePageState extends State<AddResourcePage> {
                       fontSize: 14.0,
                       fontWeight: FontWeight.w400
                   ),
-                  controller: linkController,
+                  controller: _linkController,
               ),
               SizedBox(height: 20,),
               Align(
