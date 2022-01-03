@@ -725,5 +725,6 @@ class AddResource(APIView):
                     }
                 }
             )
-        
-        return Response('SUCCESS')
+
+        return Response('SUCCESSFUL')
+
