@@ -259,7 +259,7 @@ class _HomePageState extends State<HomePage> {
             color: Colors.grey.shade300,
           ),
           ...(paths[_pageIndex]["paths"] as List<BasicPath>).map((path) {
-            return CourseContainer(key: Key(path.id!), path: path);
+            return CourseContainer(key: Key(path.id), path: path);
           }).toList(),
         ],
       ),

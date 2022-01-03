@@ -121,7 +121,7 @@ class _PathPageState extends State<PathPage> {
                             child: Column(
                               children: [
                                 Text(
-                                  widget.p!.title!,
+                                  widget.p!.title,
                                   overflow: TextOverflow.ellipsis,
                                   softWrap: true,
                                   maxLines: 2,
@@ -134,7 +134,7 @@ class _PathPageState extends State<PathPage> {
                                   height: 5,
                                 ),
                                 Text(
-                                  'Creator: ' + widget.p!.creator_username!,
+                                  'Creator: ' + widget.p!.creator_username,
                                   overflow: TextOverflow.ellipsis,
                                   softWrap: true,
                                   maxLines: 2,
@@ -158,7 +158,7 @@ class _PathPageState extends State<PathPage> {
                                             children: <TextSpan>[
                                           TextSpan(
                                               text:
-                                                  widget.p!.rating!.toStringAsFixed(2),
+                                                  widget.p!.rating.toStringAsFixed(2),
                                               style: TextStyle(
                                                   fontSize: 14,
                                                   color: Colors.black))
@@ -172,7 +172,7 @@ class _PathPageState extends State<PathPage> {
                                             children: <TextSpan>[
                                           TextSpan(
                                               text:
-                                                  widget.p!.effort!.toStringAsFixed(2),
+                                                  widget.p!.effort.toStringAsFixed(2),
                                               style: TextStyle(
                                                   fontSize: 14,
                                                   color: Colors.black))
@@ -252,7 +252,7 @@ class _PathPageState extends State<PathPage> {
                                 // for Vertical scrolling
                                 scrollDirection: Axis.vertical,
                                 child: Text(
-                                  widget.p!.description!,
+                                  widget.p!.description,
                                   style: TextStyle(
                                       fontSize: 14,
                                       height: 1.2,
@@ -279,7 +279,7 @@ class _PathPageState extends State<PathPage> {
                                 try {
                                   var response = await HttpService.shared
                                       .enroll(
-                                          User.me!.username!, widget.p!.id!);
+                                          User.me!.username!, widget.p!.id);
                                   if (!response) {
                                     ScaffoldMessenger.of(context)
                                         .showSnackBar(SnackBar(
@@ -298,7 +298,7 @@ class _PathPageState extends State<PathPage> {
                                 try {
                                   var response = await HttpService.shared
                                       .unenroll(
-                                          User.me!.username!, widget.p!.id!);
+                                          User.me!.username!, widget.p!.id);
                                   if (!response) {
                                     ScaffoldMessenger.of(context)
                                         .showSnackBar(SnackBar(
@@ -327,7 +327,7 @@ class _PathPageState extends State<PathPage> {
                                       try {
                                         var response = await HttpService.shared
                                             .fav_path(User.me!.username!,
-                                                widget.p!.id!);
+                                                widget.p!.id);
                                         if (!response) {
                                           ScaffoldMessenger.of(context)
                                               .showSnackBar(SnackBar(
@@ -347,7 +347,7 @@ class _PathPageState extends State<PathPage> {
                                       try {
                                         var response = await HttpService.shared
                                             .unfav_path(User.me!.username!,
-                                                widget.p!.id!);
+                                                widget.p!.id);
                                         if (!response) {
                                           ScaffoldMessenger.of(context)
                                               .showSnackBar(SnackBar(
@@ -443,7 +443,7 @@ class _PathPageState extends State<PathPage> {
                                                             .rate_path(
                                                             User.me!
                                                                 .username!,
-                                                            widget.p!.id!,
+                                                            widget.p!.id,
                                                             rating);
                                                         setState(() {
                                                           isButtonRateLoading=false;
@@ -663,7 +663,7 @@ class _PathPageState extends State<PathPage> {
               body: TabBarView(
                 children: [
                   ListView(physics: BouncingScrollPhysics(), children: [
-                    ...(widget.p!.milestones! as List<Milestonee>)
+                    ...(widget.p!.milestones as List<Milestonee>)
                         .map((milestone) {
                       return MilestoneContainer(milestone.id!, milestone.title!,
                           milestone.body!, milestone.isFinished!);
