@@ -2,10 +2,7 @@ from django.test import TestCase, Client
 from django.urls import reverse
 from heybooster.helpers.database.mongodb import MongoDBHelper
 from django.conf import settings
-
-import time
 import random
-from authentication.utils import create_jwt
 
 
 class SignupTests(TestCase):
