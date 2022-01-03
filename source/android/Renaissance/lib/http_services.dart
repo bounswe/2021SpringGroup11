@@ -261,16 +261,7 @@ class HttpService {
 
     if (res.statusCode == 200) {
       var temp = jsonDecode(res.body);
-      /*List<Milestonee> milestoness = [];
-      List<Topic> topicss = [];
 
-      (temp["milestones"]).map((tag) {
-        milestoness.add(Milestonee.fromJson(tag));
-      }).toList();
-
-      (temp["topics"]).map((tag) {
-        topicss.add(Topic.fromJson(tag));
-      }).toList();*/
       return Tag(
           id: topic_id,
           description: temp['description'],
@@ -286,9 +277,9 @@ class HttpService {
     Response res = await get(Uri.parse(url), headers: headers);
     if (res.statusCode == 200) {
       Iterable l = json.decode(res.body);
-      List<Tag> basicPaths =
+      List<Tag> topics =
       l.map((json) => Tag.fromSpecialJSON(json)).toList();
-      return basicPaths;
+      return topics;
     } else {
       throw Exception(res.body);
     }
