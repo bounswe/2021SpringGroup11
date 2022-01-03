@@ -73,7 +73,7 @@ class CreatePath(APIView):
         return Response({'pathID': str(id)}, status=status.HTTP_200_OK)
 
 class FinishMilestone(APIView):
-    permission_classes = [IsAuthenticated]
+    #permission_classes = [IsAuthenticated]
 
     def post(self, request):
         data = request.data
@@ -88,11 +88,13 @@ class FinishMilestone(APIView):
 
             milestone=db.find_one('milestone',query={"_id":ObjectId(milestone_id)})
 
+            path=db.find_one('path',query={"milestones": milestone_id})
+
             act_id=db.insert_one("activitystreams",
                                  activitystreams.activity_format(
-                                     summary=f'{username} finished the milestone {milestone["title"]}.',
+                                     summary=f'{username} finished the milestone {milestone["title"]} in path {path["title"]}.',
                                      username=username,
-                                     obj_id=path_id,
+                                     obj_id=str(path["_id"]),
                                      obj_name=path["title"],
                                      action="Create")).inserted_id
 
