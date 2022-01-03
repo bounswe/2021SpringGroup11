@@ -94,7 +94,14 @@ class GetProfile(APIView):
 
             if not user or user['isBanned'] or user.get('isDeleted'):
                 return Response('USER_NOT_FOUND', status=status.HTTP_404_NOT_FOUND)
-        
+            
+            user['enrolls'] = len(list(db.find('enroll', query={'username': username})))
+            user['followed_paths'] = len(list(db.find('follow_path', query={'username': username})))
+            user['finished_paths'] = len(list(db.find('pathFinished', query={'username': username})))
+            user['follower'] = len(list(db.find('follow', query={'followed_username': username})))
+            user['following'] = len(list(db.find('follow', query={'follower_username': username})))
+
+
         return Response(user, status=status.HTTP_200_OK)
 
 

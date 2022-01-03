@@ -642,7 +642,7 @@ class GetFollowedPaths(APIView):
 
 
 class SearchPath(APIView):
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request, search_text):
         data = request.data
