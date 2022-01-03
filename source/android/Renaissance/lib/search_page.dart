@@ -16,21 +16,21 @@ class SearchPage extends StatefulWidget {
   SearchPage({Key? key}) : super(key: key);
 
   @override
-  _SearchPageState createState() => _SearchPageState();
+  SearchPageState createState() => SearchPageState();
 }
 
-class _SearchPageState extends State<SearchPage> {
-  var _topics = [];
+class SearchPageState extends State<SearchPage> {
+  var topics = [];
   var _paths = [];
   var _users = [];
   String _keyword = "";
   @override
   Widget build(BuildContext context) {
     void _searchT() async {
-      var topics = await HttpService.shared.searchTopic(_keyword);
+      var xtopics = await HttpService.shared.searchTopic(_keyword);
 
       setState(() {
-        _topics = topics;
+        topics = xtopics;
       });
     }
 
@@ -140,11 +140,11 @@ class _SearchPageState extends State<SearchPage> {
               scrollDirection: Axis.horizontal,
               child: Row(
                 children: [
-                  if (_topics.isNotEmpty)
-                    ...(_topics as List<Tag>).map((tag) {
+                  if (topics.isNotEmpty)
+                    ...(topics as List<Tag>).map((tag) {
                       return TagSearchContainer(key: Key(tag.id!), tag: tag);
                     }).toList(),
-                  if (_topics.isEmpty)
+                  if (topics.isEmpty)
                     Text(
                       "No Topic to show !",
                       style:
