@@ -187,10 +187,8 @@ class HttpService {
         headers: headers,
         body:
         jsonEncode({'username': username, 'path_id': id}));
-    if (res.statusCode == 200) {
-      return true;
-    }
-    return false;
+      return res.statusCode == 200;
+    
   }
 
   Future<bool> effort_path(String username, String id, double value) async {
