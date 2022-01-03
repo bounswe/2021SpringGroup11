@@ -52,7 +52,8 @@ class CreatePathTest(TestCase):
                 'creator_username': 'test user',
                 'photo': '',
                 'milestones': [{"title": "My earth is very earth", 
-                                "body": "Earth"}],
+                                "body": "Earth",
+                                "type": 0}],
                 'is_banned': 'false',
                 'is_deleted': 'false'
                 }
@@ -73,7 +74,7 @@ class CreatePathTest(TestCase):
                 'creator_username': 'test user',
                 'photo': '', #?
                 'milestones': [{"title": "My earth is very earth", 
-                                "body": "Earth"}],
+                                "body": "Earth", "type": 0}],
                 'is_banned': 'false',
                 'is_deleted': 'false'
                 }
@@ -138,12 +139,12 @@ class EditPathTest(TestCase):
 
     def test_post_200_code(self):
         data = {'title': 'test title',
-                'pathID' :  "61b864fffc7b6ca95de23214",
+                'pathID' :  "61d1edbb4cba7b537b647a41",
                 'description': 'test description',
                 'topics': [{"ID": 2}],
                 'photo': '',
                 'milestones': [{"title": "My earth is very earth", 
-                                "body": "Earth"}],
+                                "body": "Earth", "type": 1}],
                 }
     
         response = self.client.post(
@@ -157,12 +158,12 @@ class EditPathTest(TestCase):
     
     def test_403_code(self):
         data = {'title': 'test title',
-                'pathID' :  "61b864fffc7b6ca95de23214",
+                'pathID' :  "61d1edbb4cba7b537b647a41",
                 'description': 'test description',
                 'topics': [{"ID": 2}],
                 'photo': '',
                 'milestones': [{"title": "My earth is very earth", 
-                                "body": "Earth"}],
+                                "body": "Earth", "type": 1}],
                 }
     
         response = self.client.post(
@@ -180,7 +181,7 @@ class RatePathTest(TestCase):
 
     def test_post_200_code(self):
         data = {
-                'path_id' :  "61b864fffc7b6ca95de23214",
+                'path_id' :  "61d1edbb4cba7b537b647a41",
                 'rating': 3.2
                 }
     
@@ -195,7 +196,7 @@ class RatePathTest(TestCase):
     
     def test_403_code(self):
         data = {
-                'path_id' :  "61b864fffc7b6ca95de23214",
+                'path_id' :  "61d1edbb4cba7b537b647a41",
                 'rating': 3.2
                 }
     
@@ -215,7 +216,7 @@ class EffortPathTest(TestCase):
 
     def test_post_200_code(self):
         data = {
-                'path_id' :  "61b864fffc7b6ca95de23214",
+                'path_id' :  "61d1edbb4cba7b537b647a41",
                 'effort': 3.2
                 }
     
@@ -230,7 +231,7 @@ class EffortPathTest(TestCase):
     
     def test_403_code(self):
         data = {
-                'path_id' :  "61b864fffc7b6ca95de23214",
+                'path_id' :  "61d1edbb4cba7b537b647a41",
                 'effort': 3.2
                 }
     
@@ -249,7 +250,7 @@ class FollowPathTest(TestCase):
 
     def test_post_200_code(self):
         data = {
-                'path_id' :  "61b864fffc7b6ca95de23214",
+                'path_id' :  "61d1edbb4cba7b537b647a41",
                 }
     
         response = self.client.post(
@@ -263,7 +264,7 @@ class FollowPathTest(TestCase):
     
     def test_403_code(self):
         data = {
-                'path_id' :  "61b864fffc7b6ca95de23214",
+                'path_id' :  "61d1edbb4cba7b537b647a41",
                 }
     
         response = self.client.post(
@@ -277,7 +278,7 @@ class FollowPathTest(TestCase):
     
     def test_post_409_code(self):
         data = {
-                'path_id' :  "61b864fffc7b6ca95de23214",
+                'path_id' :  "61d1edbb4cba7b537b647a41",
                 }
     
         response = self.client.post(
@@ -295,7 +296,7 @@ class UnFollowPathTest(TestCase):
 
     def test_post_200_code(self):
         data = {
-                'path_id' :  "61b864fffc7b6ca95de23214",
+                'path_id' :  "61d1edbb4cba7b537b647a41",
                 }
     
         response = self.client.post(
@@ -309,7 +310,7 @@ class UnFollowPathTest(TestCase):
     
     def test_403_code(self):
         data = {
-                'path_id' :  "61b864fffc7b6ca95de23214",
+                'path_id' :  "61d1edbb4cba7b537b647a41",
                 }
     
         response = self.client.post(
@@ -323,7 +324,7 @@ class UnFollowPathTest(TestCase):
     
     def test_post_409_code(self):
         data = {
-                'path_id' :  "61b864fffc7b6ca95de23214",
+                'path_id' :  "61d1edbb4cba7b537b647a41",
                 }
     
         response = self.client.post(
@@ -377,7 +378,7 @@ class EnrollPathTest(TestCase):
 
     def test_post_200_code(self):
         data = {
-                'path_id' :  "61b864fffc7b6ca95de23214",
+                'path_id' :  "61d1edbb4cba7b537b647a41",
                 }
     
         response = self.client.post(
@@ -391,7 +392,7 @@ class EnrollPathTest(TestCase):
     
     def test_403_code(self):
         data = {
-                'path_id' :  "61b864fffc7b6ca95de23214",
+                'path_id' :  "61d1edbb4cba7b537b647a41",
                 }
     
         response = self.client.post(
@@ -405,7 +406,7 @@ class EnrollPathTest(TestCase):
     
     def test_post_409_code(self):
         data = {
-                'path_id' :  "61b864fffc7b6ca95de23214",
+                'path_id' :  "61d1edbb4cba7b537b647a41",
                 }
     
         response = self.client.post(
@@ -423,7 +424,7 @@ class UnenrollPathTest(TestCase):
 
     def test_post_200_code(self):
         data = {
-                'path_id' :  "61b864fffc7b6ca95de23214",
+                'path_id' :  "61d1edbb4cba7b537b647a41",
                 }
     
         response = self.client.post(
@@ -437,7 +438,7 @@ class UnenrollPathTest(TestCase):
     
     def test_403_code(self):
         data = {
-                'path_id' :  "61b864fffc7b6ca95de23214",
+                'path_id' :  "61d1edbb4cba7b537b647a41",
                 }
     
         response = self.client.post(
@@ -451,7 +452,7 @@ class UnenrollPathTest(TestCase):
     
     def test_post_409_code(self):
         data = {
-                'path_id' :  "61b864fffc7b6ca95de23214",
+                'path_id' :  "61d1edbb4cba7b537b647a41",
                 }
     
         response = self.client.post(
@@ -506,7 +507,7 @@ class FinishPathTest(TestCase):
 
     def test_post_200_code(self):
         data = {
-                'path_id' :  "61b864fffc7b6ca95de23214",
+                'path_id' :  "61d1edbb4cba7b537b647a41",
                 }
     
         response = self.client.post(
@@ -520,7 +521,7 @@ class FinishPathTest(TestCase):
     
     def test_403_code(self):
         data = {
-                'path_id' :  "61b864fffc7b6ca95de23214",
+                'path_id' :  "61d1edbb4cba7b537b647a41",
                 }
     
         response = self.client.post(
@@ -538,8 +539,8 @@ class FinishMilestoneTest(TestCase):
 
     def test_post_200_code(self):
         data = {
-                'path_id' :  "61b864fffc7b6ca95de23214",
-                'milestone_id': "61b7337ff74bd48c1653a143"
+                "path_id" :  "61d1edbb4cba7b537b647a41",
+                "milestone_id": "61b7337ff74bd48c1653a143"
                 }
     
         response = self.client.post(
@@ -553,7 +554,7 @@ class FinishMilestoneTest(TestCase):
     
     def test_403_code(self):
         data = {
-                'path_id' :  "61b864fffc7b6ca95de23214",
+                'path_id' :  "61d1edbb4cba7b537b647a41",
                 }
     
         response = self.client.post(
@@ -572,7 +573,7 @@ class UnFinishMilestoneTest(TestCase):
 
     def test_post_200_code(self):
         data = {
-                'path_id' :  "61b864fffc7b6ca95de23214",
+                'path_id' :  "61d1edbb4cba7b537b647a41",
                 'milestone_id': "61b7337ff74bd48c1653a143"
                 }
     
@@ -587,7 +588,7 @@ class UnFinishMilestoneTest(TestCase):
     
     def test_403_code(self):
         data = {
-                'path_id' :  "61b864fffc7b6ca95de23214",
+                'path_id' :  "61d1edbb4cba7b537b647a41",
                 }
     
         response = self.client.post(
@@ -605,7 +606,7 @@ class WordcloudTest(TestCase):
 
     def test_post_200_code(self):
         data = {
-                'path_id' :  "61b864fffc7b6ca95de23214",
+                'path_id' :  "61d1edbb4cba7b537b647a41",
                 }
     
         response = self.client.post(
@@ -619,7 +620,7 @@ class WordcloudTest(TestCase):
     
     def test_403_code(self):
         data = {
-                'path_id' :  "61b864fffc7b6ca95de23214",
+                'path_id' :  "61d1edbb4cba7b537b647a41",
                 }
     
         response = self.client.post(
@@ -638,7 +639,7 @@ class AddResourceTest(TestCase):
 
     def test_post_200_code(self):
         data = {
-            "path_id": "61b864fffc7b6ca95de23214",
+            "path_id": "61d1edbb4cba7b537b647a41",
             "order": 1,
             "link": "http://bounswe11.com.s3-website.us-east-2.amazonaws.com/",
             "description": "home page",
@@ -655,7 +656,7 @@ class AddResourceTest(TestCase):
     
     def test_403_code(self):
         data = {
-            "path_id": "61b864fffc7b6ca95de23214",
+            "path_id": "61d1edbb4cba7b537b647a41",
             "order": 1,
             "link": "http://bounswe11.com.s3-website.us-east-2.amazonaws.com/",
             "description": "home page",

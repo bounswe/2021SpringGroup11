@@ -79,6 +79,7 @@ class FinishMilestone(APIView):
         data = request.data
         username = data['username']
         milestone_id = data['milestone_id']
+        path_id = data['path_id']
 
         with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
             db.insert_one('finished_milestone', {
@@ -88,7 +89,7 @@ class FinishMilestone(APIView):
 
             milestone=db.find_one('milestone',query={"_id":ObjectId(milestone_id)})
 
-            path=db.find_one('path',query={"milestones": milestone_id})
+            path=db.find_one('path',query={"_id": ObjectId(path_id)})
 
             act_id=db.insert_one("activitystreams",
                                  activitystreams.activity_format(
@@ -850,10 +851,14 @@ class GetPopular(APIView):
                         else:
                             topic_dict[id] = 1
                     else:
-                        if id in path_dict.keys():
-                            path_dict[id] += 1
-                        else:
-                            path_dict[id] = 1
+                        try:
+                            ObjectId(id)
+                            if id in path_dict.keys():
+                                path_dict[id] += 1
+                            else:
+                                path_dict[id] = 1
+                        except:
+                            pass
                 except:
                     continue
 
@@ -962,8 +967,12 @@ class GetForYou(APIView):
                         if id not in topic_ids:
                             topic_ids.append(id)
                     else:
-                        if id not in path_ids:
-                            path_ids.append(id)
+                        try:
+                            ObjectId(id)
+                            if id not in path_ids:
+                                path_ids.append(id)
+                        except:
+                            continue
                 except:
                     continue
 

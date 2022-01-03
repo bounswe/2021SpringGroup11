@@ -32,11 +32,10 @@ class ActivityStreams(APIView):
         data=request.data
         username=data["username"]
 
-
         with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
             followed_users = list(db.find('follow', query={'follower_username': username}))
             followed_users=[f['followed_username'] for f in followed_users]
-            userq={"actor.name": {"$in": followed_users }}
+            userq={"actor.name": {"$in": followed_users}}
 
             followed_paths= list(db.find('follow_path', query={'username':username}))
             followed_paths=[f["path_id"] for f in followed_paths]
@@ -48,6 +47,7 @@ class ActivityStreams(APIView):
 
             streams = list(db.find('activitystreams', query={"$or": [userq, pathq, topicq]}))
             streams=[activitystreams.activity_decode(s) for s in streams]
+        
         return Response(streams,status=status.HTTP_200_OK)
 
 

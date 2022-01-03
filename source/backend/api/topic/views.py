@@ -147,7 +147,6 @@ class MyTopics(APIView):
         with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
             topics = list(db.find('favorite', {'username': username}))
             topics = [topic['ID'] for topic in topics]
-            print(topics)
             topic_data = list(db.find('topic', query={'ID': {'$in': topics}}, projection={'_id': 0, 'name': 1, 'ID': 1, 'description': 1}))
 
         return Response(topic_data)
