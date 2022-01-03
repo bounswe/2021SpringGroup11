@@ -951,7 +951,9 @@ class GetForYou(APIView):
             followed_users = list(db.find('follow', query={'follower_username': username}))
             followed_users = [f['followed_username'] for f in followed_users]
 
-            topics = list(db.find('favorite', query={'username': {'$in': followed_users}}).limit(5))
+            topics_related = list(db.find('favorite', query={'username': {'$in': followed_users}}).limit(5))
+            topics = list(db.find('topic', query={'ID': {'$in': [topic['ID'] for topic in topics_related]}}).limit(5))
+
             paths = list(db.find('path', query={'creator_username': {'$in': followed_users}}).limit(5))
 
             streams = db.find('activitystreams', query={}).limit(100)
