@@ -13,6 +13,7 @@ import 'package:snippet_coder_utils/multi_images_utils.dart';
 import 'http_services.dart';
 import 'models/user.dart';
 import 'my_colors.dart';
+import 'widget/tag_create_container.dart';
 
 class CreatePathPage extends StatefulWidget {
   const CreatePathPage({Key? key}) : super(key: key);
@@ -379,38 +380,46 @@ class _CreatePathPageState extends State<CreatePathPage> {
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
               ),
               Container(
-                width: double.infinity,
                 padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       ...(topics as List<Tag>).map((tag) {
                         return Container(
+                            margin: EdgeInsets.symmetric(
+                                horizontal: 5, vertical: 2),
                             decoration: BoxDecoration(
                                 color: Colors.blue.shade200,
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(15.0))),
-                            child: Row(children: [
-                              TagContainer(key: Key(tag.id!), tag: tag),
-                              IconButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      int indice = 0;
-                                      for (int i = 0; i < topics.length; i++) {
-                                        if (topics[i].id == tag.id) {
-                                          break;
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                TagCreateContainer(key: Key(tag.id!), tag: tag),
+                                IconButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        int indice = 0;
+                                        for (int i = 0;
+                                            i < topics.length;
+                                            i++) {
+                                          if (topics[i].id == tag.id) {
+                                            break;
+                                          }
                                         }
-                                      }
 
-                                      topics.removeAt(indice);
-                                    });
-                                  },
-                                  icon: Icon(Icons.cancel_outlined),
-                                  color: Colors.redAccent,
-                                  splashRadius: 16,
-                                  iconSize: 26),
-                            ]));
+                                        topics.removeAt(indice);
+                                      });
+                                    },
+                                    icon: Icon(Icons.cancel_outlined),
+                                    color: Colors.redAccent,
+                                    splashRadius: 16,
+                                    iconSize: 26),
+                              ],
+                            ));
                       }).toList(),
                     ],
                   ),

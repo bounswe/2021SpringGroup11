@@ -3,21 +3,21 @@ import 'package:portakal/http_services.dart';
 import 'package:portakal/models/tag.dart';
 import 'package:portakal/my_colors.dart';
 
-class TagDescContainer extends StatefulWidget {
-  TagDescContainer({Key? key, this.tag}) : super(key: key);
+class TagCreateContainer extends StatefulWidget {
+  TagCreateContainer({Key? key, this.tag}) : super(key: key);
   var tag;
   @override
-  State<TagDescContainer> createState() => _TagDescContainerState();
+  State<TagCreateContainer> createState() => _TagCreateContainerState();
 }
 
-class _TagDescContainerState extends State<TagDescContainer> {
+class _TagCreateContainerState extends State<TagCreateContainer> {
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.all(5),
       padding: EdgeInsets.symmetric(horizontal: 7, vertical: 7),
       decoration: BoxDecoration(
-          color: Colors.amberAccent,
+          color: MyColors.lightGreen,
           borderRadius: BorderRadius.all(Radius.circular(10.0))),
       child: Column(children: [
         LimitedBox(
@@ -26,14 +26,6 @@ class _TagDescContainerState extends State<TagDescContainer> {
             widget.tag.name!,
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-          ),
-        ),
-        LimitedBox(
-          maxWidth: 150,
-          child: Text(
-            widget.tag.description!,
-            textAlign: TextAlign.justify,
-            style: TextStyle(fontSize: 14),
           ),
         ),
       ]),
