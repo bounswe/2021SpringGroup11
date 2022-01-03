@@ -353,11 +353,21 @@ class FinishPath(APIView): #Caution: this endpoint marks the whole path as finis
         path_id = data['path_id']
 
         with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
+            path = db.find_one('path', query={'_id': ObjectId(path_id)})
+
             db.insert_one('pathFinished',
                           {
                               'username': username,
                               'path_id': path_id,
                           })
+
+            act_id=db.insert_one("activitystreams",
+                                 activitystreams.activity_format(
+                                     summary=f'{username} finished the path {title}.',
+                                     username=username,
+                                     obj_id=path_id,
+                                     obj_name=path["title"],
+                                     action="Follow")).inserted_id
 
         return Response('SUCCESSFUL')
 
