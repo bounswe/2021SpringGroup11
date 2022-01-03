@@ -2,21 +2,21 @@ import 'package:portakal/models/basic_path.dart';
 import 'package:portakal/models/milestone_model.dart';
 import 'package:portakal/models/topic_model.dart';
 class Path {
-  final String? id;
-  final String? title;
-  final String? description;
-  final List<Topic>? topics;
-  final String? creator_username;
-  final String? creator_email;
-  final double? created_at;
-  final String? photo;
-  final List<Milestonee>? milestones;
-  final double? rating;
-  final double? effort;
-  final bool? isEnrolled;
-  final bool? isFollowed;
-  const Path({
-    this.id, this.title, this.description, this.topics, this.creator_username, this.creator_email, this.created_at, this.photo, this.milestones, this.rating, this.effort, this.isEnrolled,this.isFollowed
+  String id;
+  String title;
+  String description;
+  List<Topic>? topics;
+  String creator_username;
+  String creator_email;
+  double created_at;
+  String? photo;
+  List<Milestonee> milestones;
+  double rating;
+  double effort;
+  bool? isEnrolled;
+  bool? isFollowed;
+  Path({
+    required this.id, required this.title, required this.description, this.topics, required this.creator_username, required this.creator_email, required this.created_at, this.photo, required this.milestones, required this.rating, required this.effort, this.isEnrolled,this.isFollowed
 });
 
   factory Path.fromJson(Map<String, dynamic> json) {

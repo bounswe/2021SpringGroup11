@@ -11,7 +11,7 @@ import 'package:portakal/path_page.dart';
 class CourseContainer extends StatefulWidget {
   CourseContainer({Key? key, required this.path}):super(key:key);
 
-final BasicPath path;
+  final BasicPath path;
 
   @override
   State<CourseContainer> createState() => _CourseContainerState();
@@ -40,6 +40,7 @@ class _CourseContainerState extends State<CourseContainer> {
     if(!isLoading && _image == null) {
       loadPhoto();
     }
+    already_saved = widget.path.isFollowed ?? false;
     return Container(
       height: 70,
       decoration: BoxDecoration(
@@ -83,7 +84,7 @@ class _CourseContainerState extends State<CourseContainer> {
                       children: [
                         Container(
                             width: MediaQuery.of(context).size.width * 0.6,
-                            child: Text(widget.path.title!,
+                            child: Text(widget.path.title,
                                 overflow: TextOverflow.ellipsis,
                                 softWrap: true,
                                 maxLines: 2,
@@ -128,9 +129,9 @@ class _CourseContainerState extends State<CourseContainer> {
                   already_saved = !already_saved;
                 });
                 if (already_saved) {
-                  HttpService.shared.followPath(widget.path.id!);
+                  HttpService.shared.followPath(widget.path.id);
                 } else {
-                  HttpService.shared.unfollowPath(widget.path.id!);
+                  HttpService.shared.unfollowPath(widget.path.id);
                 }
               },
               child: Container(
