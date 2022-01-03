@@ -13,13 +13,18 @@ class TagContainer extends StatefulWidget {
 
 class _TagContainerState extends State<TagContainer> {
   late var isFav = widget.tag!.isFav!;
+  bool isLoading = false;
   @override
   Widget build(BuildContext context) {
     return InkWell(
         onTap: () async{
-
+          setState(() {
+            isLoading = true;
+          });
           List responses = await Future.wait([HttpService.shared.getTopic(widget.tag!.id!), HttpService.shared.getTopicList(widget.tag!.id!),HttpService.shared.getPathList(widget.tag!.id!)]);
-
+          setState(() {
+            isLoading = false;
+          });
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => TopicPage(t:responses[0],tags:responses[1],paths: responses[2],)),
@@ -36,7 +41,7 @@ class _TagContainerState extends State<TagContainer> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Text(widget.tag!.name!,
+                  isLoading?SizedBox(height:15,width:15,child:CircularProgressIndicator()):Text(widget.tag!.name!,
                       overflow: TextOverflow.clip,
                       maxLines: 1,
                       textAlign: TextAlign.center,

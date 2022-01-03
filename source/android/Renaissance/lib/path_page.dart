@@ -530,7 +530,7 @@ class _PathPageState extends State<PathPage> {
                                                             .effort_path(
                                                             User.me!
                                                                 .username!,
-                                                            widget.p!.id!,
+                                                            widget.p!.id,
                                                             effort);
                                                         setState(() {
                                                           isButtonEffortLoading=false;
@@ -585,7 +585,7 @@ class _PathPageState extends State<PathPage> {
                                                             .finish_path(
                                                             User.me!
                                                                 .username!,
-                                                            widget.p!.id!
+                                                            widget.p!.id
                                                         );
                                                         if (!response) {
                                                           setState(() {

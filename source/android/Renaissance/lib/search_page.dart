@@ -143,6 +143,7 @@ class _SearchPageState extends State<SearchPage> {
                   if (_topics.isNotEmpty)
                     ...(_topics as List<Tag>).map((tag) {
                       return TagSearchContainer(key: Key(tag.id!), tag: tag);
+
                     }).toList(),
                   if (_topics.isEmpty)
                     Text(
@@ -198,7 +199,7 @@ class _SearchPageState extends State<SearchPage> {
           ),
           if (_paths.isNotEmpty)
             ...(_paths as List<BasicPath>).map((path) {
-              return CourseContainer(key: Key(path.id!), path: path);
+              return CourseContainer(key: Key(path.id), path: path);
             }).toList(),
           if (_paths.isEmpty)
             Container(
