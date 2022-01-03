@@ -85,6 +85,19 @@ class FinishMilestone(APIView):
                 'username': username,
                 'milestone_id': milestone_id
             })
+
+            milestone=db.find_one('milestone',query={"_id":ObjectId(milestone_id)})
+
+            path=db.find_one('path',query={"milestones": milestone_id})
+
+            act_id=db.insert_one("activitystreams",
+                                 activitystreams.activity_format(
+                                     summary=f'{username} finished the milestone {milestone["title"]} in path {path["title"]}.',
+                                     username=username,
+                                     obj_id=str(path["_id"]),
+                                     obj_name=path["title"],
+                                     action="Create")).inserted_id
+
         
         return Response('SUCCESSFUL')
 
