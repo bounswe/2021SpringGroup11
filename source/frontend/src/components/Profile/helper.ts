@@ -6,6 +6,9 @@ import {
   GET_ENROLLED_PATHS_URL,
   GET_FOLLOWED_PATHS_URL,
   GET_USER_URL,
+  MY_PATH_URL,
+  MY_TOPIC_URL,
+  RATINGS_USER_URL,
   UNFOLLOW_USER_URL,
   WORDCLOUD_PATHS_URL,
 } from '../../utils/endpoints';
@@ -17,6 +20,20 @@ export const getUserData = async (username: string) => {
 export const getUserFollowData = async () => {
   const userData = (await get(`${GETFOLLOW_USER_URL}`)).data;
   return userData as { followed: string[]; followers: string[] };
+};
+
+// TODO??
+export const getUserRatingsData = async () => {
+  const userData = (await get(`${RATINGS_USER_URL}`)).data;
+  return userData as { efforts: unknown[]; rates: unknown[] };
+};
+export const getMyPathsData = async () => {
+  const userData = (await get(`${MY_PATH_URL}`)).data;
+  return userData as { efforts: unknown[]; rates: unknown[] };
+};
+export const getMyTopicsData = async () => {
+  const userData = (await get(`${MY_TOPIC_URL}`)).data;
+  return userData as { ID: number; description: string; name: string }[];
 };
 
 export const followUser = async (username: string) => {
@@ -73,12 +90,20 @@ export const getProfileData = async (username: string) => {
     }[]
   > = getUserFavPathsData(username);
 
-  const [profileData, enrolledpathsIDs, favpathsIDs, UserFollowData] = await Promise.all([
-    profileDataPromise,
-    enrolledpathsIDsPromise,
-    favpathsIDsPromise,
-    getUserFollowData(),
-  ]);
+  const [profileData, enrolledpathsIDs, favpathsIDs, UserFollowData, ratings, myTopics, myPaths] =
+    await Promise.all([
+      profileDataPromise,
+      enrolledpathsIDsPromise,
+      favpathsIDsPromise,
+      getUserFollowData(),
+      getUserRatingsData(),
+      getMyTopicsData(),
+      getMyPathsData(),
+    ]);
+  console.log('myTopics', myTopics);
+  console.log('myPaths', myPaths);
+  console.log('🚀 ~ file: helper.ts ~ line 84 ~ getProfileData ~ ratings', ratings);
+
   console.log('🚀 ~ file: helper.ts ~ line 6 ~ getProfileData ~ profileData', profileData);
 
   console.log('getUserEnrolledData:', enrolledpathsIDs);
@@ -102,12 +127,12 @@ export const getProfileData = async (username: string) => {
     // @ts-ignore
     .concat(favpathsIDs.map((s) => ({ ...s, isFollowed: true })));
   const favorites = [
-    { text: 'Topics', value: '126' },
+    { text: 'Topics', value: myTopics.length },
     { text: 'Paths', value: favpathsIDs.length },
   ];
   const stats = [
     { text: 'Enrolled', value: enrolledpathsIDs.length },
-    { text: 'Done', value: '103' },
+    // { text: 'Done', value: '103' },
     { text: 'Followings', value: followings.length },
     { text: 'Followers', value: followers.length },
   ];
