@@ -73,7 +73,7 @@ class CreatePath(APIView):
         return Response({'pathID': str(id)}, status=status.HTTP_200_OK)
 
 class FinishMilestone(APIView):
-    #permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def post(self, request):
         data = request.data
