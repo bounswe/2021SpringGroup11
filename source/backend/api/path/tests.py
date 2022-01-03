@@ -630,3 +630,42 @@ class WordcloudTest(TestCase):
         )
         
         self.assertEquals(response.status_code, 403)
+
+class AddResourceTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+    
+
+    def test_post_200_code(self):
+        data = {
+            "path_id": "61b864fffc7b6ca95de23214",
+            "order": 1,
+            "link": "http://bounswe11.com.s3-website.us-east-2.amazonaws.com/",
+            "description": "home page",
+        }
+    
+        response = self.client.post(
+            reverse('add_resource'),
+            data,
+            **AUTHENTICATED_NORMALUSER_HEADERS,
+            content_type="application/json"
+        )
+        
+        self.assertEquals(response.status_code, 200)
+    
+    def test_403_code(self):
+        data = {
+            "path_id": "61b864fffc7b6ca95de23214",
+            "order": 1,
+            "link": "http://bounswe11.com.s3-website.us-east-2.amazonaws.com/",
+            "description": "home page",
+        }
+    
+        response = self.client.post(
+            reverse('add_resource'),
+            data,
+            **UNAUTHENTICATED_NORMALUSER_HEADERS,
+            content_type="application/json"
+        )
+        
+        self.assertEquals(response.status_code, 403)

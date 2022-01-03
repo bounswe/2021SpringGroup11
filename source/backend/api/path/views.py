@@ -679,21 +679,52 @@ class FinishTask(APIView):
                 'username': username,
                 'milestone_id': milestone_id
             })
-        
+
         return Response('SUCCESSFUL')
 
 class UnfinishTask(APIView):
     permission_classes = [IsAuthenticated]
-    
+
     def post(self, request):
         data = request.data
         username = data['username']
         milestone_id = data['milestone_id']
-        
+
         with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
             db.delete_one('finished_milestone', {
                 'username': username,
                 'milestone_id': milestone_id
             })
-        
+
         return Response('SUCCESSFUL')
+
+class AddResource(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        data = request.data
+
+        path_id = data['path_id']
+        username = data['username']
+        order = data['order']
+        link = data['link']
+        description = data['description']
+        created_at = int(time.time())
+
+        with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
+            db.update(
+                'path',
+                {'_id': ObjectId(path_id)},
+                { '$push': {'resources': {
+                            'username': username,
+                            'order': order,
+                            'link': link,
+                            'description': description,
+                            'created_at': created_at
+                        }
+                    }
+                }
+            )
+
+        return Response('SUCCESSFUL')
+

@@ -22,4 +22,7 @@ urlpatterns = [
     path('finish-task/', views.FinishTask.as_view(), name='finish_task'),
     path('unfinish-task/', views.UnfinishTask.as_view(), name='unfinish_task'),
     path('wordcloud/', views.Wordcloud.as_view(), name='wordcloud_path'),
+    path('finish-task/', views.FinishTask.as_view(), name='finish_task'),
+    path('unfinish-task/', views.UnfinishTask.as_view(), name='unfinish_task'),
+    path('add-resource/', views.AddResource.as_view(), name='add_resource')
 ]
