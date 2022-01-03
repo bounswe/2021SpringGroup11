@@ -1,15 +1,31 @@
 import { get, post } from '../../utils/axios';
 import {
   EDIT_USER_URL,
+  FOLLOW_USER_URL,
+  GETFOLLOW_USER_URL,
   GET_ENROLLED_PATHS_URL,
   GET_FOLLOWED_PATHS_URL,
   GET_USER_URL,
+  UNFOLLOW_USER_URL,
   WORDCLOUD_PATHS_URL,
 } from '../../utils/endpoints';
 
 export const getUserData = async (username: string) => {
   const userData = (await get(`${GET_USER_URL + username}/`)).data;
   return userData;
+};
+export const getUserFollowData = async () => {
+  const userData = (await get(`${GETFOLLOW_USER_URL}`)).data;
+  return userData as { followed: string[]; followers: string[] };
+};
+
+export const followUser = async (username: string) => {
+  const { data } = await post(`${FOLLOW_USER_URL}`, { target: username });
+  return data;
+};
+export const unfollowUser = async (username: string) => {
+  const { data } = await post(`${UNFOLLOW_USER_URL}`, { target: username });
+  return data;
 };
 
 export const getUserEnrolledData = async (username: string) => {
@@ -34,26 +50,40 @@ export const updateUserData = async (data: any) => {
 };
 
 export const getProfileData = async (username: string) => {
-  const profileData = await getUserData(username);
+  const profileDataPromise = getUserData(username);
+
+  const enrolledpathsIDsPromise: Promise<
+    {
+      effort: number;
+      isFollowed: boolean;
+      photo: string;
+      rating: number;
+      title: string;
+      _id: string;
+    }[]
+  > = getUserEnrolledData(username);
+  const favpathsIDsPromise: Promise<
+    {
+      effort: number;
+      isEnrolled: boolean;
+      photo: string;
+      rating: number;
+      title: string;
+      _id: string;
+    }[]
+  > = getUserFavPathsData(username);
+
+  const [profileData, enrolledpathsIDs, favpathsIDs, UserFollowData] = await Promise.all([
+    profileDataPromise,
+    enrolledpathsIDsPromise,
+    favpathsIDsPromise,
+    getUserFollowData(),
+  ]);
   console.log('🚀 ~ file: helper.ts ~ line 6 ~ getProfileData ~ profileData', profileData);
 
-  const enrolledpathsIDs: {
-    effort: number;
-    isFollowed: boolean;
-    photo: string;
-    rating: number;
-    title: string;
-    _id: string;
-  }[] = await getUserEnrolledData(username);
-  const favpathsIDs: {
-    effort: number;
-    isEnrolled: boolean;
-    photo: string;
-    rating: number;
-    title: string;
-    _id: string;
-  }[] = await getUserFavPathsData(username);
   console.log('getUserEnrolledData:', enrolledpathsIDs);
+  const followings = UserFollowData.followed;
+  const { followers } = UserFollowData;
 
   const user = {
     username: profileData.username,
@@ -76,10 +106,10 @@ export const getProfileData = async (username: string) => {
     { text: 'Paths', value: favpathsIDs.length },
   ];
   const stats = [
-    { text: 'Enrolled', value: '145' },
+    { text: 'Enrolled', value: enrolledpathsIDs.length },
     { text: 'Done', value: '103' },
-    { text: 'Followings', value: '254' },
-    { text: 'Followers', value: '645' },
+    { text: 'Followings', value: followings.length },
+    { text: 'Followers', value: followers.length },
   ];
 
   return {
@@ -87,5 +117,7 @@ export const getProfileData = async (username: string) => {
     user,
     stats,
     favorites,
+    followers,
+    followings,
   };
 };
