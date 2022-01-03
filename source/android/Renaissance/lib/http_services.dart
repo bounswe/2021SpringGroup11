@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:flutter/animation.dart';
 import 'package:http/http.dart';
 import 'package:portakal/models/basic_path.dart';
+import 'package:portakal/models/basic_user.dart';
 import 'package:portakal/models/get_follow_response.dart';
 import 'dart:convert';
 
@@ -333,16 +334,15 @@ class HttpService {
   }
   */
 
-  Future<List<String>> searchUser(String username) async {
+  Future<List<BasicUser>> searchUser(String username) async {
     String url = baseUrl + '/user/search-user/$username/';
     Response res = await get(Uri.parse(url), headers: headers);
 
     if (res.statusCode == 200) {
-      List<String> result = [];
-      for (var item in jsonDecode(res.body)) {
-        result.add(item["username"]);
-      }
-      return result;
+      Iterable l = json.decode(res.body);
+      List<BasicUser> basicUsers =
+          l.map((json) => BasicUser.fromJSON(json)).toList();
+      return basicUsers;
     } else {
       throw Exception(res.body);
     }

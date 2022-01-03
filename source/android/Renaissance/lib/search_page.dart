@@ -2,12 +2,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:portakal/http_services.dart';
 import 'package:portakal/models/basic_path.dart';
+import 'package:portakal/models/basic_user.dart';
 import 'package:portakal/models/tag.dart';
 import 'package:portakal/models/user.dart';
 
 import 'package:portakal/my_colors.dart';
 import 'package:portakal/widget/course_container.dart';
 import 'package:portakal/widget/tag_container.dart';
+import 'package:portakal/widget/user_container.dart';
 
 class SearchPage extends StatefulWidget {
   SearchPage({Key? key}) : super(key: key);
@@ -106,8 +108,8 @@ class _SearchPageState extends State<SearchPage> {
               return TagContainer(key: Key(tag.id!), tag: tag);
             }).toList(),
           if (_users.isNotEmpty)
-            ...(_users as List<String>).map((user) {
-              return Text(user);
+            ...(_users as List<BasicUser>).map((user) {
+              return UserContainer(user: user);
             }).toList(),
         ],
       ),
