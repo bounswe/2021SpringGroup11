@@ -2,7 +2,7 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 // import ExploreIcon from '@mui/icons-material/Explore';
 // import NotificationsIcon from '@mui/icons-material/Notifications';
 import SearchIcon from '@mui/icons-material/Search';
@@ -62,14 +62,18 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 const SearchBox = () => {
   const [searchText, setSearchText] = useState('');
-
+  const timeref = useRef(new Date().valueOf());
   const [searchResults, setSearchResults] = useState<null | ISearchResult[]>(null);
   useEffect(() => {
     (async () => {
       setSearchResults(null);
       if (searchText.trim()) {
+        timeref.current = new Date().valueOf();
+        const ydk = timeref.current;
         const results = await search({ searchText: searchText.trim() });
-        setSearchResults(results);
+        if (ydk === timeref.current) {
+          setSearchResults(results);
+        }
       }
     })();
   }, [searchText]);
