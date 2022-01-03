@@ -1,8 +1,10 @@
 import { makeStyles, styled } from '@mui/styles';
-import React from 'react';
-import { Tab, Tabs } from '@mui/material';
+
+import React, { useEffect, useState } from 'react';
+import faker from 'faker';
+
+import { Tab, Tabs, Box, CircularProgress } from '@mui/material';
 import HomeTabPanel from './HomeTabPanel';
-import { items } from '../constants';
 interface StyledTabProps {
   label: string;
 }
@@ -36,6 +38,47 @@ const TabPanel = (props: TabPanelProps) => {
   const { children, value, index, ...other } = props;
 
   // TODO FIX THE ITEMS
+  const [items, setitems] = useState<
+    | {
+        tags: { name: string; id: string }[];
+        paths: {
+          name: string;
+          pic: string;
+          id: string;
+          effort: string;
+          rating: string;
+        }[];
+      }[]
+    | null
+  >(null);
+
+  useEffect(() => {
+    (async () => {
+      setTimeout(async () => {
+        const foryouItems = {
+          tags: new Array(10).fill(0).map((i) => ({
+            id: faker.datatype.string(10),
+            name: Math.random() < 0.5 ? faker.random.words(1) : faker.random.words(2),
+          })),
+          paths: new Array(10).fill(0).map((i) => ({
+            id: faker.datatype.string(10),
+            name: Math.random() < 0.5 ? faker.random.words(3) : faker.random.words(5),
+            pic: faker.image.imageUrl(64, 64, undefined, true),
+            effort: String(faker.datatype.number(10)),
+            rating: String(faker.datatype.number(10)),
+          })),
+        };
+        setitems([foryouItems, foryouItems, foryouItems]);
+      }, 1000);
+    })();
+  }, []);
+  if (!items) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '90vh' }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
     <div

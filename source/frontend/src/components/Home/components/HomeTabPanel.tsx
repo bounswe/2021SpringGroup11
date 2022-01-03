@@ -13,6 +13,7 @@ interface Props {
 interface tagProps {
   item: {
     name: string;
+    id: string;
   };
 }
 
@@ -22,6 +23,7 @@ interface pathProps {
     pic: string;
     effort: string;
     rating: string;
+    id: string;
   };
 }
 const useStyles = makeStyles(() => ({
@@ -45,6 +47,8 @@ const useStyles = makeStyles(() => ({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+    maxHeight: '90%',
+    overflow: 'scroll',
   },
 
   paths: {
@@ -81,6 +85,7 @@ const TagItem = (props: tagProps) => {
   return (
     <Grid item xs={8} className={classes.tagRoot}>
       <div
+        onClick={() => history.push(`/topic/${item.id}`)}
         style={{
           display: 'flex',
           flexDirection: 'row',
@@ -111,11 +116,11 @@ const PathItem = (props: pathProps) => {
   const classes = useStyles();
 
   return (
-    <div className={classes.pathRoot}>
+    <div className={classes.pathRoot} onClick={() => history.push(`/path/${item.id}`)}>
       <img className={classes.pathPic} src={item.pic} alt="path-item" />
       <div style={{ display: 'flex', flexDirection: 'row' }}>
         <div style={{ display: 'flex', flexDirection: 'column', width: '75%' }}>
-          <Button onClick={() => history.push('/path/61b7337ff74bd48c1653a145')}>
+          <Button>
             <Typography variant="h5" align="center">
               {item.name}
             </Typography>
@@ -173,7 +178,7 @@ const HomeTabPanel = (props: Props) => {
           </Typography>
         </div>
         <Grid container className={classes.tags}>
-          {items.tags.map((item: { name: string }) => (
+          {items.tags.map((item) => (
             <TagItem item={item} />
           ))}
         </Grid>
@@ -185,11 +190,9 @@ const HomeTabPanel = (props: Props) => {
           </Typography>
         </div>
         <Grid container className={classes.paths}>
-          {items.paths.map(
-            (item: { name: string; pic: string; effort: string; rating: string }) => (
-              <PathItem item={item} />
-            ),
-          )}
+          {items.paths.map((item) => (
+            <PathItem item={item} />
+          ))}
         </Grid>
       </div>
     </div>

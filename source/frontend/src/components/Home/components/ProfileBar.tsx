@@ -52,6 +52,7 @@ const useStyles = makeStyles(() => ({
     height: '100%',
     width: '20%',
     background: '#70A9FF',
+    overflow: 'scroll',
   },
   imageContainer: {
     margin: '20px',
