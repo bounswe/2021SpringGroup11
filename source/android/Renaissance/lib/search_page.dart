@@ -16,44 +16,45 @@ class SearchPage extends StatefulWidget {
   SearchPage({Key? key}) : super(key: key);
 
   @override
-  _SearchPageState createState() => _SearchPageState();
+  SearchPageState createState() => SearchPageState();
 }
 
-class _SearchPageState extends State<SearchPage> {
-  var _topics = [];
-  var _paths = [];
-  var _users = [];
-  String _keyword = "";
+@visibleForTesting
+class SearchPageState extends State<SearchPage> {
+  var topics = [];
+  var paths = [];
+  var users = [];
+  String keyword = "";
+  void searchT() async {
+    var xtopics = await HttpService.shared.searchTopic(keyword);
+
+    setState(() {
+      topics = xtopics;
+    });
+  }
+
+  void searchP() async {
+    var tpaths = await HttpService.shared.searchPath(keyword);
+    setState(() {
+      paths = tpaths;
+    });
+  }
+
+  void searchU() async {
+    var tusers = await HttpService.shared.searchUser(keyword);
+    setState(() {
+      users = tusers;
+    });
+  }
+
+  void search() async {
+    searchT();
+    searchP();
+    searchU();
+  }
+
   @override
   Widget build(BuildContext context) {
-    void _searchT() async {
-      var topics = await HttpService.shared.searchTopic(_keyword);
-
-      setState(() {
-        _topics = topics;
-      });
-    }
-
-    void _searchP() async {
-      var paths = await HttpService.shared.searchPath(_keyword);
-      setState(() {
-        _paths = paths;
-      });
-    }
-
-    void _searchU() async {
-      var users = await HttpService.shared.searchUser(_keyword);
-      setState(() {
-        _users = users;
-      });
-    }
-
-    void _search() async {
-      _searchT();
-      _searchP();
-      _searchU();
-    }
-
     return Scaffold(
       appBar: AppBar(
           backgroundColor: MyColors.blue,
@@ -69,7 +70,7 @@ class _SearchPageState extends State<SearchPage> {
             IconButton(
                 onPressed: () {
                   setState(() {
-                    _search();
+                    search();
                   });
                 },
                 icon: Icon(Icons.search))
@@ -89,13 +90,13 @@ class _SearchPageState extends State<SearchPage> {
               child: TextField(
                 onSubmitted: (query) {
                   setState(() {
-                    _keyword = query;
+                    keyword = query;
                   });
-                  _search();
+                  search();
                 },
                 onChanged: (query) {
                   setState(() {
-                    _keyword = query;
+                    keyword = query;
                   });
                 },
                 style: TextStyle(
@@ -140,12 +141,11 @@ class _SearchPageState extends State<SearchPage> {
               scrollDirection: Axis.horizontal,
               child: Row(
                 children: [
-                  if (_topics.isNotEmpty)
-                    ...(_topics as List<Tag>).map((tag) {
+                  if (topics.isNotEmpty)
+                    ...(topics as List<Tag>).map((tag) {
                       return TagSearchContainer(key: Key(tag.id!), tag: tag);
-
                     }).toList(),
-                  if (_topics.isEmpty)
+                  if (topics.isEmpty)
                     Text(
                       "No Topic to show !",
                       style:
@@ -174,11 +174,11 @@ class _SearchPageState extends State<SearchPage> {
               scrollDirection: Axis.horizontal,
               child: Row(
                 children: [
-                  if (_users.isNotEmpty)
-                    ...(_users as List<BasicUser>).map((user) {
+                  if (users.isNotEmpty)
+                    ...(users as List<BasicUser>).map((user) {
                       return UserContainer(user: user);
                     }).toList(),
-                  if (_users.isEmpty)
+                  if (users.isEmpty)
                     Text(
                       "No User to show !",
                       style:
@@ -197,11 +197,11 @@ class _SearchPageState extends State<SearchPage> {
                     letterSpacing: 2.0)),
             color: Colors.grey.shade300,
           ),
-          if (_paths.isNotEmpty)
-            ...(_paths as List<BasicPath>).map((path) {
-              return CourseContainer(key: Key(path.id), path: path);
+          if (paths.isNotEmpty)
+            ...(paths as List<BasicPath>).map((path) {
+              return CourseContainer(key: Key(path.id!), path: path);
             }).toList(),
-          if (_paths.isEmpty)
+          if (paths.isEmpty)
             Container(
               width: double.infinity,
               padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),

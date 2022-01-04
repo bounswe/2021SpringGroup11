@@ -41,12 +41,14 @@ dependencies:
   jwt_decode: ^0.3.1
   comment_box: ^0.0.16
   flutter_spinbox: ^0.7.0
+  
   intl: ^0.17.0
 
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  test: ^1.16.2
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is

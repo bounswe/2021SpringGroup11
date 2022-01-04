@@ -14,10 +14,11 @@ class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
 
   @override
-  _LoginPageState createState() => _LoginPageState();
+  LoginPageState createState() => LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+@visibleForTesting
+class LoginPageState extends State<LoginPage> {
   String username = "";
   String password = "";
   bool _passwordVisible = false;
@@ -89,7 +90,8 @@ class _LoginPageState extends State<LoginPage> {
                                     fillColor: Colors.black.withOpacity(0.1)),
                                 validator: (username) {
                                   //Check if username address is valid here, if invalid, return a message.
-                                  if (username == null || username.length == 0) {
+                                  if (username == null ||
+                                      username.length == 0) {
                                     return "Username cannot be empty !";
                                   }
                                   return null;
@@ -280,7 +282,10 @@ class _LoginPageState extends State<LoginPage> {
               setState(() {
                 _isLoading = true;
               });
-              List responses = await Future.wait([HttpService.shared.login(username, password), HttpService.shared.getUser(username)]);
+              List responses = await Future.wait([
+                HttpService.shared.login(username, password),
+                HttpService.shared.getUser(username)
+              ]);
               setState(() {
                 _isLoading = false;
               });
@@ -289,7 +294,7 @@ class _LoginPageState extends State<LoginPage> {
               prefs.setBool('isLoggedIn', true);
               Navigator.pop(context);
               Navigator.pushNamed(context, "/home");
-            } on Exception catch(error) {
+            } on Exception catch (error) {
               setState(() {
                 _isLoading = false;
               });
@@ -307,15 +312,20 @@ class _LoginPageState extends State<LoginPage> {
                   color: Colors.white,
                   fontWeight: FontWeight.w400),
             ),
-            _isLoading ? Container(
-              width: 24,
-              height: 24,
-              padding: const EdgeInsets.all(2.0),
-              child: const CircularProgressIndicator(
-                color: Colors.white,
-                strokeWidth: 3,
-              ),
-            ) : Icon(CupertinoIcons.arrow_right_circle_fill, color: Colors.white70,),
+            _isLoading
+                ? Container(
+                    width: 24,
+                    height: 24,
+                    padding: const EdgeInsets.all(2.0),
+                    child: const CircularProgressIndicator(
+                      color: Colors.white,
+                      strokeWidth: 3,
+                    ),
+                  )
+                : Icon(
+                    CupertinoIcons.arrow_right_circle_fill,
+                    color: Colors.white70,
+                  ),
           ],
         ),
         style: ElevatedButton.styleFrom(

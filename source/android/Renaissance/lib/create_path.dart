@@ -19,56 +19,57 @@ class CreatePathPage extends StatefulWidget {
   const CreatePathPage({Key? key}) : super(key: key);
 
   @override
-  _CreatePathPageState createState() => _CreatePathPageState();
+  CreatePathPageState createState() => CreatePathPageState();
 }
 
-class _CreatePathPageState extends State<CreatePathPage> {
+@visibleForTesting
+class CreatePathPageState extends State<CreatePathPage> {
   var _image;
   bool _isLoading = false;
 
-  var _topics = <Tag>[];
+  var topics = <Tag>[];
 
-  List<TextEditingController> _titleControllers = [];
-  List<TextField> _titleFields = [];
-  List<TextEditingController> _descControllers = [];
-  List<TextField> _descFields = [];
+  List<TextEditingController> titleControllers = [];
+  List<TextField> titleFields = [];
+  List<TextEditingController> descControllers = [];
+  List<TextField> descFields = [];
 
-  List<String> _typeOfController = [];
+  List<String> typeOfController = [];
 
   TextEditingController titleController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   TextEditingController topicController = TextEditingController();
 
   void clearItems() {
-    _titleControllers = [];
-    _titleFields = [];
-    _descControllers = [];
-    _descFields = [];
-    _typeOfController = [];
-    _topics = [];
+    titleControllers = [];
+    titleFields = [];
+    descControllers = [];
+    descFields = [];
+    typeOfController = [];
+
     titleController.clear();
     descriptionController.clear();
     topicController.clear();
   }
 
   int findIndex(int i) {
-    String type = _typeOfController[i];
+    String type = typeOfController[i];
     int index = 1;
     for (int ind = 0; ind < i; ind++) {
-      if (_typeOfController[ind] == type) {
+      if (typeOfController[ind] == type) {
         index += 1;
       }
     }
     return index;
   }
 
-  void _deleteItem(int i) {
+  void deleteItem(int i) {
     setState(() {
-      _titleControllers.removeAt(i);
-      _titleFields.removeAt(i);
-      _descControllers.removeAt(i);
-      _descFields.removeAt(i);
-      _typeOfController.removeAt(i);
+      titleControllers.removeAt(i);
+      titleFields.removeAt(i);
+      descControllers.removeAt(i);
+      descFields.removeAt(i);
+      typeOfController.removeAt(i);
     });
   }
 
@@ -90,7 +91,7 @@ class _CreatePathPageState extends State<CreatePathPage> {
                   return InkWell(
                       onTap: () {
                         setState(() {
-                          _topics.add(tag);
+                          topics.add(tag);
                         });
                         Navigator.of(context).pop();
                       },
@@ -116,10 +117,10 @@ class _CreatePathPageState extends State<CreatePathPage> {
 
   @override
   void dispose() {
-    for (final controller in _titleControllers) {
+    for (final controller in titleControllers) {
       controller.dispose();
     }
-    for (final controller in _descControllers) {
+    for (final controller in descControllers) {
       controller.dispose();
     }
     titleController.dispose();
@@ -131,9 +132,11 @@ class _CreatePathPageState extends State<CreatePathPage> {
   Widget _addTile() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      key: const Key("addTile"),
       children: [
         TextButton(
           child: Text('Add Task'),
+          key: const Key("addTask"),
           style: TextButton.styleFrom(
             primary: MyColors.coolGray,
             backgroundColor: Colors.orangeAccent,
@@ -169,11 +172,11 @@ class _CreatePathPageState extends State<CreatePathPage> {
             );
 
             setState(() {
-              _titleControllers.add(titleController);
-              _titleFields.add(titleField);
-              _descControllers.add(descController);
-              _descFields.add(descField);
-              _typeOfController.add("Task");
+              titleControllers.add(titleController);
+              titleFields.add(titleField);
+              descControllers.add(descController);
+              descFields.add(descField);
+              typeOfController.add("Task");
             });
           },
         ),
@@ -214,11 +217,11 @@ class _CreatePathPageState extends State<CreatePathPage> {
             );
 
             setState(() {
-              _titleControllers.add(titleController);
-              _titleFields.add(titleField);
-              _descControllers.add(descController);
-              _descFields.add(descField);
-              _typeOfController.add("Milestone");
+              titleControllers.add(titleController);
+              titleFields.add(titleField);
+              descControllers.add(descController);
+              descFields.add(descField);
+              typeOfController.add("Milestone");
             });
           },
         ),
@@ -226,9 +229,9 @@ class _CreatePathPageState extends State<CreatePathPage> {
     );
   }
 
-  Widget _items() {
+  Widget items() {
     final children = [
-      for (var i = 0; i < _titleControllers.length; i++)
+      for (var i = 0; i < titleControllers.length; i++)
         Container(
           margin: EdgeInsets.all(5),
           child: InputDecorator(
@@ -240,18 +243,18 @@ class _CreatePathPageState extends State<CreatePathPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      _typeOfController[i] + " " + findIndex(i).toString(),
+                      typeOfController[i] + " " + findIndex(i).toString(),
                       style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
-                          color: _typeOfController[i] == "Task"
+                          color: typeOfController[i] == "Task"
                               ? Colors.redAccent
                               : Colors.orangeAccent),
                     ),
                     TextButton(
-                      onPressed: () => _deleteItem(i),
+                      onPressed: () => deleteItem(i),
                       style: TextButton.styleFrom(
-                        backgroundColor: _typeOfController[i] == "Task"
+                        backgroundColor: typeOfController[i] == "Task"
                             ? Colors.redAccent
                             : Colors.orangeAccent,
                         shape: CircleBorder(),
@@ -265,15 +268,15 @@ class _CreatePathPageState extends State<CreatePathPage> {
                   ],
                 ),
                 Text(
-                  _typeOfController[i] + " Title",
+                  typeOfController[i] + " Title",
                   style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
                 ),
-                _titleFields[i],
+                titleFields[i],
                 Text(
-                  _typeOfController[i] + " Description ",
+                  typeOfController[i] + " Description",
                   style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
                 ),
-                _descFields[i],
+                descFields[i],
               ],
             ),
             decoration: InputDecoration(),
@@ -283,6 +286,7 @@ class _CreatePathPageState extends State<CreatePathPage> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: children,
+      key: Key("items"),
     );
   }
 
@@ -387,12 +391,12 @@ class _CreatePathPageState extends State<CreatePathPage> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      ...(_topics as List<Tag>).map((tag) {
+                      ...(topics as List<Tag>).map((tag) {
                         return Container(
                             margin: EdgeInsets.symmetric(
                                 horizontal: 5, vertical: 2),
                             decoration: BoxDecoration(
-                                color: _topics.indexOf(_topics.firstWhere(
+                                color: topics.indexOf(topics.firstWhere(
                                                 (element) =>
                                                     (element.id! == tag.id!))) %
                                             2 ==
@@ -411,14 +415,14 @@ class _CreatePathPageState extends State<CreatePathPage> {
                                       setState(() {
                                         int indice = 0;
                                         for (int i = 0;
-                                            i < _topics.length;
+                                            i < topics.length;
                                             i++) {
-                                          if (_topics[i].id == tag.id) {
+                                          if (topics[i].id == tag.id) {
                                             break;
                                           }
                                         }
 
-                                        _topics.removeAt(indice);
+                                        topics.removeAt(indice);
                                       });
                                     },
                                     icon: Icon(Icons.cancel_outlined),
@@ -459,7 +463,7 @@ class _CreatePathPageState extends State<CreatePathPage> {
                 'Tasks and Milestones',
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
               ),
-              _items(),
+              items(),
               _addTile(),
               MaterialButton(
                   onPressed: () async {
@@ -477,11 +481,11 @@ class _CreatePathPageState extends State<CreatePathPage> {
                       // if (topicController.text == "")
                       //   throw Exception('Please give some topic!');
 
-                      for (var item in _titleControllers)
+                      for (var item in titleControllers)
                         if (item.text == "")
                           throw Exception('Please fill all milestone titles!');
 
-                      for (var item in _descControllers)
+                      for (var item in descControllers)
                         if (item.text == "")
                           throw Exception(
                               'Please fill all milestone descriptions!');
@@ -489,21 +493,22 @@ class _CreatePathPageState extends State<CreatePathPage> {
                       List<Map<String, Object>> items = [];
                       List<Map<String, String>> topics = [];
 
-                      for (var i = 0; i < _titleControllers.length; i++) {
+                      for (var i = 0; i < titleControllers.length; i++) {
                         items.add({
-                          "title": _titleControllers[i].text,
-                          "body": _descControllers[i].text,
-                          "type": _typeOfController[i] == "Task" ? 0 : 1,
+                          "title": titleControllers[i].text,
+                          "body": descControllers[i].text,
+                          "type": typeOfController[i] == "Task" ? 0 : 1,
                         });
                       }
                       print(items);
 
                       List<Map<String, Object>> sendTopic = [];
-                      for (var i = 0; i < _topics.length; i++) {
+                      for (var i = 0; i < topics.length; i++) {
                         sendTopic.add({
-                          "ID": int.parse(_topics[i].id as String),
-                          "name": _topics[i].name as String,
-                          "description": _topics[i].description as String
+                          "ID": int.parse((topics[i] as Tag).id as String),
+                          "name": (topics[i] as Tag).name as String,
+                          "description":
+                              (topics[i] as Tag).description as String
                         });
                       }
 
