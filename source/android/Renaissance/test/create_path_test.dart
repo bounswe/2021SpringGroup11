@@ -49,4 +49,23 @@ void main() {
     expect(state.descFields, isEmpty);
     expect(state.typeOfController, isEmpty);
   });
+
+  test('Find index functionailty checks', () {
+    final widget = CreatePathPage();
+    final element = widget.createElement(); // this will set state.widget
+    final state = element.state as CreatePathPageState;
+
+    state.typeOfController.add("t1");
+    state.typeOfController.add("t2");
+    state.typeOfController.add("t1");
+    state.typeOfController.add("t1");
+    state.typeOfController.add("t1");
+    state.typeOfController.add("t2");
+
+    expect(state.typeOfController, isNotEmpty);
+
+    expect(state.findIndex(5), 2);
+    expect(state.findIndex(4), 4);
+    expect(state.findIndex(1), 1);
+  });
 }
