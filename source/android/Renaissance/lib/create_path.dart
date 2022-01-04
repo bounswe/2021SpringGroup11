@@ -45,6 +45,10 @@ class _CreatePathPageState extends State<CreatePathPage> {
     _descControllers = [];
     _descFields = [];
     _typeOfController = [];
+    _topics = [];
+    titleController.clear();
+    descriptionController.clear();
+    topicController.clear();
   }
 
   int findIndex(int i) {
@@ -469,8 +473,8 @@ class _CreatePathPageState extends State<CreatePathPage> {
                       if (descriptionController.text == "")
                         throw Exception('Please give a description!');
 
-                      if (topicController.text == "")
-                        throw Exception('Please give some topic!');
+                      // if (topicController.text == "")
+                      //   throw Exception('Please give some topic!');
 
                       for (var item in _titleControllers)
                         if (item.text == "")
@@ -481,18 +485,17 @@ class _CreatePathPageState extends State<CreatePathPage> {
                           throw Exception(
                               'Please fill all milestone descriptions!');
 
-                      List<Map<String, String>> items = [];
+                      List<Map<String, Object>> items = [];
                       List<Map<String, String>> topics = [];
 
                       for (var i = 0; i < _titleControllers.length; i++) {
                         items.add({
                           "title": _titleControllers[i].text,
                           "body": _descControllers[i].text,
-                          "type": _typeOfController[i],
+                          "type": _typeOfController[i] == "Task" ? 0 : 1,
                         });
                       }
-
-                      List<String> splitted = topicController.text.split(",");
+                      print(items);
 
                       List<Map<String, Object>> sendTopic = [];
                       for (var i = 0; i < _topics.length; i++) {
@@ -503,15 +506,15 @@ class _CreatePathPageState extends State<CreatePathPage> {
                         });
                       }
 
-                      // User response = await HttpService.shared.createPath(
-                      //   titleController.text,
-                      //   descriptionController.text,
-                      //   items,
-                      //   _image == null
-                      //       ? ""
-                      //       : FileConverter.getBase64StringFile(_image),
-                      //   sendTopic,
-                      // );
+                      User response = await HttpService.shared.createPath(
+                        titleController.text,
+                        descriptionController.text,
+                        items,
+                        _image == null
+                            ? ""
+                            : FileConverter.getBase64StringFile(_image),
+                        sendTopic,
+                      );
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                         content: Text(
                           'Successfully created ${titleController.text}',
@@ -522,9 +525,6 @@ class _CreatePathPageState extends State<CreatePathPage> {
                         ),
                       ));
 
-                      titleController.clear();
-                      descriptionController.clear();
-                      topicController.clear();
                       clearItems();
                       _image = null;
 

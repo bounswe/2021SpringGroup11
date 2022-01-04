@@ -143,6 +143,7 @@ class _SearchPageState extends State<SearchPage> {
                   if (_topics.isNotEmpty)
                     ...(_topics as List<Tag>).map((tag) {
                       return TagSearchContainer(key: Key(tag.id!), tag: tag);
+
                     }).toList(),
                   if (_topics.isEmpty)
                     Text(
