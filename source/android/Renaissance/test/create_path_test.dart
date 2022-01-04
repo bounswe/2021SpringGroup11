@@ -9,30 +9,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:portakal/models/tag.dart';
 
-import 'package:portakal/search_page.dart';
+import 'package:portakal/create_path.dart';
 import 'package:portakal/widget/tag_container.dart';
 import 'package:portakal/widget/tag_search_container.dart';
 
 void main() {
   test('initial list empty checks', () {
-    final widget = SearchPage();
+    final widget = CreatePathPage();
     final element = widget.createElement(); // this will set state.widget
-    final state = element.state as SearchPageState;
+    final state = element.state as CreatePathPageState;
     expect(state.topics, isEmpty);
-    expect(state.paths, isEmpty);
-    expect(state.users, isEmpty);
-  });
-
-  test('topic list update check', () {
-    final widget = SearchPage();
-    final element = widget.createElement(); // this will set state.widget
-    final state = element.state as SearchPageState;
-    Tag dumb = Tag(name: "name", id: "2", description: "desc", isFav: true);
-
-    state.setState(() {
-      state.topics = [dumb];
-    });
-
-    expect(find.byType(TagSearchContainer), findsWidgets);
+    expect(state.titleController, isNotNull);
+    expect(state.topicController, isNotNull);
+    expect(state.descriptionController, isNotNull);
   });
 }

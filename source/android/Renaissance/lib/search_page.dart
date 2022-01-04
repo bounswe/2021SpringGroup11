@@ -24,37 +24,37 @@ class SearchPageState extends State<SearchPage> {
   var topics = [];
   var paths = [];
   var users = [];
-  String _keyword = "";
+  String keyword = "";
+  void searchT() async {
+    var xtopics = await HttpService.shared.searchTopic(keyword);
+
+    setState(() {
+      topics = xtopics;
+    });
+  }
+
+  void searchP() async {
+    var tpaths = await HttpService.shared.searchPath(keyword);
+    setState(() {
+      paths = tpaths;
+    });
+  }
+
+  void searchU() async {
+    var tusers = await HttpService.shared.searchUser(keyword);
+    setState(() {
+      users = tusers;
+    });
+  }
+
+  void search() async {
+    searchT();
+    searchP();
+    searchU();
+  }
+
   @override
   Widget build(BuildContext context) {
-    void _searchT() async {
-      var xtopics = await HttpService.shared.searchTopic(_keyword);
-
-      setState(() {
-        topics = xtopics;
-      });
-    }
-
-    void _searchP() async {
-      var tpaths = await HttpService.shared.searchPath(_keyword);
-      setState(() {
-        paths = tpaths;
-      });
-    }
-
-    void _searchU() async {
-      var tusers = await HttpService.shared.searchUser(_keyword);
-      setState(() {
-        users = tusers;
-      });
-    }
-
-    void _search() async {
-      _searchT();
-      _searchP();
-      _searchU();
-    }
-
     return Scaffold(
       appBar: AppBar(
           backgroundColor: MyColors.blue,
@@ -70,7 +70,7 @@ class SearchPageState extends State<SearchPage> {
             IconButton(
                 onPressed: () {
                   setState(() {
-                    _search();
+                    search();
                   });
                 },
                 icon: Icon(Icons.search))
@@ -90,13 +90,13 @@ class SearchPageState extends State<SearchPage> {
               child: TextField(
                 onSubmitted: (query) {
                   setState(() {
-                    _keyword = query;
+                    keyword = query;
                   });
-                  _search();
+                  search();
                 },
                 onChanged: (query) {
                   setState(() {
-                    _keyword = query;
+                    keyword = query;
                   });
                 },
                 style: TextStyle(

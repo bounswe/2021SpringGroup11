@@ -27,7 +27,7 @@ class CreatePathPageState extends State<CreatePathPage> {
   var _image;
   bool _isLoading = false;
 
-  var _topics = <Tag>[];
+  var topics = <Tag>[];
 
   List<TextEditingController> _titleControllers = [];
   List<TextField> _titleFields = [];
@@ -87,7 +87,7 @@ class CreatePathPageState extends State<CreatePathPage> {
                   return InkWell(
                       onTap: () {
                         setState(() {
-                          _topics.add(tag);
+                          topics.add(tag);
                         });
                         Navigator.of(context).pop();
                       },
@@ -389,7 +389,7 @@ class CreatePathPageState extends State<CreatePathPage> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      ...(_topics as List<Tag>).map((tag) {
+                      ...(topics as List<Tag>).map((tag) {
                         return Container(
                             margin: EdgeInsets.symmetric(
                                 horizontal: 5, vertical: 2),
@@ -407,14 +407,14 @@ class CreatePathPageState extends State<CreatePathPage> {
                                       setState(() {
                                         int indice = 0;
                                         for (int i = 0;
-                                            i < _topics.length;
+                                            i < topics.length;
                                             i++) {
-                                          if (_topics[i].id == tag.id) {
+                                          if (topics[i].id == tag.id) {
                                             break;
                                           }
                                         }
 
-                                        _topics.removeAt(indice);
+                                        topics.removeAt(indice);
                                       });
                                     },
                                     icon: Icon(Icons.cancel_outlined),
@@ -496,11 +496,12 @@ class CreatePathPageState extends State<CreatePathPage> {
                       List<String> splitted = topicController.text.split(",");
 
                       List<Map<String, Object>> sendTopic = [];
-                      for (var i = 0; i < _topics.length; i++) {
+                      for (var i = 0; i < topics.length; i++) {
                         sendTopic.add({
-                          "ID": int.parse(_topics[i].id as String),
-                          "name": _topics[i].name as String,
-                          "description": _topics[i].description as String
+                          "ID": int.parse((topics[i] as Tag).id as String),
+                          "name": (topics[i] as Tag).name as String,
+                          "description":
+                              (topics[i] as Tag).description as String
                         });
                       }
 
