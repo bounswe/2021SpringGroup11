@@ -97,7 +97,7 @@ class _CourseContainerState extends State<CourseContainer> {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Column(children: [
-                                  Text('Effort',
+                                  Text('Difficulty',
                                       style: TextStyle(
                                           fontSize: 14, color: Colors.yellow)),
                                   Text(widget.path.effort.toStringAsFixed(2),
