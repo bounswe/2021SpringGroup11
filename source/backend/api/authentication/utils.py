@@ -193,7 +193,7 @@ def send_email(receiver, username, forgot_password_link: str=''):
             service.users().messages().send(userId=user_id, body=message).execute()
         
         except:
-            print('Could not send email')
+            pass#print('Could not send email')
     else:
         try:
             service = get_service()
@@ -203,7 +203,7 @@ def send_email(receiver, username, forgot_password_link: str=''):
             message = create_message(settings.SENDER_EMAIL, receiver, subject, message_text)
             service.users().messages().send(userId=user_id, body=message).execute()
         except:
-            print('Could not send email')
+            pass#print('Could not send email')
 
 
 def create_forgot_password_link(jwt) -> str:
