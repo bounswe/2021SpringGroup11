@@ -482,6 +482,9 @@ class GetPath(APIView):
         path['rating'] = rating
         path['effort'] = effort
         
+        if 'resources' not in path.keys():
+            path['resources'] = []
+
         new_path_topics = []
         for path_topic in path['topics']:
             for topic in topics:
