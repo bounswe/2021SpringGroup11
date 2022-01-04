@@ -75,11 +75,6 @@ const NavBar = (props: Props) => {
                   <ExploreIcon />
                 </Badge>
               </IconButton>
-              <IconButton size="large" color="inherit">
-                <Badge badgeContent={2} color="error">
-                  <NotificationsIcon />
-                </Badge>
-              </IconButton>
               <IconButton
                 onClick={() => {
                   history.push('/profile');
