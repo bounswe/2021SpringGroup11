@@ -1,16 +1,21 @@
+import 'dart:developer';
+
 class User {
-  final String? username;
-  final String? email;
-  final String? firstname;
-  final String? lastname;
-  final String? bio;
-  final bool? isAdmin;
-  final bool? isBanned;
-  final int? finishedResourceCount;
-  final String? photo;
-  final bool? rememberMe;
-  const User({
-    this.username, this.email, this.firstname, this.lastname, this.bio, this.isAdmin, this.isBanned, this.finishedResourceCount, this.photo, this.rememberMe
+  String? username;
+  String? email;
+  String? firstname;
+  String? lastname;
+  String? bio;
+  int? finishedResourceCount;
+  int? enrolls;
+  int? followed_paths;
+  int? finished_paths;
+  int follower;
+  int following;
+  String? photo;
+  bool? rememberMe;
+  User({
+    this.username, this.email, this.firstname, this.lastname, this.bio, this.finishedResourceCount, this.photo, this.rememberMe, this.finished_paths, this.followed_paths, this.enrolls, required this.follower, required this.following
   });
 
   static User? me;
@@ -21,11 +26,14 @@ class User {
         firstname: json['firstname'] as String?,
         lastname: json['lastname'] as String?,
         bio: json['bio'] as String?,
-        isAdmin: json['isAdmin'] as bool?,
-        isBanned: json['isBanned'] as bool?,
         finishedResourceCount: json['finishedResourceCount'] as int?,
         photo: json['photo'] as String?,
-        rememberMe: json['rememberMe'] as bool?
+        rememberMe: json['rememberMe'] as bool?,
+        finished_paths: json['finished_paths'] as int?,
+        followed_paths: json['followed_paths'] as int?,
+        enrolls: json['enrolls'] as int?,
+        follower: json['follower'] as int,
+        following: json['following'] as int
     );
   }
 }

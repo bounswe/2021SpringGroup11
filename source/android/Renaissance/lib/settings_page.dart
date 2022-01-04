@@ -11,14 +11,15 @@ class SettingsPage extends StatefulWidget {
   const SettingsPage({Key? key}) : super(key: key);
 
   @override
-  State<SettingsPage> createState() => _SettingsPageState();
+  State<SettingsPage> createState() => SettingsPageState();
 }
 
-class _SettingsPageState extends State<SettingsPage> {
-  bool _allowNotifications = true;
-  bool _favoritePaths = true;
-  bool _enrolledPaths = true;
-  bool _favoriteTopics = true;
+@visibleForTesting
+class SettingsPageState extends State<SettingsPage> {
+  bool allowNotifications = true;
+  bool favoritePaths = true;
+  bool enrolledPaths = true;
+  bool favoriteTopics = true;
   TextEditingController _passwordController = TextEditingController();
   TextEditingController _repeatController = TextEditingController();
   TextEditingController _oldPasswordController = TextEditingController();
@@ -42,7 +43,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   Container(
                     padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                     decoration: BoxDecoration(
-                        borderRadius: _allowNotifications
+                        borderRadius: allowNotifications
                             ? BorderRadius.only(
                                 topLeft: Radius.circular(15),
                                 topRight: Radius.circular(15))
@@ -59,21 +60,21 @@ class _SettingsPageState extends State<SettingsPage> {
                         ),
                         Spacer(),
                         CupertinoSwitch(
-                            value: _allowNotifications,
+                            value: allowNotifications,
                             onChanged: (value) {
                               setState(() {
-                                _allowNotifications = value;
+                                allowNotifications = value;
                               });
                             })
                       ],
                     ),
                   ),
                   Container(
-                      padding: _allowNotifications
+                      padding: allowNotifications
                           ? EdgeInsets.symmetric(vertical: 3, horizontal: 10)
                           : EdgeInsets.all(0),
                       color: MyColors.blue,
-                      child: _allowNotifications
+                      child: allowNotifications
                           ? Column(
                               children: [
                                 Row(
@@ -84,10 +85,10 @@ class _SettingsPageState extends State<SettingsPage> {
                                     ),
                                     Spacer(),
                                     CupertinoSwitch(
-                                        value: _favoritePaths,
+                                        value: favoritePaths,
                                         onChanged: (value) {
                                           setState(() {
-                                            _favoritePaths = value;
+                                            favoritePaths = value;
                                           });
                                         })
                                   ],
@@ -98,11 +99,11 @@ class _SettingsPageState extends State<SettingsPage> {
                               height: 0,
                             )),
                   Container(
-                    padding: _allowNotifications
+                    padding: allowNotifications
                         ? EdgeInsets.symmetric(vertical: 3, horizontal: 10)
                         : EdgeInsets.all(0),
                     color: MyColors.blue,
-                    child: _allowNotifications
+                    child: allowNotifications
                         ? Column(
                             children: [
                               Row(
@@ -111,10 +112,10 @@ class _SettingsPageState extends State<SettingsPage> {
                                       style: TextStyle(fontSize: 15)),
                                   Spacer(),
                                   CupertinoSwitch(
-                                      value: _enrolledPaths,
+                                      value: enrolledPaths,
                                       onChanged: (value) {
                                         setState(() {
-                                          _enrolledPaths = value;
+                                          enrolledPaths = value;
                                         });
                                       })
                                 ],
@@ -126,14 +127,14 @@ class _SettingsPageState extends State<SettingsPage> {
                           ),
                   ),
                   Container(
-                    padding: _allowNotifications
+                    padding: allowNotifications
                         ? EdgeInsets.symmetric(vertical: 3, horizontal: 10)
                         : EdgeInsets.all(0),
                     decoration: BoxDecoration(
                         borderRadius:
                             BorderRadius.vertical(bottom: Radius.circular(15)),
                         color: MyColors.blue),
-                    child: _allowNotifications
+                    child: allowNotifications
                         ? Column(
                             children: [
                               Row(
@@ -142,10 +143,10 @@ class _SettingsPageState extends State<SettingsPage> {
                                       style: TextStyle(fontSize: 15)),
                                   Spacer(),
                                   CupertinoSwitch(
-                                      value: _favoriteTopics,
+                                      value: favoriteTopics,
                                       onChanged: (value) {
                                         setState(() {
-                                          _favoriteTopics = value;
+                                          favoriteTopics = value;
                                         });
                                       })
                                 ],
@@ -164,7 +165,8 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
             MaterialButton(
               onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => MyPathsPage()));
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => MyPathsPage()));
               },
               child: Row(
                 children: [
@@ -209,7 +211,8 @@ class _SettingsPageState extends State<SettingsPage> {
             MaterialButton(
               onPressed: () async {
                 SharedPreferences prefs = await SharedPreferences.getInstance();
-                await Future.wait([prefs.remove('isLoggedIn'), prefs.remove('token')]);
+                await Future.wait(
+                    [prefs.remove('isLoggedIn'), prefs.remove('token')]);
                 Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
                     PageRouteBuilder(pageBuilder: (
                       BuildContext context,
@@ -303,8 +306,8 @@ class _SettingsPageState extends State<SettingsPage> {
                     ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: Text('Processing data')));
                     try {
-                      var response = await HttpService.shared.changePassword(_passwordController.text);
-
+                      var response = await HttpService.shared
+                          .changePassword(_passwordController.text);
                     } on Exception catch (error) {
                       ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(content: Text(error.toString())));

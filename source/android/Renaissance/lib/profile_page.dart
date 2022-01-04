@@ -1,9 +1,13 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:portakal/edit_profile.dart';
 import 'package:portakal/file_converter.dart';
 import 'package:portakal/follow_page.dart';
 import 'package:portakal/http_services.dart';
+import 'package:portakal/models/basic_path.dart';
+import 'package:portakal/models/path.dart';
 import 'dart:io';
 import 'package:portakal/my_colors.dart';
 import 'package:portakal/widget/profile_appbar_widget.dart';
@@ -12,9 +16,11 @@ import 'package:portakal/widget/profile_stats_widget.dart';
 import 'package:portakal/widget/profile_follow_widget.dart';
 import 'package:portakal/widget/course_container.dart';
 
+import 'models/basic_path.dart';
+
 class ProfilePage extends StatefulWidget {
-  final User user;
-  const ProfilePage({ Key? key, required this.user }): super(key: key);
+  User user;
+  ProfilePage({ Key? key, required this.user }): super(key: key);
 
   @override
   _ProfilePageState createState() => _ProfilePageState();
@@ -22,31 +28,18 @@ class ProfilePage extends StatefulWidget {
 bool isFollowed = true;
 
 class _ProfilePageState extends State<ProfilePage> with EditProfileDelegate, FollowerWidgetDelegate {
+  late Future<List<BasicPath>> favPaths = HttpService.shared.getFavouritePaths(widget.user.username!);
+  late Future<List<BasicPath>> enrolledPaths = HttpService.shared.getEnrolledPaths(widget.user.username!);
 
-  var paths = [
-    {"name": "Selam", "effort": 2, "rating": 10.0},
-    {"name": "Muz", "effort": 2, "rating": 10.0},
-    {"name": "Ahoy", "effort": 2, "rating": 10.0},
-    {"name": "Cam", "effort": 2, "rating": 10.0},
-    {"name": "Kar", "effort": 2, "rating": 11.0},
-    {"name": "Araba", "effort": 2, "rating": 10.0},
-    {"name": "Selam", "effort": 2, "rating": 10.0},
-    {"name": "Muz", "effort": 2, "rating": 10.0},
-    {"name": "Ahoy", "effort": 2, "rating": 11.0},
-    {"name": "Cam", "effort": 2, "rating": 1.0},
-    {"name": "Kar", "effort": 2, "rating": 10.0},
-    {"name": "Araba", "effort": 2, "rating": 10.0},
-  ];
   bool loadingImage = false;
   File? profileImg;
-  // https://stackoverflow.com/questions/62156996/how-to-decode-base64-string-to-image-file-with-flutter?rq=1 profil fotosu yukleme yap.
 
   void loadPhoto() async {
-    if (User.me!.photo == null || User.me!.photo == "") { return ; }
+    if (widget.user.photo == null || widget.user.photo == "") { return ; }
     setState(() {
       loadingImage = true;
     });
-    profileImg = await FileConverter.getImageFromBase64(User.me!.photo!);
+    profileImg = await FileConverter.getImageFromBase64(widget.user.photo!);
     setState(() {
       loadingImage = false;
     });
@@ -83,38 +76,45 @@ class _ProfilePageState extends State<ProfilePage> with EditProfileDelegate, Fol
                           child: Image.file(profileImg!, width: 64, height: 64, fit: BoxFit.fitHeight,),
                           borderRadius: BorderRadius.circular(32.0),
                         ),
-                        StatsWidget(0,0,0)
+                        StatsWidget(widget.user.followed_paths ?? 0, widget.user.enrolls ?? 0, widget.user.finishedResourceCount!)
                       ]
                   ),
-                  Container(
-                    margin: EdgeInsets.only(top: 15),
-                    width: 315,
-                    padding: EdgeInsets.symmetric(horizontal: 5,vertical: 5),
-                    decoration: BoxDecoration(
-                        color: Color(0x99FFFFFF),
-                        borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                         'About',
-                          style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-                        ),
-                        Container(
-                          // adding margin
-                          height: 53,
-                          child: SingleChildScrollView(
-                            // for Vertical scrolling
-                            scrollDirection: Axis.vertical,
-                            child: Text(
-                              User.me!.bio ?? "No info yet.",
-                              style: TextStyle(fontSize: 14, height: 1.2,  fontStyle: FontStyle.italic),
+                  MaterialButton(onPressed: _pullRefresh, child: Text("Refresh", style: TextStyle(color: Colors.white60),), color: Colors.black54, ),
+
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(top: 15),
+                        width: 315,
+                        padding: EdgeInsets.symmetric(horizontal: 5,vertical: 5),
+                        decoration: BoxDecoration(
+                            color: Color(0x99FFFFFF),
+                            borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                             'About',
+                              style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                             ),
-                          ),
+                            Container(
+                              // adding margin
+                              height: 53,
+                              child: SingleChildScrollView(
+                                // for Vertical scrolling
+                                scrollDirection: Axis.vertical,
+                                child: Text(
+                                  User.me!.bio ?? "No info yet.",
+                                  style: TextStyle(fontSize: 14, height: 1.2,  fontStyle: FontStyle.italic),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                   Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -127,7 +127,7 @@ class _ProfilePageState extends State<ProfilePage> with EditProfileDelegate, Fol
                                 borderRadius: BorderRadius.all(Radius.circular(50.0))
                             ),
                             child: Center(
-                                child: FollowerWidget(0,0, this)
+                                child: FollowerWidget(widget.user.follower, widget.user.following, this)
                             ),
                             margin: EdgeInsets.only(top: 10)
                         ),
@@ -149,10 +149,12 @@ class _ProfilePageState extends State<ProfilePage> with EditProfileDelegate, Fol
                                 try {
                                   var response = await HttpService.shared.followUser(User.me!.username!, widget.user.username!);
                                 } on Exception catch (error) {
+
                                 }
                               }
                               setState(() {
                                 isFollowed = !isFollowed;
+                                widget.user.follower += isFollowed ? -1 : 1;
                               });
                             },
                           ),
@@ -162,46 +164,86 @@ class _ProfilePageState extends State<ProfilePage> with EditProfileDelegate, Fol
               )
           ),
           InkWell(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
+              child: const Padding(
+                padding: EdgeInsets.all(8.0),
                 child: Text('Favourite Paths',
                     style: TextStyle(fontSize: 14,decoration: TextDecoration.underline, fontWeight: FontWeight.bold, color: Colors.lightBlue)),
               ),
               onTap: () {},
           ),
-          Padding(
-              padding: const EdgeInsets.symmetric(vertical:0,horizontal:10),
-              child:Text('No Favourite Paths Yet.',
-                  style: TextStyle(fontSize: 14, fontStyle: FontStyle.italic))
+          FutureBuilder<List<BasicPath>>(
+            future: favPaths,
+            builder: (context, snapshot) {
+              if (snapshot.hasData == false) {
+                return const Padding(
+                    padding: EdgeInsets.symmetric(vertical:0,horizontal:10),
+                    child: Text('No Favourite Paths Yet.',
+                        style: TextStyle(fontSize: 14, fontStyle: FontStyle.italic))
+                );
+              } else {
+                return Container(
+                  height: 80.0,
+                  width: double.infinity,
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    physics: const BouncingScrollPhysics(),
+                    child: Row(
+                      children: snapshot.data!.map((e) { e.isFollowed = true; return CourseContainer(key: Key(e.id), path: e,); }
+                      ).toList(),
+                    ),
+                  ),
+                );
+              }
+            }
           ),
-          /*SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children:
-                paths.map((path) {
-                  return CourseContainer(path["name"] as String,
-                      path["effort"] as int, path["rating"] as double);
-                }).toList(),
-            ),
-          ),*/
           InkWell(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
+              child: const Padding(
+                padding: EdgeInsets.all(8.0),
                 child: Text('Enrolled Paths',
                     style: TextStyle(fontSize: 14,decoration: TextDecoration.underline, fontWeight: FontWeight.bold, color: Colors.lightBlue)),
               ),
               onTap: () {}
           ),
-          Padding(
-          padding: const EdgeInsets.symmetric(vertical:0,horizontal:10),
-          child:Text('No Enrolled Paths Yet.',
-              style: TextStyle(fontSize: 14, fontStyle: FontStyle.italic))
-          ),
+
+          FutureBuilder<List<BasicPath>>(
+              future: enrolledPaths,
+              builder: (context, snapshot) {
+                if (snapshot.hasData == false) {
+                  return const Padding(
+                      padding: EdgeInsets.symmetric(vertical:0,horizontal:10),
+                      child: Text('No Enrolled Paths Yet.',
+                          style: TextStyle(fontSize: 14, fontStyle: FontStyle.italic))
+                  );
+                } else {
+                  return Container(
+                    height: 80.0,
+                    width: double.infinity,
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      physics: const BouncingScrollPhysics(),
+                      child: Row(
+                        children: snapshot.data!.map((e) => CourseContainer(key: Key(e.id), path: e,)).toList(),
+                      ),
+                    ),
+                  );
+                }
+              }
+          )
         ],
       ),
     );
   }
 
+  Future<void> _pullRefresh() async {
+    User user = await HttpService.shared.getUser(widget.user.username!);
+    Future<List<BasicPath>> favPaths = HttpService.shared.getFavouritePaths(widget.user.username!);
+    Future<List<BasicPath>> enrolledPaths = HttpService.shared.getEnrolledPaths(widget.user.username!);
+    setState(() {
+      widget.user = user;
+      this.favPaths = HttpService.shared.getFavouritePaths(widget.user.username!);
+      this.enrolledPaths = HttpService.shared.getEnrolledPaths(widget.user.username!);
+    });
+  }
   @override
   void onSuccessfulSave() async {
     loadPhoto();

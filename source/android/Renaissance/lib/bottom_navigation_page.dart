@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:portakal/activity_stream.dart';
 import 'package:portakal/create_path.dart';
 import 'package:portakal/home_page.dart';
 import 'package:portakal/login_page.dart';
 import 'package:portakal/models/user.dart';
 import 'package:portakal/my_colors.dart';
+import 'package:portakal/search_page.dart';
 import 'explore_page.dart';
 import 'profile_page.dart';
 import 'path_page.dart';
 import 'package:portakal/models/topic_model.dart';
 import 'package:portakal/models/milestone_model.dart';
+
 class BottomNavigationPage extends StatefulWidget {
   const BottomNavigationPage({Key? key}) : super(key: key);
 
@@ -51,7 +54,7 @@ class _BottomNavigationPageState extends State<BottomNavigationPage> {
           Navigator(
             key: _exploreScreen,
             onGenerateRoute: (route) => MaterialPageRoute(
-                builder: (context) => ExplorePage(), settings: route),
+                builder: (context) => SearchPage(), settings: route),
           ),
           Navigator(
             key: _addScreen,
@@ -61,7 +64,7 @@ class _BottomNavigationPageState extends State<BottomNavigationPage> {
           Navigator(
             key: _notificationScreen,
             onGenerateRoute: (route) => MaterialPageRoute(
-                builder: (context) => ExplorePage(), settings: route),
+                builder: (context) => ActivityStreamPage(), settings: route),
           ),
           Navigator(
             key: _profileScreen,

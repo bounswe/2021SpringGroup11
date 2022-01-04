@@ -17,7 +17,8 @@ Future<void> main() async {
   var isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
   if (isLoggedIn) {
     var token = await Token.shared.initializeToken();
-    User.me = await HttpService.shared.getUser(Jwt.parseJwt(token!)['username']);
+    User.me =
+        await HttpService.shared.getUser(Jwt.parseJwt(token!)['username']);
   }
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
@@ -25,6 +26,7 @@ Future<void> main() async {
     routes: {
       "/": (context) => const LoginPage(),
       "/home": (context) => const BottomNavigationPage(),
+      "/search": (context) => const BottomNavigationPage(),
     },
   ));
 }
