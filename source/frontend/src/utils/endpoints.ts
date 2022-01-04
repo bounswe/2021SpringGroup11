@@ -9,7 +9,7 @@ export const GET_USER_URL = `${baseUrl}user/get-profile/`; /// /get-profile/<use
 export const SEARCH_USER_URL = `${baseUrl}user/search-user/`; // /search-user/<search_text>
 export const FOLLOW_USER_URL = `${baseUrl}user/follow-user/`; //
 export const UNFOLLOW_USER_URL = `${baseUrl}user/unfollow-user/`; //
-export const FOLLOWINGS_USER_URL = `${baseUrl}user/get-follow/`; //
+export const GETFOLLOW_USER_URL = `${baseUrl}user/get-follow/`; //
 export const RATINGS_USER_URL = `${baseUrl}user/get-ratings/`; //
 export const ENROLLS_USER_URL = `${baseUrl}user/get-enrolls/`; //
 export const FAV_PATH_USER_URL = `${baseUrl}user/get-favourite-paths/`; //
@@ -22,6 +22,7 @@ export const GET_RELATED_TOPICS_BY_TOPIC_ID_URL = `${baseUrl}topic/related-topic
 export const GET_TOPIC_BY_TOPIC_ID_URL = `${baseUrl}topic/get-topic/`; //
 export const FAV_TOPIC_URL = `${baseUrl}topic/favorite-topic/`; //
 export const UNFAV_TOPIC_URL = `${baseUrl}topic/unfavorite-topic/`; //
+export const MY_TOPIC_URL = `${baseUrl}topic/my-topics/`; //
 
 export const ENROLL_PATH_URL = `${baseUrl}path/enroll-path/`;
 export const SEARCH_PATH_URL = `${baseUrl}path/search-path/`; // /search-path/<search_text>
@@ -32,5 +33,6 @@ export const SEARCHPATH_URL = `${baseUrl}path/search-path/`; ///
 export const GET_PATH_URL = `${baseUrl}path/get-path/`; /// path/ get-path/<slug:path_id>/ [name='get_path']
 export const WORDCLOUD_PATHS_URL = `${baseUrl}path/wordcloud/`; /// POST
 export const GET_PATH_DETAIL_URL = `${baseUrl}path/get-path-detail/`; ///
-
 export const GET_ACTIVITIES_URL = `${baseUrl}user/activity-streams/`; ///
+export const MY_PATH_URL = `${baseUrl}path/my-paths/`; ///
+export const HOME_DATA_URL = `${baseUrl}path/`; ///

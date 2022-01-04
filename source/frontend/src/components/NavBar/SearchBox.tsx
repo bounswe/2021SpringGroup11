@@ -2,7 +2,7 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 // import ExploreIcon from '@mui/icons-material/Explore';
 // import NotificationsIcon from '@mui/icons-material/Notifications';
 import SearchIcon from '@mui/icons-material/Search';
@@ -62,14 +62,18 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 const SearchBox = () => {
   const [searchText, setSearchText] = useState('');
-
+  const timeref = useRef(new Date().valueOf());
   const [searchResults, setSearchResults] = useState<null | ISearchResult[]>(null);
   useEffect(() => {
     (async () => {
       setSearchResults(null);
       if (searchText.trim()) {
+        timeref.current = new Date().valueOf();
+        const ydk = timeref.current;
         const results = await search({ searchText: searchText.trim() });
-        setSearchResults(results);
+        if (ydk === timeref.current) {
+          setSearchResults(results);
+        }
       }
     })();
   }, [searchText]);
@@ -206,20 +210,23 @@ const SearchBox = () => {
 interface Props {
   id: any;
   photo: any;
+  className?: any;
+  full?: boolean;
 }
 
-const WordCloudImg = ({ id, photo }: Props) => {
+export const base64ImgDataGenerator = (photo: string) =>
+  (photo.startsWith('data') ? '' : 'data:image/png;base64,') + photo;
+
+export const WordCloudImg = ({ id, photo, className, full }: Props) => {
   const [img, setimg] = useState('https://c.tenor.com/I6kN-6X7nhAAAAAj/loading-buffering.gif');
   useEffect(() => {
     (async () => {
       if (photo) {
-        setimg((photo.startsWith('data') ? '' : 'data:image/png;base64,') + photo);
-
-        setimg(`data:image/png;base64,${photo}`);
+        setimg(base64ImgDataGenerator(photo));
       } else {
         try {
           const wc = await getPathPhotoData(id);
-          setimg((wc.startsWith('data') ? '' : 'data:image/png;base64,') + wc);
+          setimg(base64ImgDataGenerator(wc));
         } catch (error) {
           setimg(faker.image.imageUrl(64, 64, undefined, true));
         }
@@ -228,9 +235,10 @@ const WordCloudImg = ({ id, photo }: Props) => {
   }, []);
   return (
     <img
+      className={className}
       style={{
-        height: '64px',
-        width: '64px',
+        height: full ? '100%' : '64px',
+        width: full ? '100%' : '64px',
       }}
       src={`${img}`}
     />

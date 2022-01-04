@@ -1,8 +1,11 @@
 import { makeStyles, styled } from '@mui/styles';
-import React from 'react';
-import { Tab, Tabs } from '@mui/material';
+
+import React, { useEffect, useState } from 'react';
+import faker from 'faker';
+
+import { Tab, Tabs, Box, CircularProgress } from '@mui/material';
 import HomeTabPanel from './HomeTabPanel';
-import { items } from '../constants';
+import { getHomeData } from './utils';
 interface StyledTabProps {
   label: string;
 }
@@ -36,6 +39,37 @@ const TabPanel = (props: TabPanelProps) => {
   const { children, value, index, ...other } = props;
 
   // TODO FIX THE ITEMS
+  const [items, setitems] = useState<
+    | {
+        tags: { name: string; id: string }[];
+        paths: {
+          name: string;
+          pic: string;
+          id: string;
+          effort: string;
+          rating: string;
+        }[];
+      }[]
+    | null
+  >(null);
+
+  useEffect(() => {
+    (async () => {
+      const res = await Promise.all([
+        getHomeData('popular'),
+        getHomeData('foryou'),
+        getHomeData('new'),
+      ]);
+      setitems(res);
+    })();
+  }, []);
+  if (!items) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '90vh' }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
     <div

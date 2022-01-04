@@ -25,8 +25,18 @@ import { toast } from 'react-toastify';
 
 import faker from 'faker';
 import NavBar from '../NavBar';
-import { getPathPhotoData, getProfileData, getUserData, updateUserData } from './helper';
+import {
+  followUser,
+  getPathPhotoData,
+  getProfileData,
+  getUserData,
+  getUsername,
+  unfollowUser,
+  updateUserData,
+} from './helper';
 import auth from '../../utils/auth';
+import history from '../../utils/history';
+import { base64ImgDataGenerator } from '../NavBar/SearchBox';
 
 interface Props {
   history: any;
@@ -40,6 +50,8 @@ const Profile = (props: Props) => {
   const [user, setUser] = useState(null);
   const [stats, setStats] = useState(null);
   const [favorites, setFavorites] = useState([]);
+  const [followings, setfollowings] = useState<string[]>([]);
+  const [followers, setfollowers] = useState<string[]>([]);
 
   const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
@@ -54,7 +66,9 @@ const Profile = (props: Props) => {
           user: _user,
           stats: _stats,
           favorites: _favorites,
-        } = await getProfileData(username || auth.getAuthInfoFromSession()?.username || 'e');
+          followers: _followers,
+          followings: _followings,
+        } = await getProfileData(getUsername(username));
         console.log(_resources);
 
         // @ts-ignore
@@ -65,12 +79,18 @@ const Profile = (props: Props) => {
         setStats(_stats);
         // @ts-ignore
         setFavorites(_favorites);
+        setfollowers(_followers);
+        setfollowings(_followings);
         setLoading(false);
       }, 10);
     })();
   }, [username]);
 
   const [editProfilePopup, seteditProfilePopup] = useState(false);
+  const [followingsPopup, setfollowingsPopup] = useState(false);
+  const [followersPopup, setfollowersPopup] = useState(false);
+
+  const [followingProgress, setfollowingProgress] = useState(false);
 
   if (loading) {
     return (
@@ -128,19 +148,62 @@ const Profile = (props: Props) => {
         >
           {
             // @ts-ignore
-            stats?.map((item: any) => (
-              <div
-                style={{
-                  alignItems: 'center',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'space-around',
-                }}
-              >
-                <div style={{ color: 'green' }}>{item.text}</div>
-                <div>{item.value}</div>
-              </div>
-            ))
+            stats?.map((item: any) => {
+              if (item.text === 'Followings') {
+                if (username) return;
+
+                return (
+                  <div
+                    style={{
+                      alignItems: 'center',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      justifyContent: 'space-around',
+                    }}
+                    onClick={() => {
+                      // users can see only own follow data
+                      !username && setfollowingsPopup(true);
+                    }}
+                  >
+                    <div style={{ color: 'green' }}>{item.text}</div>
+                    <div>{item.value}</div>
+                  </div>
+                );
+              }
+              if (item.text === 'Followers') {
+                if (username) return;
+                return (
+                  <div
+                    style={{
+                      alignItems: 'center',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      justifyContent: 'space-around',
+                    }}
+                    onClick={() => {
+                      // users can see only own follow data
+                      !username && setfollowersPopup(true);
+                    }}
+                  >
+                    <div style={{ color: 'green' }}>{item.text}</div>
+                    <div>{item.value}</div>
+                  </div>
+                );
+              }
+              return (
+                <div
+                  style={{
+                    alignItems: 'center',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'space-around',
+                  }}
+                >
+                  <div style={{ color: 'green' }}>{item.text}</div>
+                  <div>{item.value}</div>
+                </div>
+              );
+            })
           }
         </div>
         <div
@@ -170,6 +233,42 @@ const Profile = (props: Props) => {
             </div>
           </div>
         </div>
+        {username && (
+          <Button
+            style={{
+              color: 'white',
+              marginLeft: 'auto',
+              // padding: '0 20px',
+              flex: 1,
+              backgroundColor: followings.includes(username) ? 'red' : 'green',
+            }}
+            onClick={async () => {
+              if (followings.includes(username)) {
+                setfollowingProgress(true);
+                await unfollowUser(username);
+                setfollowings(followings.filter((i) => i !== username));
+                setfollowingProgress(false);
+              } else {
+                setfollowingProgress(true);
+
+                await followUser(username);
+                setfollowings(followings.concat(username));
+                setfollowingProgress(false);
+              }
+            }}
+          >
+            {followingProgress ? (
+              <>
+                <CircularProgress color="warning" />
+              </>
+            ) : followings.includes(username) ? (
+              'Unfollow'
+            ) : (
+              'Follow'
+            )}
+          </Button>
+        )}
+
         {!username && (
           <Button
             style={{
@@ -184,7 +283,7 @@ const Profile = (props: Props) => {
           </Button>
         )}
       </div>
-      <ProfileContent user={user} resources={resources} favorites={favorites} />
+      <ProfileContent username={username} user={user} resources={resources} favorites={favorites} />
       <Modal
         open={editProfilePopup}
         onClose={async () => {
@@ -228,6 +327,91 @@ const Profile = (props: Props) => {
           }}
         >
           <EditProfile seteditProfilePopup={seteditProfilePopup} username={username} />{' '}
+        </Box>
+      </Modal>
+      <Modal
+        open={followingsPopup}
+        onClose={async () => {
+          setfollowingsPopup(false);
+        }}
+      >
+        <Box
+          sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            // width: 400,
+            bgcolor: 'background.paper',
+            border: '2px solid #000',
+            boxShadow: 24,
+            p: 4,
+            overflow: 'scroll',
+            height: '90vh',
+          }}
+        >
+          <h1>followings</h1>
+
+          {followings.map((followingUsername) => (
+            <div
+              onClick={() => {
+                history.push(`/profile/${followingUsername}`);
+                setfollowingsPopup(false);
+              }}
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                background: 'yellow',
+                margin: '1rem',
+                borderStyle: 'double',
+                borderRadius: '5px',
+              }}
+            >
+              <h2>@{followingUsername}</h2>
+            </div>
+          ))}
+        </Box>
+      </Modal>
+      <Modal
+        open={followersPopup}
+        onClose={async () => {
+          setfollowersPopup(false);
+        }}
+      >
+        <Box
+          sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            // width: 400,
+            bgcolor: 'background.paper',
+            border: '2px solid #000',
+            boxShadow: 24,
+            p: 4,
+            overflow: 'scroll',
+            height: '90vh',
+          }}
+        >
+          <h1>followers</h1>
+          {followers.map((followingUsername) => (
+            <div
+              onClick={() => {
+                history.push(`/profile/${followingUsername}`);
+                setfollowersPopup(false);
+              }}
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                background: 'yellow',
+                margin: '1rem',
+                borderStyle: 'double',
+                borderRadius: '5px',
+              }}
+            >
+              <h2>@{followingUsername}</h2>
+            </div>
+          ))}
         </Box>
       </Modal>
     </div>
@@ -360,6 +544,7 @@ interface ProfileContentProps {
   resources: Resource[];
   favorites: { text: string; value: string }[];
   user: any;
+  username?: string;
 }
 const ProfileContent = (props: ProfileContentProps) => (
   <div
@@ -414,7 +599,9 @@ const ProfileContent = (props: ProfileContentProps) => (
           .map((resource) => (
             <ResourceCard
               resource={resource}
-              onClick={() => {}}
+              onClick={() => {
+                history.push(`/path/${resource._id}`);
+              }}
               buttonText={resource.isEnrolled ? 'Unenroll' : 'Enroll'}
               onButtonClick={() => {
                 alert('TODO');
@@ -472,22 +659,27 @@ const ProfileContent = (props: ProfileContentProps) => (
           flexDirection: 'column',
         }}
       >
-        {props.favorites.map((item) => (
-          <div
-            style={{
-              alignItems: 'center',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'space-around',
-              borderRadius: '10px',
-              background: 'white',
-              margin: '10px',
-            }}
-          >
-            <div style={{ color: 'green' }}>{item.text}</div>
-            <div>{item.value}</div>
-          </div>
-        ))}
+        {props.favorites.map((item) => {
+          if (item.text === 'Topics' && props.username) {
+            return;
+          }
+          return (
+            <div
+              style={{
+                alignItems: 'center',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-around',
+                borderRadius: '10px',
+                background: 'white',
+                margin: '10px',
+              }}
+            >
+              <div style={{ color: 'green' }}>{item.text}</div>
+              <div>{item.value}</div>
+            </div>
+          );
+        })}
       </div>
     </div>
   </div>
@@ -500,7 +692,7 @@ interface Resource {
   isEnrolled: boolean;
   isFollowed: boolean;
   photo: string;
-  id: string;
+  _id: string;
 }
 interface ResourceCardProps {
   resource: Resource;
@@ -515,14 +707,11 @@ export const ResourceCard = (props: ResourceCardProps) => {
   useEffect(() => {
     (async () => {
       if (props.resource.photo) {
-        setimg(
-          (props.resource.photo.startsWith('data') ? '' : 'data:image/png;base64,') +
-            props.resource.photo,
-        );
+        setimg(base64ImgDataGenerator(props.resource.photo));
       } else {
         try {
-          const wc = await getPathPhotoData(props.resource.id);
-          setimg((wc.startsWith('data') ? '' : 'data:image/png;base64,') + wc);
+          const wc = await getPathPhotoData(props.resource._id);
+          setimg(base64ImgDataGenerator(wc));
         } catch (error) {
           setimg(faker.image.imageUrl(64, 64, undefined, true));
         }
