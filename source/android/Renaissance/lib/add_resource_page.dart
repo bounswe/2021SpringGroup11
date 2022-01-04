@@ -1,12 +1,14 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:portakal/http_services.dart';
 import 'package:portakal/my_colors.dart';
 
 class AddResourcePage extends StatefulWidget {
+  final String? id;
+  const AddResourcePage({Key? key, this.id}) : super(key: key);
   @override
   State<StatefulWidget> createState() => _AddResourcePageState();
-
 }
 
 class _AddResourcePageState extends State<AddResourcePage> {
@@ -71,7 +73,9 @@ class _AddResourcePageState extends State<AddResourcePage> {
               Align(
                 alignment: Alignment.centerRight,
                 child: MaterialButton(
-                  onPressed:() {},
+                  onPressed:() async {
+                    await HttpService.shared.add_resource(widget.id!, _linkController.text, _descriptionController.text);
+                  },
                   color: Colors.green,
                   child: Text("SUBMIT"),
                 ),

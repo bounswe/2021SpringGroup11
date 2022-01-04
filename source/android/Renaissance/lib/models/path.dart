@@ -1,3 +1,4 @@
+import 'package:portakal/models/Resource.dart';
 import 'package:portakal/models/basic_path.dart';
 import 'package:portakal/models/milestone_model.dart';
 import 'package:portakal/models/topic_model.dart';
@@ -15,8 +16,9 @@ class Path {
   double effort;
   bool? isEnrolled;
   bool? isFollowed;
+  List<Resource>? resources;
   Path({
-    required this.id, required this.title, required this.description, this.topics, required this.creator_username, required this.creator_email, required this.created_at, this.photo, required this.milestones, required this.rating, required this.effort, this.isEnrolled,this.isFollowed
+    required this.id, required this.title, required this.description, this.topics, required this.creator_username, required this.creator_email, required this.created_at, this.photo, required this.milestones, required this.rating, required this.effort, this.isEnrolled,this.isFollowed,this.resources
 });
 
   factory Path.fromJson(Map<String, dynamic> json) {

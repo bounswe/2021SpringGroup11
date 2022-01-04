@@ -79,10 +79,11 @@ class _ProfilePageState extends State<ProfilePage> with EditProfileDelegate, Fol
                         StatsWidget(widget.user.followed_paths ?? 0, widget.user.enrolls ?? 0, widget.user.finishedResourceCount!)
                       ]
                   ),
+                  MaterialButton(onPressed: _pullRefresh, child: Text("Refresh", style: TextStyle(color: Colors.white60),), color: Colors.black54, ),
+
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      MaterialButton(onPressed: _pullRefresh, child: Text("Refresh", style: TextStyle(color: Colors.white60),), color: Colors.black54, ),
                       Container(
                         margin: EdgeInsets.only(top: 15),
                         width: 315,

@@ -682,9 +682,10 @@ class _PathPageState extends State<PathPage> {
                         children: [
                           Spacer(),
                           MaterialButton(onPressed: (){
+                            print(widget.p!.id);
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => AddResourcePage()),
+                              MaterialPageRoute(builder: (context) => AddResourcePage(id:widget.p!.id)),
                             );
                           },
                             color: MyColors.lightYellow,
@@ -693,9 +694,10 @@ class _PathPageState extends State<PathPage> {
                           Spacer()
                         ],
                       ),
-                      ResourceContainer(resource: Resource(username: "@tahsin", taskId: 10, description: "Allahi daha derinden ve yakindan tanimak icin gerekeni yapmaliyiz. Kurani Kerim Japonca meali tam da bunun icin, Link is below.", link: "hebele_hubele")),
-                      ResourceContainer(resource:  Resource(username: "@muhsin", taskId: 3, description: "Bence en iyi namaz 4 rekat kilinan namazdir. Ama sureleri bilmeden olmaz. Sure kitabi linkini birakiyorum.", link: "qurani_kerim.com"),),
-                      ResourceContainer(resource:  Resource(username: "@berkecan", taskId: 6, description: "Pdf dosyalarini acabilmenin sirri nedir? Cilegin serada mi tarlada mi yetistigini nasil anlariz? Ibrahim Tatlises terorist miydi?", link: "isiksu.inci"),),
+                      ...(widget.p!.resources as List<Resource>)
+                          .map((resource) {
+                        return ResourceContainer(resource:resource );
+                      }).toList(),
                     ],
                   )
                 ],
