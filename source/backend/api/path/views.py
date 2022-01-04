@@ -189,17 +189,6 @@ class GetPathDetail(APIView):
             'effort': effort,
         }, status=status.HTTP_200_OK)
 
-class SearchTopic(APIView):
-
-    def post(self, request):
-        data = request.data
-
-        search = data['search']
-
-        with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
-            topics = db.find('')# full text + regex search
-        
-        return Response(list(topics), status=status.HTTP_200_OK)
 
 class GetFollow(APIView):
     permission_classes = [IsAuthenticated]
@@ -477,7 +466,6 @@ class GetPath(APIView):
     def get(self, request, path_id):
         data = request.data
         username = data['username']
-
         with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
             path = db.find_one('path', query={'_id': ObjectId(path_id)})
             follow = db.find_one('follow_path', query={'username': username, 'path_id': path_id})
@@ -493,7 +481,7 @@ class GetPath(APIView):
         rating, effort = get_rate_n_effort(path['_id'])
         path['rating'] = rating
         path['effort'] = effort
-
+        
         new_path_topics = []
         for path_topic in path['topics']:
             for topic in topics:
@@ -724,7 +712,8 @@ class EditPath(APIView):
                 if not milestone.get('ID'):
                     id = db.insert_one('milestone', {
                         'title': milestone['title'],
-                        'body': milestone['body']
+                        'body': milestone['body'],
+                        'type': milestone['type']
                     }).inserted_id
                     milestone_ids.append(str(id))
                 else:
