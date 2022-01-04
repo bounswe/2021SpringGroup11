@@ -38,7 +38,7 @@ class _ActivityContainerrState extends State<ActivityContainer> {
               textAlign: TextAlign.start,
               style: TextStyle(fontSize: 14,)),
             ),
-            Text(DateFormat('dd-MM-yyyy – kk:mm').format(DateTime.parse(widget.time)),
+            Text(DateFormat('dd.MM.yyyy – kk:mm').format(DateTime.parse(widget.time)),
                 overflow: TextOverflow.ellipsis,
                 softWrap: true,
                 maxLines: 1,
