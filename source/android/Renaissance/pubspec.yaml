@@ -41,6 +41,7 @@ dependencies:
   jwt_decode: ^0.3.1
   comment_box: ^0.0.16
   flutter_spinbox: ^0.7.0
+  intl: ^0.17.0
 
 
 dev_dependencies:
