@@ -25,6 +25,11 @@ export const UNFAV_TOPIC_URL = `${baseUrl}topic/unfavorite-topic/`; //
 export const MY_TOPIC_URL = `${baseUrl}topic/my-topics/`; //
 
 export const ENROLL_PATH_URL = `${baseUrl}path/enroll-path/`;
+export const UNENROLL_PATH_URL = `${baseUrl}path/unenroll-path/`;
+
+export const FOLLOW_PATH_URL = `${baseUrl}path/follow-path/`;
+export const UNFOLLOW_PATH_URL = `${baseUrl}path/unfollow-path/`;
+
 export const SEARCH_PATH_URL = `${baseUrl}path/search-path/`; // /search-path/<search_text>
 export const GET_PATHS_BY_TOPIC_ID_URL = `${baseUrl}path/related-path/`; /// /path/related-path/<topic:int> Wikidata tag number
 export const GET_ENROLLED_PATHS_URL = `${baseUrl}path/get-enrolled-paths/`; ///

@@ -3,6 +3,9 @@ import {
   ENROLL_PATH,
   ENROLL_PATH_FAILURE,
   ENROLL_PATH_SUCCESS,
+  FOLLOW_PATH,
+  FOLLOW_PATH_FAILURE,
+  FOLLOW_PATH_SUCCESS,
   GET_PATH,
   GET_PATH_FAILURE,
   GET_PATH_SUCCESS,
@@ -35,10 +38,11 @@ export function getPathFailure(error: any) {
   };
 }
 
-export function enrollPath(pathId: any) {
+export function enrollPath(pathId: any, isEnrolled: any) {
   return {
     type: ENROLL_PATH,
     pathId,
+    isEnrolled,
   };
 }
 
@@ -52,6 +56,28 @@ export function enrollPathSuccess(response: any) {
 export function enrollPathFailure(error: any) {
   return {
     type: ENROLL_PATH_FAILURE,
+    error,
+  };
+}
+
+export function followPath(pathId: any, isFollowed: any) {
+  return {
+    type: FOLLOW_PATH,
+    pathId,
+    isFollowed,
+  };
+}
+
+export function followPathSuccess(response: any) {
+  return {
+    type: FOLLOW_PATH_SUCCESS,
+    response,
+  };
+}
+
+export function followPathFailure(error: any) {
+  return {
+    type: FOLLOW_PATH_FAILURE,
     error,
   };
 }
