@@ -30,11 +30,11 @@ class _ProfilePageState extends State<ProfilePage> with EditProfileDelegate, Fol
   File? profileImg;
 
   void loadPhoto() async {
-    if (User.me!.photo == null || User.me!.photo == "") { return ; }
+    if (widget.user.photo == null || widget.user.photo == "") { return ; }
     setState(() {
       loadingImage = true;
     });
-    profileImg = await FileConverter.getImageFromBase64(User.me!.photo!);
+    profileImg = await FileConverter.getImageFromBase64(widget.user.photo!);
     setState(() {
       loadingImage = false;
     });
@@ -71,7 +71,7 @@ class _ProfilePageState extends State<ProfilePage> with EditProfileDelegate, Fol
                           child: Image.file(profileImg!, width: 64, height: 64, fit: BoxFit.fitHeight,),
                           borderRadius: BorderRadius.circular(32.0),
                         ),
-                        StatsWidget(55, 20, widget.user.finishedResourceCount!)
+                        StatsWidget(widget.user.followed_paths ?? 0, widget.user.enrolls ?? 0, widget.user.finishedResourceCount!)
                       ]
                   ),
                   Container(
@@ -115,7 +115,7 @@ class _ProfilePageState extends State<ProfilePage> with EditProfileDelegate, Fol
                                 borderRadius: BorderRadius.all(Radius.circular(50.0))
                             ),
                             child: Center(
-                                child: FollowerWidget(52, 91, this)
+                                child: FollowerWidget(widget.user.follower, widget.user.following, this)
                             ),
                             margin: EdgeInsets.only(top: 10)
                         ),
@@ -137,10 +137,12 @@ class _ProfilePageState extends State<ProfilePage> with EditProfileDelegate, Fol
                                 try {
                                   var response = await HttpService.shared.followUser(User.me!.username!, widget.user.username!);
                                 } on Exception catch (error) {
+
                                 }
                               }
                               setState(() {
                                 isFollowed = !isFollowed;
+                                widget.user.follower += isFollowed ? -1 : 1;
                               });
                             },
                           ),
@@ -169,15 +171,14 @@ class _ProfilePageState extends State<ProfilePage> with EditProfileDelegate, Fol
               } else {
                 return Container(
                   height: 80.0,
-                  child: ListView.builder(
+                  width: double.infinity,
+                  child: SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     physics: const BouncingScrollPhysics(),
-                    itemCount: snapshot.data!.length,
-                    itemBuilder: (context, index) {
-                      BasicPath path = snapshot.data![index];
-                      path.isFollowed = true;
-                      return CourseContainer(path: path);
-                    },
+                    child: Row(
+                      children: snapshot.data!.map((e) { e.isFollowed = true; return CourseContainer(key: Key(e.id), path: e,); }
+                      ).toList(),
+                    ),
                   ),
                 );
               }
@@ -204,14 +205,13 @@ class _ProfilePageState extends State<ProfilePage> with EditProfileDelegate, Fol
                 } else {
                   return Container(
                     height: 80.0,
-                    child: ListView.builder(
+                    width: double.infinity,
+                    child: SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
-                      physics: BouncingScrollPhysics(),
-                      itemCount: snapshot.data!.length,
-                      itemBuilder: (context, index) {
-                        BasicPath path = snapshot.data![index];
-                        return CourseContainer(path: path);
-                      },
+                      physics: const BouncingScrollPhysics(),
+                      child: Row(
+                        children: snapshot.data!.map((e) => CourseContainer(key: Key(e.id), path: e,)).toList(),
+                      ),
                     ),
                   );
                 }

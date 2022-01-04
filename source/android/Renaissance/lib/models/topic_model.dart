@@ -1,3 +1,5 @@
+import 'package:portakal/models/tag.dart';
+
 class Topic {
   final int? ID;
   final String? name;

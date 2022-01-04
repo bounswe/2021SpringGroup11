@@ -46,6 +46,10 @@ class CreatePathPageState extends State<CreatePathPage> {
     descControllers = [];
     descFields = [];
     typeOfController = [];
+
+    titleController.clear();
+    descriptionController.clear();
+    topicController.clear();
   }
 
   int findIndex(int i) {
@@ -109,15 +113,6 @@ class CreatePathPageState extends State<CreatePathPage> {
         );
       },
     );
-
-    // List<Map<String, Object>> sendTopic = [];
-    // for (var i = 0; i < topicsSubmit.length; i++) {
-    //   sendTopic.add({
-    //     "ID": int.parse(topicsSubmit[i].id as String),
-    //     "name": topicsSubmit[i].name as String,
-    //     "description": topicsSubmit[i].description as String
-    //   });
-    // }
   }
 
   @override
@@ -250,12 +245,16 @@ class CreatePathPageState extends State<CreatePathPage> {
                       style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
-                          color: MyColors.darkGray),
+                          color: typeOfController[i] == "Task"
+                              ? Colors.redAccent
+                              : Colors.orangeAccent),
                     ),
                     TextButton(
                       onPressed: () => deleteItem(i),
                       style: TextButton.styleFrom(
-                        backgroundColor: Colors.redAccent,
+                        backgroundColor: typeOfController[i] == "Task"
+                            ? Colors.redAccent
+                            : Colors.orangeAccent,
                         shape: CircleBorder(),
                       ),
                       child: Icon(
@@ -394,9 +393,15 @@ class CreatePathPageState extends State<CreatePathPage> {
                             margin: EdgeInsets.symmetric(
                                 horizontal: 5, vertical: 2),
                             decoration: BoxDecoration(
-                                color: Colors.blue.shade200,
+                                color: topics.indexOf(topics.firstWhere(
+                                                (element) =>
+                                                    (element.id! == tag.id!))) %
+                                            2 ==
+                                        0
+                                    ? Colors.blue.shade200
+                                    : Colors.indigo.shade200,
                                 borderRadius:
-                                    BorderRadius.all(Radius.circular(15.0))),
+                                    BorderRadius.all(Radius.circular(18.0))),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.center,
@@ -470,8 +475,8 @@ class CreatePathPageState extends State<CreatePathPage> {
                       if (descriptionController.text == "")
                         throw Exception('Please give a description!');
 
-                      if (topicController.text == "")
-                        throw Exception('Please give some topic!');
+                      // if (topicController.text == "")
+                      //   throw Exception('Please give some topic!');
 
                       for (var item in titleControllers)
                         if (item.text == "")
@@ -482,18 +487,17 @@ class CreatePathPageState extends State<CreatePathPage> {
                           throw Exception(
                               'Please fill all milestone descriptions!');
 
-                      List<Map<String, String>> items = [];
+                      List<Map<String, Object>> items = [];
                       List<Map<String, String>> topics = [];
 
                       for (var i = 0; i < titleControllers.length; i++) {
                         items.add({
                           "title": titleControllers[i].text,
                           "body": descControllers[i].text,
-                          "type": typeOfController[i],
+                          "type": typeOfController[i] == "Task" ? 0 : 1,
                         });
                       }
-
-                      List<String> splitted = topicController.text.split(",");
+                      print(items);
 
                       List<Map<String, Object>> sendTopic = [];
                       for (var i = 0; i < topics.length; i++) {
@@ -505,15 +509,15 @@ class CreatePathPageState extends State<CreatePathPage> {
                         });
                       }
 
-                      // User response = await HttpService.shared.createPath(
-                      //   titleController.text,
-                      //   descriptionController.text,
-                      //   items,
-                      //   _image == null
-                      //       ? ""
-                      //       : FileConverter.getBase64StringFile(_image),
-                      //   sendTopic,
-                      // );
+                      User response = await HttpService.shared.createPath(
+                        titleController.text,
+                        descriptionController.text,
+                        items,
+                        _image == null
+                            ? ""
+                            : FileConverter.getBase64StringFile(_image),
+                        sendTopic,
+                      );
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                         content: Text(
                           'Successfully created ${titleController.text}',
@@ -524,9 +528,6 @@ class CreatePathPageState extends State<CreatePathPage> {
                         ),
                       ));
 
-                      titleController.clear();
-                      descriptionController.clear();
-                      topicController.clear();
                       clearItems();
                       _image = null;
 

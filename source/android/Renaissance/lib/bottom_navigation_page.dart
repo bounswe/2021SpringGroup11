@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:portakal/activity_stream.dart';
 import 'package:portakal/create_path.dart';
 import 'package:portakal/home_page.dart';
 import 'package:portakal/login_page.dart';
@@ -63,7 +64,7 @@ class _BottomNavigationPageState extends State<BottomNavigationPage> {
           Navigator(
             key: _notificationScreen,
             onGenerateRoute: (route) => MaterialPageRoute(
-                builder: (context) => ExplorePage(), settings: route),
+                builder: (context) => ActivityStreamPage(), settings: route),
           ),
           Navigator(
             key: _profileScreen,

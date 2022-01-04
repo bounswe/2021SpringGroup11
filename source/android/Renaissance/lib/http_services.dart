@@ -7,6 +7,7 @@ import 'package:http/http.dart';
 import 'package:portakal/models/basic_path.dart';
 import 'package:portakal/models/basic_user.dart';
 import 'package:portakal/models/get_follow_response.dart';
+import 'package:portakal/models/home_page_response.dart';
 import 'dart:convert';
 
 import 'package:portakal/models/login_response.dart';
@@ -17,6 +18,8 @@ import 'package:portakal/models/milestone.dart';
 import 'package:portakal/models/milestone_model.dart';
 import 'package:portakal/models/tag.dart';
 import 'package:portakal/models/path.dart';
+import 'package:portakal/models/activity.dart';
+
 import 'package:portakal/models/topic_model.dart';
 import 'package:portakal/token.dart';
 import 'package:jwt_decode/jwt_decode.dart';
@@ -255,6 +258,49 @@ class HttpService {
     }
   }
 
+  Future<Tag> getTopic(String topic_id) async {
+    String url = baseUrl + '/topic/get-topic/$topic_id/';
+    Response res = await get(Uri.parse(url), headers: headers);
+
+    if (res.statusCode == 200) {
+      var temp = jsonDecode(res.body);
+
+      return Tag(
+          id: topic_id,
+          description: temp['description'],
+          name: temp['name'],
+          isFav: temp['isFav']);
+    } else {
+      throw Exception(res.body);
+    }
+  }
+
+  Future<List<Tag>> getTopicList(String topic_id) async {
+    String url = baseUrl + '/topic/related-topic/$topic_id/';
+    Response res = await get(Uri.parse(url), headers: headers);
+    if (res.statusCode == 200) {
+      Iterable l = json.decode(res.body);
+      List<Tag> topics =
+      l.map((json) => Tag.fromSpecialJSON(json)).toList();
+      return topics;
+    } else {
+      throw Exception(res.body);
+    }
+  }
+
+  Future<List<BasicPath>> getPathList(String topic_id) async {
+    String url = baseUrl + '/path/related-path/$topic_id/';
+    Response res = await get(Uri.parse(url), headers: headers);
+    if (res.statusCode == 200) {
+      Iterable l = json.decode(res.body);
+      List<BasicPath> basicPaths =
+      l.map((json) => BasicPath.fromJSON(json)).toList();
+      return basicPaths;
+    } else {
+      throw Exception(res.body);
+    }
+  }
+
   Future<User> editUser(
       String firstName, String lastName, String bio, String? photo) async {
     String url = baseUrl + '/user/edit-user/';
@@ -312,7 +358,7 @@ class HttpService {
   Future<User> createPath(
       String title,
       String description,
-      List<Map<String, String>> milestones,
+      List<Map<String, Object>> milestones,
       String? photo,
       List<Map<String, Object>> topics) async {
     String url = baseUrl + '/path/create-path/';
@@ -379,6 +425,21 @@ class HttpService {
       List<Tag> result = [];
       for (var item in jsonDecode(res.body)) {
         result.add(Tag.fromJSON(item));
+      }
+      return (result);
+    } else {
+      throw Exception("An error occured with topics, please try another set");
+    }
+  }
+
+  Future<List<Activity>> activityStream() async {
+    String url = baseUrl + '/user/activity-streams/';
+
+    Response res = await post(Uri.parse(url), headers: headers);
+    if (res.statusCode == 200) {
+      List<Activity> result = [];
+      for (var item in jsonDecode(res.body)) {
+        result.add(Activity.fromJSON(item));
       }
       return (result);
     } else {
@@ -500,6 +561,36 @@ class HttpService {
       List<BasicPath> basicPaths =
           l.map((json) => BasicPath.fromJSON(json)).toList();
       return basicPaths;
+    } else {
+      throw Exception(res.body);
+    }
+  }
+
+  Future<HomePageResponse> popular() async {
+    String url = baseUrl + '/path/popular/';
+    Response res = await get(Uri.parse(url), headers: headers);
+    if (res.statusCode == 200) {
+      return HomePageResponse.fromJSON(json.decode(res.body));
+    } else {
+      throw Exception(res.body);
+    }
+  }
+
+  Future<HomePageResponse> forYou() async {
+    String url = baseUrl + '/path/foryou/';
+    Response res = await get(Uri.parse(url), headers: headers);
+    if (res.statusCode == 200) {
+      return HomePageResponse.fromJSON(json.decode(res.body));
+    } else {
+      throw Exception(res.body);
+    }
+  }
+
+  Future<HomePageResponse> news() async {
+    String url = baseUrl + '/path/new/';
+    Response res = await get(Uri.parse(url), headers: headers);
+    if (res.statusCode == 200) {
+      return HomePageResponse.fromJSON(json.decode(res.body));
     } else {
       throw Exception(res.body);
     }
