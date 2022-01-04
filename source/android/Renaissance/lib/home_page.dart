@@ -20,7 +20,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   var _pageIndex = 0;
-  HomePageResponse _results = HomePageResponse(paths: [], topics: []);
+  HomePageResponse _results = HomePageResponse(paths: [], tags: []);
   var _isLoading = false;
   void _fetchPopular() async {
     try {
@@ -149,7 +149,7 @@ class _HomePageState extends State<HomePage> {
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
-                children: _results.topics.map((topic) => TagContainer(topic: topic,)).toList()
+                children: _results.tags.map((tag) => TagContainer(tag: tag,)).toList()
               ),
             ),
           ),

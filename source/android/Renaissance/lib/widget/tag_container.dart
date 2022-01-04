@@ -6,8 +6,8 @@ import 'package:portakal/my_colors.dart';
 import 'package:portakal/topic_page.dart';
 
 class TagContainer extends StatefulWidget {
-  TagContainer({Key? key, required this.topic}): super(key:key);
-  Topic topic;
+  TagContainer({Key? key, required this.tag}): super(key:key);
+  Tag tag;
   @override
   State<TagContainer> createState() => _TagContainerState();
 }
@@ -21,7 +21,7 @@ class _TagContainerState extends State<TagContainer> {
           setState(() {
             isLoading = true;
           });
-          List responses = await Future.wait([HttpService.shared.getTopic(widget.topic.ID), HttpService.shared.getTopicList(widget.topic!.ID),HttpService.shared.getPathList(widget.topic!.ID)]);
+          List responses = await Future.wait([HttpService.shared.getTopic(widget.tag.id!), HttpService.shared.getTopicList(widget.tag.id!),HttpService.shared.getPathList(widget.tag.id!)]);
           setState(() {
             isLoading = false;
           });
@@ -41,7 +41,7 @@ class _TagContainerState extends State<TagContainer> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  isLoading?SizedBox(height:15,width:15,child:CircularProgressIndicator()):Text(widget.topic.name!,
+                  isLoading?SizedBox(height:15,width:15,child:CircularProgressIndicator()):Text(widget.tag.name!,
                       overflow: TextOverflow.clip,
                       maxLines: 1,
                       textAlign: TextAlign.center,

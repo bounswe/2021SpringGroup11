@@ -1,19 +1,19 @@
 class User {
-  final String? username;
-  final String? email;
-  final String? firstname;
-  final String? lastname;
-  final String? bio;
-  final int? finishedResourceCount;
-  final int? enrolls;
-  final int? followed_paths;
-  final int? finished_paths;
-  final int? follower;
-  final int? following;
-  final String? photo;
-  final bool? rememberMe;
-  const User({
-    this.username, this.email, this.firstname, this.lastname, this.bio, this.finishedResourceCount, this.photo, this.rememberMe, this.finished_paths, this.followed_paths, this.enrolls, this.follower, this.following
+  String? username;
+  String? email;
+  String? firstname;
+  String? lastname;
+  String? bio;
+  int? finishedResourceCount;
+  int? enrolls;
+  int? followed_paths;
+  int? finished_paths;
+  int follower;
+  int following;
+  String? photo;
+  bool? rememberMe;
+  User({
+    this.username, this.email, this.firstname, this.lastname, this.bio, this.finishedResourceCount, this.photo, this.rememberMe, this.finished_paths, this.followed_paths, this.enrolls, required this.follower, required this.following
   });
 
   static User? me;
@@ -30,8 +30,8 @@ class User {
         finished_paths: json['finished_paths'] as int?,
         followed_paths: json['followed_paths'] as int?,
         enrolls: json['enrolls'] as int?,
-        follower: json['follower'] as int?,
-        following: json['following'] as int?
+        follower: json['follower'] as int,
+        following: json['following'] as int
     );
   }
 }
