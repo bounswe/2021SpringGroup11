@@ -112,15 +112,6 @@ class _CreatePathPageState extends State<CreatePathPage> {
         );
       },
     );
-
-    // List<Map<String, Object>> sendTopic = [];
-    // for (var i = 0; i < topicsSubmit.length; i++) {
-    //   sendTopic.add({
-    //     "ID": int.parse(topicsSubmit[i].id as String),
-    //     "name": topicsSubmit[i].name as String,
-    //     "description": topicsSubmit[i].description as String
-    //   });
-    // }
   }
 
   @override
@@ -253,12 +244,16 @@ class _CreatePathPageState extends State<CreatePathPage> {
                       style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
-                          color: MyColors.darkGray),
+                          color: _typeOfController[i] == "Task"
+                              ? Colors.redAccent
+                              : Colors.orangeAccent),
                     ),
                     TextButton(
                       onPressed: () => _deleteItem(i),
                       style: TextButton.styleFrom(
-                        backgroundColor: Colors.redAccent,
+                        backgroundColor: _typeOfController[i] == "Task"
+                            ? Colors.redAccent
+                            : Colors.orangeAccent,
                         shape: CircleBorder(),
                       ),
                       child: Icon(
@@ -397,9 +392,15 @@ class _CreatePathPageState extends State<CreatePathPage> {
                             margin: EdgeInsets.symmetric(
                                 horizontal: 5, vertical: 2),
                             decoration: BoxDecoration(
-                                color: Colors.blue.shade200,
+                                color: _topics.indexOf(_topics.firstWhere(
+                                                (element) =>
+                                                    (element.id! == tag.id!))) %
+                                            2 ==
+                                        0
+                                    ? Colors.blue.shade200
+                                    : Colors.indigo.shade200,
                                 borderRadius:
-                                    BorderRadius.all(Radius.circular(15.0))),
+                                    BorderRadius.all(Radius.circular(18.0))),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.center,
