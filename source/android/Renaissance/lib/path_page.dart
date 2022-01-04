@@ -684,7 +684,7 @@ class _PathPageState extends State<PathPage> {
                     ...(widget.p!.milestones as List<Milestonee>)
                         .map((milestone) {
                       return MilestoneContainer(milestone.id!, milestone.title!,
-                          milestone.body!, milestone.isFinished!,milestone.type??1);
+                          milestone.body!, milestone.isFinished!,milestone.type!);
                     }).toList()
                   ]),
                   Text("Under Development.")
