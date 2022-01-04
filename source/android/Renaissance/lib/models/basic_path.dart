@@ -12,7 +12,8 @@ class BasicPath {
         id: json['_id'],
         photo: json['photo'],
         isFollowed: json['isFollowed'],
-        effort: json['effort'] as double,
-        rating: json['rating'] as double);
+        effort: json['effort'], // as double
+        rating: json['rating']); // as double
+
   }
 }

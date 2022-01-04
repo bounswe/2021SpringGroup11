@@ -55,7 +55,7 @@ class _CourseContainerState extends State<CourseContainer> {
                 setState(() {
                   isButtonLoading = true;
                 });
-                Path p= await HttpService.shared.getPath(widget.path.id!);
+                Path p= await HttpService.shared.getPath(widget.path.id);
                 setState(() {
                   isButtonLoading = false;
                 });
@@ -100,7 +100,7 @@ class _CourseContainerState extends State<CourseContainer> {
                                   Text('Effort',
                                       style: TextStyle(
                                           fontSize: 14, color: Colors.yellow)),
-                                  Text(widget.path.effort.toString(),
+                                  Text(widget.path.effort.toStringAsFixed(2),
                                       style: TextStyle(
                                           fontSize: 14, color: Colors.white)),
                                 ]),
@@ -108,7 +108,7 @@ class _CourseContainerState extends State<CourseContainer> {
                                   Text('Rating',
                                       style: TextStyle(
                                           fontSize: 14, color: Colors.yellow)),
-                                  Text(widget.path.rating.toString(),
+                                  Text(widget.path.rating.toStringAsFixed(2),
                                       style: TextStyle(
                                           fontSize: 14, color: Colors.white))
                                 ])
