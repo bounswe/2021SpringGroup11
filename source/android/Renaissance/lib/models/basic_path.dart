@@ -1,16 +1,19 @@
 class BasicPath {
-  final String? title;
-  final String? id;
-  final String? photo;
-  final double? effort;
-  final double? rating;
-  const BasicPath({this.title, this.id, this.photo, this.effort, this.rating});
+  String title;
+  String id;
+  String? photo;
+  double effort;
+  double rating;
+  bool? isFollowed;
+  BasicPath({required this.title, required this.id, this.photo, required this.effort, required this.rating, this.isFollowed});
   factory BasicPath.fromJSON(Map<String, dynamic> json) {
     return BasicPath(
         title: json['title'],
         id: json['_id'],
         photo: json['photo'],
-        effort: json['effort'] as double,
-        rating: json['rating'] as double);
+        isFollowed: json['isFollowed'],
+        effort: json['effort'], // as double
+        rating: json['rating']); // as double
+
   }
 }

@@ -5,10 +5,13 @@ import 'dart:io';
 import 'package:flutter/animation.dart';
 import 'package:http/http.dart';
 import 'package:portakal/models/basic_path.dart';
+import 'package:portakal/models/basic_user.dart';
 import 'package:portakal/models/get_follow_response.dart';
 import 'dart:convert';
 
 import 'package:portakal/models/login_response.dart';
+import 'package:portakal/models/search_result.dart';
+import 'package:portakal/models/tag.dart';
 
 import 'package:portakal/models/milestone.dart';
 import 'package:portakal/models/milestone_model.dart';
@@ -181,6 +184,14 @@ class HttpService {
     return false;
   }
 
+  Future<bool> finish_path(String username, String id) async {
+    String url = baseUrl + '/path/finish-path/';
+    Response res = await post(Uri.parse(url),
+        headers: headers,
+        body: jsonEncode({'username': username, 'path_id': id}));
+    return res.statusCode == 200;
+  }
+
   Future<bool> effort_path(String username, String id, double value) async {
     String url = baseUrl + '/path/effort-path/';
     Response res = await post(Uri.parse(url),
@@ -204,36 +215,84 @@ class HttpService {
     }
   }
 
+  Path processPath(input) {
+    List<Milestonee> milestoness = [];
+    List<Topic> topicss = [];
+
+    (input["milestones"]).map((tag) {
+      milestoness.add(Milestonee.fromJson(tag));
+    }).toList();
+
+    (input["topics"]).map((tag) {
+      topicss.add(Topic.fromJson(tag));
+    }).toList();
+    return Path(
+        id: input['_id'],
+        title: input['title'],
+        description: input['description'],
+        topics: topicss,
+        creator_username: input['creator_username'],
+        creator_email: input['creator_email'],
+        created_at: 1.0 * input['created_at'],
+        photo: input['photo'],
+        milestones: milestoness,
+        rating: input['rating'],
+        effort: input['effort'],
+        isEnrolled: input['isEnrolled'],
+        isFollowed: input['isFollowed']);
+  }
+
   Future<Path> getPath(String path_id) async {
     String url = baseUrl + '/path/get-path/$path_id/';
     Response res = await get(Uri.parse(url), headers: headers);
 
     if (res.statusCode == 200) {
       var temp = jsonDecode(res.body);
-      List<Milestonee> milestoness = [];
-      List<Topic> topicss = [];
 
-      (temp["milestones"]).map((tag) {
-        milestoness.add(Milestonee.fromJson(tag));
-      }).toList();
+      return processPath(temp);
+    } else {
+      throw Exception(res.body);
+    }
+  }
 
-      (temp["topics"]).map((tag) {
-        topicss.add(Topic.fromJson(tag));
-      }).toList();
-      return Path(
-          id: path_id,
-          title: temp['title'],
+  Future<Tag> getTopic(String topic_id) async {
+    String url = baseUrl + '/topic/get-topic/$topic_id/';
+    Response res = await get(Uri.parse(url), headers: headers);
+
+    if (res.statusCode == 200) {
+      var temp = jsonDecode(res.body);
+
+      return Tag(
+          id: topic_id,
           description: temp['description'],
-          topics: topicss,
-          creator_username: temp['creator_username'],
-          creator_email: temp['creator_email'],
-          created_at: 1.0 * temp['created_at'],
-          photo: temp['photo'],
-          milestones: milestoness,
-          rating: temp['rating'],
-          effort: temp['effort'],
-          isEnrolled: temp['isEnrolled'],
-          isFollowed: temp['isFollowed']);
+          name: temp['name'],
+          isFav: temp['isFav']);
+    } else {
+      throw Exception(res.body);
+    }
+  }
+
+  Future<List<Tag>> getTopicList(String topic_id) async {
+    String url = baseUrl + '/topic/related-topic/$topic_id/';
+    Response res = await get(Uri.parse(url), headers: headers);
+    if (res.statusCode == 200) {
+      Iterable l = json.decode(res.body);
+      List<Tag> topics =
+      l.map((json) => Tag.fromSpecialJSON(json)).toList();
+      return topics;
+    } else {
+      throw Exception(res.body);
+    }
+  }
+
+  Future<List<BasicPath>> getPathList(String topic_id) async {
+    String url = baseUrl + '/path/related-path/$topic_id/';
+    Response res = await get(Uri.parse(url), headers: headers);
+    if (res.statusCode == 200) {
+      Iterable l = json.decode(res.body);
+      List<BasicPath> basicPaths =
+      l.map((json) => BasicPath.fromJSON(json)).toList();
+      return basicPaths;
     } else {
       throw Exception(res.body);
     }
@@ -296,7 +355,7 @@ class HttpService {
   Future<User> createPath(
       String title,
       String description,
-      List<Map<String, String>> milestones,
+      List<Map<String, Object>> milestones,
       String? photo,
       List<Map<String, Object>> topics) async {
     String url = baseUrl + '/path/create-path/';
@@ -326,33 +385,36 @@ class HttpService {
   }
   */
 
-  Future<List<String>> searchUser(String username) async {
+  Future<List<BasicUser>> searchUser(String username) async {
     String url = baseUrl + '/user/search-user/$username/';
     Response res = await get(Uri.parse(url), headers: headers);
 
     if (res.statusCode == 200) {
-      List<String> result = [];
-      for (var item in jsonDecode(res.body)) {
-        result.add(item["username"]);
-      }
-      return result;
+      Iterable l = json.decode(res.body);
+      List<BasicUser> basicUsers =
+          l.map((json) => BasicUser.fromJSON(json)).toList();
+      return basicUsers;
     } else {
       throw Exception(res.body);
     }
   }
 
-  Future<List<Object>> searchPath(String pathName) async {
+  Future<List<BasicPath>> searchPath(String pathName) async {
     String url = baseUrl + '/path/search-path/$pathName/';
     Response res = await get(Uri.parse(url), headers: headers);
-
     if (res.statusCode == 200) {
-      return (jsonDecode(res.body));
+      Iterable l = json.decode(res.body);
+      List<BasicPath> basicPaths =
+          l.map((json) => BasicPath.fromJSON(json)).toList();
+      return basicPaths;
     } else {
       throw Exception(res.body);
     }
   }
 
   Future<List<Tag>> searchTopic(String topicName) async {
+    topicName = topicName.replaceAll(" ", "-");
+
     String url = baseUrl + '/topic/search-topic/$topicName/';
     Response res = await get(Uri.parse(url), headers: headers);
 
@@ -445,7 +507,7 @@ class HttpService {
     }
   }
 
-  Future<List<BasicPath>> getFollowedPaths(String username) async {
+  Future<List<BasicPath>> getFavouritePaths(String username) async {
     String url = baseUrl + '/path/get-followed-paths/';
     final body = jsonEncode({'username': username});
     Response res = await post(Uri.parse(url), headers: headers, body: body);
