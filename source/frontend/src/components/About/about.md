@@ -7,6 +7,7 @@
 - https://ui-avatars.com - MIT License - https://github.com/LasseRafn/ui-avatars
 - https://c.tenor.com/I6kN-6X7nhAAAAAj/loading-buffering.gif
 - https://unsplash.com/license (attribution isn’t required)
+- http://placeimg.com/ (faker.js)
 
 ## How can I submit a [DMCA](https://www.dmca.com/) claim?
 
