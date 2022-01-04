@@ -1,11 +1,10 @@
+import * as React from 'react';
 import { makeStyles } from '@mui/styles';
-import { createStructuredSelector } from 'reselect';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import NavBar from '../NavBar';
 import ProfileBar from './components/ProfileBar';
 import Main from './components/Main';
-import makeSelectLogin from '../Login/selectors';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -17,12 +16,14 @@ const useStyles = makeStyles(() => ({
   },
   main: {
     display: 'flex',
-    height: '100%',
+    height: 'calc(100% - 64px)',
+    position: 'relative',
   },
 }));
 
-const Home = (props) => {
+const Home = (props: { dispatch: any; history: any }) => {
   const { dispatch, history } = props;
+
   const classes = useStyles();
   return (
     <div className={classes.root}>
@@ -35,7 +36,7 @@ const Home = (props) => {
   );
 };
 
-function mapDispatchToProps(dispatch) {
+function mapDispatchToProps(dispatch: any) {
   return {
     dispatch,
   };

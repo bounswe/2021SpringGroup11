@@ -37,10 +37,12 @@ jobs:
       - name: Production Build
         run: |
           cd source/frontend
-          npm run build -- --no-scope-hoist
-#      - name: Unit Tests
-#        run: |
-#          yarn test
+          CI= yarn build
+      - name: Unit Tests
+        run: |
+          cd source/frontend
+          CI=true yarn test
+          
       - name: Deploy to S3
         uses: jakejarvis/s3-sync-action@master
         with:
@@ -50,7 +52,7 @@ jobs:
           AWS_ACCESS_KEY_ID: AKIAXZ2EBCZWG57YHQNN
           AWS_SECRET_ACCESS_KEY: 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
           AWS_REGION: us-east-2
-          SOURCE_DIR: "source/frontend/dist"
+          SOURCE_DIR: "source/frontend/build"
 
 
       # Runs a single command using the runners shell

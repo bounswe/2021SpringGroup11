@@ -1,21 +1,8 @@
 import ExploreIcon from '@mui/icons-material/Explore';
 import NotificationsIcon from '@mui/icons-material/Notifications';
-import SearchIcon from '@mui/icons-material/Search';
 import SettingsIcon from '@mui/icons-material/Settings';
 
-import {
-  alpha,
-  AppBar,
-  Badge,
-  Box,
-  IconButton,
-  InputBase,
-  Menu,
-  MenuItem,
-  styled,
-  Toolbar,
-  Typography,
-} from '@mui/material';
+import { AppBar, Badge, Box, IconButton, Menu, MenuItem, Toolbar, Typography } from '@mui/material';
 import React from 'react';
 // @ts-ignore
 import logo from '../../images/logo.png';
@@ -32,6 +19,7 @@ const NavBar = (props: Props) => {
   const [auth, setAuth] = React.useState(true);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
+  // eslint-disable-next-line no-unused-vars
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setAuth(event.target.checked);
   };
@@ -82,14 +70,9 @@ const NavBar = (props: Props) => {
 
           {auth && (
             <div>
-              <IconButton size="large" color="inherit">
+              <IconButton onClick={() => history.push('activity/')} size="large" color="inherit">
                 <Badge badgeContent={1} color="error">
                   <ExploreIcon />
-                </Badge>
-              </IconButton>
-              <IconButton size="large" color="inherit">
-                <Badge badgeContent={2} color="error">
-                  <NotificationsIcon />
                 </Badge>
               </IconButton>
               <IconButton
@@ -117,9 +100,14 @@ const NavBar = (props: Props) => {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
               >
-                <MenuItem onClick={handleClose}>View Profile</MenuItem>
-                <MenuItem onClick={handleClose}>Settings</MenuItem>
-                <MenuItem onClick={handleClose}>Help</MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    history.push('/about');
+                  }}
+                >
+                  About
+                </MenuItem>
+                <br />
                 <MenuItem onClick={handleLogout}>Logout</MenuItem>
               </Menu>
             </div>

@@ -18,7 +18,9 @@ export interface sessionStorageUserData {
   username: string;
   token: string;
 }
+
 export function* doLoginSaga() {
+  // @ts-ignore
   const loginData = yield select(makeSelectLogin());
   const userData = {
     username: loginData.username,
@@ -39,12 +41,14 @@ export function* doLoginSaga() {
         auth.setAuthInfoToLocalStorage(user);
       }
       loginData?.redirectFrom
-        ? yield put(history.push(loginData.redirectFrom))
-        : yield put(history.push('/home'));
+        ? // @ts-ignore
+          yield put(history.push(loginData.redirectFrom))
+        : // @ts-ignore
+          yield put(history.push('/home'));
     } else {
       yield put(loginFailure(response));
     }
-  } catch (error) {
+  } catch (error: any) {
     console.log(error.request);
     const usernameError = 'Username is invalid';
     const passwordError = 'Password is invalid';
@@ -64,6 +68,7 @@ export function* doLoginSaga() {
 }
 
 export function* checkAuth() {
+  // @ts-ignore
   const loginData = yield select(makeSelectLogin());
 
   try {
@@ -71,8 +76,10 @@ export function* checkAuth() {
     if (user) {
       yield put(checkAuthSuccess(user));
       if (loginData.redirectFrom) {
+        // @ts-ignore
         yield put(history.push(loginData.redirectFrom));
       } else {
+        // @ts-ignore
         yield put(history.push('/'));
       }
     } else {
@@ -94,6 +101,7 @@ export function* doLogout() {
 }
 
 export function* forgotPasswordSaga() {
+  // @ts-ignore
   const selectedData = yield select(makeSelectLogin());
   const userData = {
     username: selectedData.username,

@@ -1,11 +1,12 @@
-import renderRoutes from './utils/renderRoutes';
-import history from './utils/history';
 import { Router } from 'react-router-dom';
-
-import { Suspense } from 'react';
+import React, { Suspense } from 'react';
 import { createTheme, LinearProgress, ThemeProvider } from '@mui/material';
 import { Provider } from 'react-redux';
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
 import store from './store';
+import renderRoutes from './utils/renderRoutes';
+import history from './utils/history';
 
 const theme = createTheme();
 
@@ -16,6 +17,7 @@ export function App() {
         <Router history={history}>
           <Suspense fallback={<LinearProgress />}>{renderRoutes()}</Suspense>
         </Router>
+        <ToastContainer limit={5} />
       </ThemeProvider>
     </Provider>
   );

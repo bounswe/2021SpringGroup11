@@ -1,4 +1,4 @@
-import React = require('react');
+import * as React from 'react';
 import {
   Typography,
   TextField,
@@ -102,6 +102,8 @@ const ForgotPassModal = (props: Props) => {
     setOpenSnackBar(true);
   };
 
+  // @ts-ignore
+  // @ts-ignore
   return (
     <>
       <Modal
@@ -158,7 +160,7 @@ const ForgotPassModal = (props: Props) => {
         onClose={() => setOpenSnackBar(!openSnackBar)}
         open={openSnackBar && !loading}
       >
-        {!loading && (
+        {!loading ? (
           <SnackbarContent
             className={classes.barContent}
             message={<span className={classes.message}>A new password is sent to your e-mail</span>}
@@ -168,6 +170,8 @@ const ForgotPassModal = (props: Props) => {
               </Button>
             }
           />
+        ) : (
+          <div />
         )}
       </Snackbar>
     </>

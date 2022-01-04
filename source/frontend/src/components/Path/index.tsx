@@ -1,18 +1,18 @@
-import React = require('react');
-
 import { makeStyles } from '@mui/styles';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
-import { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Typography } from '@material-ui/core';
 import { LinearProgress } from '@mui/material';
 import makeSelectPath from './selectors';
-import { enrollPath, getPath } from './actions';
+import { enrollPath, followPath, getPath } from './actions';
 import NavBar from '../NavBar';
 // @ts-ignore
 import pathPlaceholder from '../../images/pathPlaceholder.png';
 import Milestone from './components/Milestone';
+import Resource from './components/Resource';
+
 import Tag from './components/Tag';
 
 interface Props {
@@ -138,11 +138,21 @@ const Path = (props: Props) => {
   } = props;
   const classes = useStyles();
 
+  const [order, setOrder] = useState(-1);
   const handleEnrollButton = () => {
-    dispatch(enrollPath(pathId));
+    dispatch(enrollPath(pathId, path.isEnrolled));
+  };
+
+  const handleOrderChange = (orderArg: any) => {
+    setOrder(orderArg);
+  };
+
+  const handleFollowButton = () => {
+    dispatch(followPath(pathId, path.isFollowed));
   };
   useEffect(() => {
     dispatch(getPath(pathId));
+    console.log(path);
   }, []);
 
   return (
@@ -179,7 +189,7 @@ const Path = (props: Props) => {
                     Tags
                   </Typography>
                   <div className={classes.tagContainer}>
-                    {path.topics.map((tag) => (
+                    {path.topics.map((tag: any) => (
                       <Tag id={tag.ID} name={tag.name} />
                     ))}
                   </div>
@@ -191,7 +201,7 @@ const Path = (props: Props) => {
                 <Button onClick={handleEnrollButton} color="primary" variant="outlined">
                   {path.isEnrolled ? 'UNENROLL' : 'ENROLL'}
                 </Button>
-                <Button color="primary" variant="outlined">
+                <Button onClick={handleFollowButton} color="primary" variant="outlined">
                   {path.isFollowed ? 'REMOVE FROM FAVORITE' : 'ADD TO FAVORITE'}
                 </Button>
               </div>
@@ -201,14 +211,17 @@ const Path = (props: Props) => {
           </div>
           <div className={classes.body}>
             <div className={classes.milestones}>
-              <Typography align="center" variant="h3">
-                MILESTONES
+              <Typography align="center" variant="h4">
+                MILESTONES AND TASKS
               </Typography>
-              {path.milestones.map((milestone) => (
+              {path.milestones.map((milestone: any, index: number) => (
                 <Milestone
+                  order={index}
+                  orderChange={handleOrderChange}
                   key={milestone._id}
                   title={milestone.title}
                   body={milestone.body}
+                  type={milestone.type}
                   isEnrolled
                   isChecked={milestone.isFinished}
                   loading={false}
@@ -218,8 +231,16 @@ const Path = (props: Props) => {
             </div>
             <div className={classes.comments}>
               <Typography align="center" variant="h3">
-                COMMENTS
+                RESOURCES
               </Typography>
+              {path.resources.map((resource: any) =>
+                resource.order === order ? (
+                  <Resource link={resource.link} description={resource.description} />
+                ) : (
+                  <div />
+                ),
+              )}
+              )
             </div>
           </div>
         </div>
@@ -231,7 +252,7 @@ const Path = (props: Props) => {
 const mapStateToProps = createStructuredSelector({
   path: makeSelectPath(),
 });
-function mapDispatchToProps(dispatch) {
+function mapDispatchToProps(dispatch: any) {
   return {
     dispatch,
   };

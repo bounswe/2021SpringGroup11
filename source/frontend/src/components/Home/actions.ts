@@ -6,7 +6,7 @@ export function defaultAction() {
   };
 }
 
-export function getUser(userInfo) {
+export function getUser(userInfo: any) {
   return {
     type: GET_USER,
     userInfo,
@@ -19,7 +19,7 @@ export function getUserSuccess() {
   };
 }
 
-export function getUserFailure(res) {
+export function getUserFailure(res: any) {
   return {
     type: GET_USER_FAILURE,
     res,

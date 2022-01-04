@@ -20,22 +20,21 @@ export function defaultAction() {
   };
 }
 
-export function doLogin(userInfo) {
+export function doLogin(userInfo: any) {
   return {
     type: LOGIN,
     userInfo,
   };
 }
 
-export function loginSuccess(authInfo) {
-  console.log('ACTION');
+export function loginSuccess(authInfo: any) {
   return {
     type: LOGIN_SUCCESS,
     authInfo,
   };
 }
 
-export function loginFailure(res) {
+export function loginFailure(res: any) {
   return {
     type: LOGIN_FAILURE,
     res,
@@ -60,14 +59,14 @@ export function logoutFailure() {
   };
 }
 
-export function checkAuth(redirectFrom) {
+export function checkAuth(redirectFrom: any) {
   return {
     type: CHECKAUTH,
     redirectFrom,
   };
 }
 
-export function checkAuthSuccess(authInfo) {
+export function checkAuthSuccess(authInfo: any) {
   return {
     type: CHECKAUTH_SUCCESS,
     authInfo,
@@ -80,21 +79,21 @@ export function checkAuthFailure() {
   };
 }
 
-export function forgotPassword(userInfo) {
+export function forgotPassword(userInfo: any) {
   return {
     type: FORGOT_PASSWORD,
     userInfo,
   };
 }
 
-export function forgotPasswordSuccess(response) {
+export function forgotPasswordSuccess(response: any) {
   return {
     type: FORGOT_PASSWORD_SUCCESS,
     response,
   };
 }
 
-export function forgotPasswordFailure(response) {
+export function forgotPasswordFailure(response: any) {
   return {
     type: FORGOT_PASSWORD_FAILURE,
     response,

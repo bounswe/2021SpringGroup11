@@ -1,8 +1,8 @@
 import { Redirect } from 'react-router-dom';
-import { lazy, LazyExoticComponent } from 'react';
-
+import React, { lazy, LazyExoticComponent } from 'react';
 const routes: {
   path: string;
+  // eslint-disable-next-line no-unused-vars,no-undef
   component: (() => JSX.Element) | LazyExoticComponent<(props: any) => JSX.Element>;
   exact: boolean;
   requestAuth: boolean;
@@ -10,26 +10,37 @@ const routes: {
   {
     path: '/',
     exact: true,
+    // @ts-ignore
     component: () => <Redirect to="/home" />,
     requestAuth: false,
   },
   {
     path: '/login',
     exact: true,
+    // @ts-ignore
     component: lazy(() => import('./components/Login')),
     requestAuth: false,
   },
   {
     path: '/signup',
     exact: true,
+    // @ts-ignore
     component: lazy(() => import('./components/SignUp')),
     requestAuth: false,
   },
   {
     path: '/home',
     exact: true,
+    // @ts-ignore
     component: lazy(() => import('./components/Home')),
-    requestAuth: true, // TODO: remove after dev
+    requestAuth: true,
+  },
+  {
+    path: '/activity',
+    exact: true,
+    // @ts-ignore
+    component: lazy(() => import('./components/Activity')),
+    requestAuth: true,
   },
   {
     path: '/profile',
@@ -52,7 +63,15 @@ const routes: {
   {
     path: '/path/:pathId',
     exact: true,
+    // @ts-ignore
     component: lazy(() => import('./components/Path')),
+    requestAuth: true,
+  },
+  {
+    path: '/about',
+    exact: true,
+    // @ts-ignore
+    component: lazy(() => import('./components/About')),
     requestAuth: true,
   },
 ];

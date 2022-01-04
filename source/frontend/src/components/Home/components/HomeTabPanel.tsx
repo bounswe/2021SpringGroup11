@@ -1,8 +1,9 @@
 import { Button, Typography } from '@material-ui/core';
 import { makeStyles } from '@mui/styles';
-import React = require('react');
+import React from 'react';
 import { Grid } from '@mui/material';
 import history from '../../../utils/history';
+import { WordCloudImg } from '../../NavBar/SearchBox';
 
 interface Props {
   items: {
@@ -13,6 +14,7 @@ interface Props {
 interface tagProps {
   item: {
     name: string;
+    id: string;
   };
 }
 
@@ -22,6 +24,7 @@ interface pathProps {
     pic: string;
     effort: string;
     rating: string;
+    id: string;
   };
 }
 const useStyles = makeStyles(() => ({
@@ -45,6 +48,8 @@ const useStyles = makeStyles(() => ({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+    maxHeight: '90%',
+    overflow: 'scroll',
   },
 
   paths: {
@@ -81,6 +86,7 @@ const TagItem = (props: tagProps) => {
   return (
     <Grid item xs={8} className={classes.tagRoot}>
       <div
+        onClick={() => history.push(`/topic/${item.id}`)}
         style={{
           display: 'flex',
           flexDirection: 'row',
@@ -99,7 +105,7 @@ const TagItem = (props: tagProps) => {
             marginRight: '10px',
           }}
         >
-          <Typography align="center">Follow</Typography>
+          <Typography align="center">GO</Typography>
         </Button>
       </div>
     </Grid>
@@ -111,11 +117,13 @@ const PathItem = (props: pathProps) => {
   const classes = useStyles();
 
   return (
-    <div className={classes.pathRoot}>
-      <img className={classes.pathPic} src={item.pic} alt="path-item" />
+    <div className={classes.pathRoot} onClick={() => history.push(`/path/${item.id}`)}>
+      {/* <img className={classes.pathPic} src={item.pic} alt="path-item" /> */}
+      <WordCloudImg className={classes.pathPic} photo={item.pic} id={item.id} full />
+
       <div style={{ display: 'flex', flexDirection: 'row' }}>
         <div style={{ display: 'flex', flexDirection: 'column', width: '75%' }}>
-          <Button onClick={() => history.push('/path/61b7337ff74bd48c1653a145')}>
+          <Button>
             <Typography variant="h5" align="center">
               {item.name}
             </Typography>
@@ -153,7 +161,7 @@ const PathItem = (props: pathProps) => {
           }}
         >
           <Typography style={{ color: '#F25115' }} variant="h6" align="center">
-            Enroll
+            GO
           </Typography>
         </Button>
       </div>
