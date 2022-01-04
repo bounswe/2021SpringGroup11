@@ -18,6 +18,8 @@ __pycache__/
 **/.venv/**
 **/__pycache__
 
+db.sqlite3
+
 # Environments
 .env.yaml
 .env
