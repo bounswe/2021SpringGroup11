@@ -29,7 +29,7 @@ class _MilestoneContainerState extends State<MilestoneContainer> {
         color: widget.type==0?Colors.redAccent:Colors.orangeAccent,
           borderRadius: BorderRadius.circular(15)),
       margin: EdgeInsets.all(MediaQuery.of(context).size.width * 0.01),
-      child: widget.type==0?
+      child: widget.type==1?
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(
