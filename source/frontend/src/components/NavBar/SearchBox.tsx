@@ -210,9 +210,11 @@ const SearchBox = () => {
 interface Props {
   id: any;
   photo: any;
+  className?: any;
+  full?: boolean;
 }
 
-const WordCloudImg = ({ id, photo }: Props) => {
+export const WordCloudImg = ({ id, photo, className, full }: Props) => {
   const [img, setimg] = useState('https://c.tenor.com/I6kN-6X7nhAAAAAj/loading-buffering.gif');
   useEffect(() => {
     (async () => {
@@ -232,9 +234,10 @@ const WordCloudImg = ({ id, photo }: Props) => {
   }, []);
   return (
     <img
+      className={className}
       style={{
-        height: '64px',
-        width: '64px',
+        height: full ? '100%' : '64px',
+        width: full ? '100%' : '64px',
       }}
       src={`${img}`}
     />

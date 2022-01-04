@@ -22,6 +22,7 @@ export const GET_RELATED_TOPICS_BY_TOPIC_ID_URL = `${baseUrl}topic/related-topic
 export const GET_TOPIC_BY_TOPIC_ID_URL = `${baseUrl}topic/get-topic/`; //
 export const FAV_TOPIC_URL = `${baseUrl}topic/favorite-topic/`; //
 export const UNFAV_TOPIC_URL = `${baseUrl}topic/unfavorite-topic/`; //
+export const MY_TOPIC_URL = `${baseUrl}topic/my-topics/`; //
 
 export const ENROLL_PATH_URL = `${baseUrl}path/enroll-path/`;
 export const SEARCH_PATH_URL = `${baseUrl}path/search-path/`; // /search-path/<search_text>
@@ -32,3 +33,6 @@ export const SEARCHPATH_URL = `${baseUrl}path/search-path/`; ///
 export const GET_PATH_URL = `${baseUrl}path/get-path/`; /// path/ get-path/<slug:path_id>/ [name='get_path']
 export const WORDCLOUD_PATHS_URL = `${baseUrl}path/wordcloud/`; /// POST
 export const GET_PATH_DETAIL_URL = `${baseUrl}path/get-path-detail/`; ///
+export const MY_PATH_URL = `${baseUrl}path/my-paths/`; ///
+
+export const HOME_DATA_URL = `${baseUrl}path/`; ///

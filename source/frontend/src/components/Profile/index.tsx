@@ -148,6 +148,8 @@ const Profile = (props: Props) => {
             // @ts-ignore
             stats?.map((item: any) => {
               if (item.text === 'Followings') {
+                if (username) return;
+
                 return (
                   <div
                     style={{
@@ -167,6 +169,7 @@ const Profile = (props: Props) => {
                 );
               }
               if (item.text === 'Followers') {
+                if (username) return;
                 return (
                   <div
                     style={{
@@ -278,7 +281,7 @@ const Profile = (props: Props) => {
           </Button>
         )}
       </div>
-      <ProfileContent user={user} resources={resources} favorites={favorites} />
+      <ProfileContent username={username} user={user} resources={resources} favorites={favorites} />
       <Modal
         open={editProfilePopup}
         onClose={async () => {
@@ -539,6 +542,7 @@ interface ProfileContentProps {
   resources: Resource[];
   favorites: { text: string; value: string }[];
   user: any;
+  username?: string;
 }
 const ProfileContent = (props: ProfileContentProps) => (
   <div
@@ -653,22 +657,27 @@ const ProfileContent = (props: ProfileContentProps) => (
           flexDirection: 'column',
         }}
       >
-        {props.favorites.map((item) => (
-          <div
-            style={{
-              alignItems: 'center',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'space-around',
-              borderRadius: '10px',
-              background: 'white',
-              margin: '10px',
-            }}
-          >
-            <div style={{ color: 'green' }}>{item.text}</div>
-            <div>{item.value}</div>
-          </div>
-        ))}
+        {props.favorites.map((item) => {
+          if (item.text === 'Topics' && props.username) {
+            return;
+          }
+          return (
+            <div
+              style={{
+                alignItems: 'center',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-around',
+                borderRadius: '10px',
+                background: 'white',
+                margin: '10px',
+              }}
+            >
+              <div style={{ color: 'green' }}>{item.text}</div>
+              <div>{item.value}</div>
+            </div>
+          );
+        })}
       </div>
     </div>
   </div>

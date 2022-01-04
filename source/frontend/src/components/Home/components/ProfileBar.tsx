@@ -1,25 +1,49 @@
-import * as React from 'react';
-import { Grid, Typography } from '@mui/material/';
+import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@mui/styles';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import { useParams } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import {
+  Box,
+  Grid,
+  Typography,
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  CircularProgress,
+  IconButton,
+  Modal,
+  TextField,
+} from '@mui/material';
+
 // @ts-ignore
 // import avatarPlaceholder from '../../../images/avatarPlaceholder.png';
+import auth from '../../../utils/auth';
+import {
+  followUser,
+  getPathPhotoData,
+  getProfileData,
+  getUserData,
+  unfollowUser,
+  updateUserData,
+} from '../../Profile/helper';
+import history from '../../../utils/history';
+
 // @ts-ignore
 import avatar from '../../../images/avatar1.png';
-import auth from '../../../utils/auth';
 
-interface Props {
-  user: {
-    username: string;
-    title: string;
-    stats: {
-      enrolled: number;
-      done: number;
-      followings: number;
-      followers: number;
-      tags: number;
-      resources: number;
-    };
+interface User {
+  username: string;
+  title: string;
+  photo: string;
+  stats: {
+    enrolled: number;
+    // done: number;
+    followings: number;
+    followers: number;
+    tags: number;
+    resources: number;
   };
 }
 
@@ -28,6 +52,7 @@ const useStyles = makeStyles(() => ({
     height: '100%',
     width: '20%',
     background: '#70A9FF',
+    overflow: 'scroll',
   },
   imageContainer: {
     margin: '20px',
@@ -73,17 +98,66 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const ProfileBar = (props: Props) => {
-  const { user } = props;
+const ProfileBar = () => {
   const classes = useStyles();
+  // @ts-ignore
+  const { username } = useParams();
+
+  const [user, setUser] = useState<User | null>(null);
+
+  const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    setLoading(true);
+    (async () => {
+      // simulate api request waiting
+      setTimeout(async () => {
+        const {
+          resources: _resources,
+          user: _user,
+          stats: _stats,
+          favorites: _favorites,
+          followers: _followers,
+          followings: _followings,
+        } = await getProfileData(username || auth.getAuthInfoFromSession()?.username || 'e');
+        console.log(_resources);
+
+        // @ts-ignore
+        setUser({
+          username: _user.username,
+          title: _user.name,
+          photo: _user.photo,
+          stats: {
+            enrolled: _resources.filter((r) => r.isEnrolled === true).length,
+            // done: number;
+            followings: _followings.length,
+            followers: _followers.length,
+            tags: _favorites[0].value,
+            resources: _favorites[1].value,
+          },
+        });
+        setLoading(false);
+      }, 10);
+    })();
+  }, [username]);
+
+  if (!user) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '90vh' }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
+
   return (
     <Grid container className={classes.root}>
       <Grid container className={classes.username}>
         <div className={classes.imageContainer}>
-          <img className={classes.profilePic} src={avatar} alt="profile-pic" />
+          <img className={classes.profilePic} src={user?.photo} alt="profile-pic" />
         </div>
         <Typography variant="h5" align="center">
-          {user.username}
+          @{user.username}
         </Typography>
         <Grid item xs={12} className={classes.title}>
           <Typography variant="h5" align="center">
@@ -101,14 +175,14 @@ const ProfileBar = (props: Props) => {
             {user.stats.enrolled}
           </Typography>
         </Grid>
-        <Grid item xs={5} className={classes.info}>
+        {/* <Grid item xs={5} className={classes.info}>
           <Typography variant="h5" align="center">
             Done
           </Typography>
           <Typography variant="h5" align="center">
             {user.stats.done}
           </Typography>
-        </Grid>
+        </Grid> */}
         <Grid item xs={5} className={classes.info}>
           <Typography variant="h5" align="center">
             Followings

@@ -16,7 +16,8 @@ const useStyles = makeStyles(() => ({
   },
   main: {
     display: 'flex',
-    height: '100%',
+    height: 'calc(100% - 64px)',
+    position: 'relative',
   },
 }));
 

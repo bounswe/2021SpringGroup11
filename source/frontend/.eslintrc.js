@@ -67,6 +67,7 @@ module.exports = {
     'react-hooks/exhaustive-deps': 0,
     'react/jsx-closing-tag-location': 0,
     'react/forbid-prop-types': 1,
+    'react/no-unused-prop-types': 1,
     'react/jsx-first-prop-new-line': [2, 'multiline'],
     'react/jsx-filename-extension': 0,
     'react/jsx-no-target-blank': 0,
@@ -91,5 +92,7 @@ module.exports = {
     'no-unused-expressions': 0,
     'jsx-a11y/alt-text': 0,
     'react/no-array-index-key': 0,
+    'jsx-a11y/click-events-have-key-events': 0,
+    'jsx-a11y/no-static-element-interactions': 0,
   },
 };
