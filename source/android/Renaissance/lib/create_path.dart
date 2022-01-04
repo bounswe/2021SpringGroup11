@@ -271,7 +271,7 @@ class CreatePathPageState extends State<CreatePathPage> {
                 ),
                 titleFields[i],
                 Text(
-                  typeOfController[i] + " Description ",
+                  typeOfController[i] + " Description",
                   style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
                 ),
                 descFields[i],

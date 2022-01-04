@@ -121,12 +121,12 @@ void main() {
     state.descControllers.add(TextEditingController());
     state.titleFields.add(TextField());
     state.descFields.add(TextField());
-    state.typeOfController.add("test");
+    state.typeOfController.add("Task");
     state.titleControllers.add(TextEditingController());
     state.descControllers.add(TextEditingController());
     state.titleFields.add(TextField());
     state.descFields.add(TextField());
-    state.typeOfController.add("test");
+    state.typeOfController.add("Task");
     state.setState(() {});
 
     await tester.pump();
@@ -136,5 +136,12 @@ void main() {
                 .children)
             .length,
         2);
+
+    final finderTask = find.text('Task 1');
+    final titleFinderTask = find.text('Task Title');
+    final descriptionFinderTask = find.text('Task Description');
+    expect(finderTask, findsOneWidget);
+    expect(titleFinderTask, findsWidgets);
+    expect(descriptionFinderTask, findsWidgets);
   });
 }
