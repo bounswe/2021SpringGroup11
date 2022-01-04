@@ -29,30 +29,30 @@ class CreatePathPageState extends State<CreatePathPage> {
 
   var topics = <Tag>[];
 
-  List<TextEditingController> _titleControllers = [];
-  List<TextField> _titleFields = [];
-  List<TextEditingController> _descControllers = [];
-  List<TextField> _descFields = [];
+  List<TextEditingController> titleControllers = [];
+  List<TextField> titleFields = [];
+  List<TextEditingController> descControllers = [];
+  List<TextField> descFields = [];
 
-  List<String> _typeOfController = [];
+  List<String> typeOfController = [];
 
   TextEditingController titleController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   TextEditingController topicController = TextEditingController();
 
   void clearItems() {
-    _titleControllers = [];
-    _titleFields = [];
-    _descControllers = [];
-    _descFields = [];
-    _typeOfController = [];
+    titleControllers = [];
+    titleFields = [];
+    descControllers = [];
+    descFields = [];
+    typeOfController = [];
   }
 
   int findIndex(int i) {
-    String type = _typeOfController[i];
+    String type = typeOfController[i];
     int index = 1;
     for (int ind = 0; ind < i; ind++) {
-      if (_typeOfController[ind] == type) {
+      if (typeOfController[ind] == type) {
         index += 1;
       }
     }
@@ -61,11 +61,11 @@ class CreatePathPageState extends State<CreatePathPage> {
 
   void _deleteItem(int i) {
     setState(() {
-      _titleControllers.removeAt(i);
-      _titleFields.removeAt(i);
-      _descControllers.removeAt(i);
-      _descFields.removeAt(i);
-      _typeOfController.removeAt(i);
+      titleControllers.removeAt(i);
+      titleFields.removeAt(i);
+      descControllers.removeAt(i);
+      descFields.removeAt(i);
+      typeOfController.removeAt(i);
     });
   }
 
@@ -122,10 +122,10 @@ class CreatePathPageState extends State<CreatePathPage> {
 
   @override
   void dispose() {
-    for (final controller in _titleControllers) {
+    for (final controller in titleControllers) {
       controller.dispose();
     }
-    for (final controller in _descControllers) {
+    for (final controller in descControllers) {
       controller.dispose();
     }
     titleController.dispose();
@@ -175,11 +175,11 @@ class CreatePathPageState extends State<CreatePathPage> {
             );
 
             setState(() {
-              _titleControllers.add(titleController);
-              _titleFields.add(titleField);
-              _descControllers.add(descController);
-              _descFields.add(descField);
-              _typeOfController.add("Task");
+              titleControllers.add(titleController);
+              titleFields.add(titleField);
+              descControllers.add(descController);
+              descFields.add(descField);
+              typeOfController.add("Task");
             });
           },
         ),
@@ -220,11 +220,11 @@ class CreatePathPageState extends State<CreatePathPage> {
             );
 
             setState(() {
-              _titleControllers.add(titleController);
-              _titleFields.add(titleField);
-              _descControllers.add(descController);
-              _descFields.add(descField);
-              _typeOfController.add("Milestone");
+              titleControllers.add(titleController);
+              titleFields.add(titleField);
+              descControllers.add(descController);
+              descFields.add(descField);
+              typeOfController.add("Milestone");
             });
           },
         ),
@@ -234,7 +234,7 @@ class CreatePathPageState extends State<CreatePathPage> {
 
   Widget _items() {
     final children = [
-      for (var i = 0; i < _titleControllers.length; i++)
+      for (var i = 0; i < titleControllers.length; i++)
         Container(
           margin: EdgeInsets.all(5),
           child: InputDecorator(
@@ -246,7 +246,7 @@ class CreatePathPageState extends State<CreatePathPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      _typeOfController[i] + " " + findIndex(i).toString(),
+                      typeOfController[i] + " " + findIndex(i).toString(),
                       style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
@@ -267,15 +267,15 @@ class CreatePathPageState extends State<CreatePathPage> {
                   ],
                 ),
                 Text(
-                  _typeOfController[i] + " Title",
+                  typeOfController[i] + " Title",
                   style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
                 ),
-                _titleFields[i],
+                titleFields[i],
                 Text(
-                  _typeOfController[i] + " Description ",
+                  typeOfController[i] + " Description ",
                   style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
                 ),
-                _descFields[i],
+                descFields[i],
               ],
             ),
             decoration: InputDecoration(),
@@ -473,11 +473,11 @@ class CreatePathPageState extends State<CreatePathPage> {
                       if (topicController.text == "")
                         throw Exception('Please give some topic!');
 
-                      for (var item in _titleControllers)
+                      for (var item in titleControllers)
                         if (item.text == "")
                           throw Exception('Please fill all milestone titles!');
 
-                      for (var item in _descControllers)
+                      for (var item in descControllers)
                         if (item.text == "")
                           throw Exception(
                               'Please fill all milestone descriptions!');
@@ -485,11 +485,11 @@ class CreatePathPageState extends State<CreatePathPage> {
                       List<Map<String, String>> items = [];
                       List<Map<String, String>> topics = [];
 
-                      for (var i = 0; i < _titleControllers.length; i++) {
+                      for (var i = 0; i < titleControllers.length; i++) {
                         items.add({
-                          "title": _titleControllers[i].text,
-                          "body": _descControllers[i].text,
-                          "type": _typeOfController[i],
+                          "title": titleControllers[i].text,
+                          "body": descControllers[i].text,
+                          "type": typeOfController[i],
                         });
                       }
 

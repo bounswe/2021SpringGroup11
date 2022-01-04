@@ -23,4 +23,30 @@ void main() {
     expect(state.topicController, isNotNull);
     expect(state.descriptionController, isNotNull);
   });
+
+  test('Clear items functionailty checks', () {
+    final widget = CreatePathPage();
+    final element = widget.createElement(); // this will set state.widget
+    final state = element.state as CreatePathPageState;
+
+    state.titleControllers.add(TextEditingController());
+    state.descControllers.add(TextEditingController());
+    state.titleFields.add(TextField());
+    state.descFields.add(TextField());
+    state.typeOfController.add("test");
+
+    expect(state.titleControllers, isNotEmpty);
+    expect(state.descControllers, isNotEmpty);
+    expect(state.titleFields, isNotEmpty);
+    expect(state.descFields, isNotEmpty);
+    expect(state.typeOfController, isNotEmpty);
+
+    state.clearItems();
+
+    expect(state.titleControllers, isEmpty);
+    expect(state.descControllers, isEmpty);
+    expect(state.titleFields, isEmpty);
+    expect(state.descFields, isEmpty);
+    expect(state.typeOfController, isEmpty);
+  });
 }
