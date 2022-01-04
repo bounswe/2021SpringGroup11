@@ -26,10 +26,27 @@ class _MilestoneContainerState extends State<MilestoneContainer> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.redAccent,
+        color: widget.type==0?Colors.redAccent:Colors.orangeAccent,
           borderRadius: BorderRadius.circular(15)),
       margin: EdgeInsets.all(MediaQuery.of(context).size.width * 0.01),
-      child: LabeledCheckbox(
+      child: widget.type==0?
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(widget.milestone_title,softWrap: true,
+
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
+                Text(widget.milestone_description,softWrap: true,
+                  style: TextStyle(fontSize: 14, ),),
+
+
+            ],),
+          )
+          :
+      LabeledCheckbox(
         title: widget.milestone_title,
         description: widget.milestone_description,
         value: _isInital?widget.is_completed:state_checkbox_value,
