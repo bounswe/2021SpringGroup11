@@ -35,6 +35,8 @@ class ActivityStreams(APIView):
         with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
             followed_users = list(db.find('follow', query={'follower_username': username}))
             followed_users=[f['followed_username'] for f in followed_users]
+            followed_users.append(username)
+            
             userq={"actor.name": {"$in": followed_users}}
 
             followed_paths= list(db.find('follow_path', query={'username':username}))

@@ -21,6 +21,8 @@ def get_topics(text: str):
                 'id': int(entity['id'][1:]),
                 'description': entity.get('description', 'No description provided')
             })
+        if len(ret) == 3:
+            break
 
     return ret
 
