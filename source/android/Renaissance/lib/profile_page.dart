@@ -30,11 +30,11 @@ class _ProfilePageState extends State<ProfilePage> with EditProfileDelegate, Fol
   File? profileImg;
 
   void loadPhoto() async {
-    if (User.me!.photo == null || User.me!.photo == "") { return ; }
+    if (widget.user.photo == null || widget.user.photo == "") { return ; }
     setState(() {
       loadingImage = true;
     });
-    profileImg = await FileConverter.getImageFromBase64(User.me!.photo!);
+    profileImg = await FileConverter.getImageFromBase64(widget.user.photo!);
     setState(() {
       loadingImage = false;
     });
@@ -115,7 +115,7 @@ class _ProfilePageState extends State<ProfilePage> with EditProfileDelegate, Fol
                                 borderRadius: BorderRadius.all(Radius.circular(50.0))
                             ),
                             child: Center(
-                                child: FollowerWidget(widget.user.follower!, widget.user.following!, this)
+                                child: FollowerWidget(widget.user.follower, widget.user.following, this)
                             ),
                             margin: EdgeInsets.only(top: 10)
                         ),
@@ -137,10 +137,12 @@ class _ProfilePageState extends State<ProfilePage> with EditProfileDelegate, Fol
                                 try {
                                   var response = await HttpService.shared.followUser(User.me!.username!, widget.user.username!);
                                 } on Exception catch (error) {
+
                                 }
                               }
                               setState(() {
                                 isFollowed = !isFollowed;
+                                widget.user.follower += isFollowed ? -1 : 1;
                               });
                             },
                           ),
