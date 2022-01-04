@@ -18,6 +18,8 @@ import 'package:portakal/models/milestone.dart';
 import 'package:portakal/models/milestone_model.dart';
 import 'package:portakal/models/tag.dart';
 import 'package:portakal/models/path.dart';
+import 'package:portakal/models/activity.dart';
+
 import 'package:portakal/models/topic_model.dart';
 import 'package:portakal/token.dart';
 import 'package:jwt_decode/jwt_decode.dart';
@@ -423,6 +425,21 @@ class HttpService {
       List<Tag> result = [];
       for (var item in jsonDecode(res.body)) {
         result.add(Tag.fromJSON(item));
+      }
+      return (result);
+    } else {
+      throw Exception("An error occured with topics, please try another set");
+    }
+  }
+
+  Future<List<Activity>> activityStream() async {
+    String url = baseUrl + '/user/activity-streams/';
+
+    Response res = await post(Uri.parse(url), headers: headers);
+    if (res.statusCode == 200) {
+      List<Activity> result = [];
+      for (var item in jsonDecode(res.body)) {
+        result.add(Activity.fromJSON(item));
       }
       return (result);
     } else {
