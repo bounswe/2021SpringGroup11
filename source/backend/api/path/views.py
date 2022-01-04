@@ -504,6 +504,7 @@ class GetPath(APIView):
                     path_milestone['_id'] = str(milestone['_id'])
                     path_milestone['title'] = milestone['title']
                     path_milestone['body'] = milestone['body']
+                    path_milestone['type'] = milestone.get('type', 1)
                     path_milestone['isFinished'] = str(milestone['_id']) in finished_milestone_ids
                     new_path_milestones.append(path_milestone)
                     break
