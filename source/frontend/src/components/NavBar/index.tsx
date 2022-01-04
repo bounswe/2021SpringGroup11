@@ -105,9 +105,14 @@ const NavBar = (props: Props) => {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
               >
-                {/* <MenuItem onClick={handleClose}>View Profile</MenuItem>
-                <MenuItem onClick={handleClose}>Settings</MenuItem>
-                <MenuItem onClick={handleClose}>Help</MenuItem> */}
+                <MenuItem
+                  onClick={() => {
+                    history.push('/about');
+                  }}
+                >
+                  About
+                </MenuItem>
+                <br />
                 <MenuItem onClick={handleLogout}>Logout</MenuItem>
               </Menu>
             </div>

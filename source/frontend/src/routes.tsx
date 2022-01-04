@@ -60,6 +60,13 @@ const routes: {
     component: lazy(() => import('./components/Path')),
     requestAuth: true,
   },
+  {
+    path: '/about',
+    exact: true,
+    // @ts-ignore
+    component: lazy(() => import('./components/About')),
+    requestAuth: true,
+  },
 ];
 
 export default routes;
