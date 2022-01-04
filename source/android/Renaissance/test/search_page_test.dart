@@ -22,4 +22,20 @@ void main() {
     expect(state.paths, isEmpty);
     expect(state.users, isEmpty);
   });
+
+  testWidgets('Search page creation check', (WidgetTester tester) async {
+    Widget testWidget = MaterialApp(
+        home: Material(
+            child: new MediaQuery(
+                data: new MediaQueryData(), child: SearchPage())));
+
+    await tester.pumpWidget(testWidget);
+
+    final finderPath = find.text('PATHS');
+    final finderUser = find.text('Users');
+    final finderTag = find.text('TAGS');
+    expect(finderPath, findsOneWidget);
+    expect(finderUser, findsWidgets);
+    expect(finderTag, findsWidgets);
+  });
 }
