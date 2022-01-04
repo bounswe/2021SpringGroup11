@@ -199,7 +199,7 @@ class SearchPageState extends State<SearchPage> {
           ),
           if (paths.isNotEmpty)
             ...(paths as List<BasicPath>).map((path) {
-              return CourseContainer(key: Key(path.id!), path: path);
+              return CourseContainer(key: Key(path.id), path: path);
             }).toList(),
           if (paths.isEmpty)
             Container(
