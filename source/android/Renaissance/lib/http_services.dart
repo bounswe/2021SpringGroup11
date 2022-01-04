@@ -312,7 +312,7 @@ class HttpService {
   Future<User> createPath(
       String title,
       String description,
-      List<Map<String, String>> milestones,
+      List<Map<String, Object>> milestones,
       String? photo,
       List<Map<String, Object>> topics) async {
     String url = baseUrl + '/path/create-path/';
