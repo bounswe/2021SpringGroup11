@@ -11,16 +11,12 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:portakal/search_page.dart';
 
 void main() {
-  test('if widget.someParam is empty, do something', () {
+  test('initial list empty checks', () {
     final widget = SearchPage();
     final element = widget.createElement(); // this will set state.widget
     final state = element.state as SearchPageState;
     expect(state.topics, isEmpty);
+    expect(state.paths, isEmpty);
+    expect(state.users, isEmpty);
   });
-  // testWidgets('First test', (WidgetTester tester) async {
-  //   final SearchPageState searchState =
-  //       tester.state<SearchPageState>(find.byType(SearchPage));
-  //   print(searchState.topics);
-  //   expect(searchState.topics, isEmpty);
-  // });
 }

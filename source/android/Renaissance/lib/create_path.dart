@@ -19,10 +19,11 @@ class CreatePathPage extends StatefulWidget {
   const CreatePathPage({Key? key}) : super(key: key);
 
   @override
-  _CreatePathPageState createState() => _CreatePathPageState();
+  CreatePathPageState createState() => CreatePathPageState();
 }
 
-class _CreatePathPageState extends State<CreatePathPage> {
+@visibleForTesting
+class CreatePathPageState extends State<CreatePathPage> {
   var _image;
   bool _isLoading = false;
 

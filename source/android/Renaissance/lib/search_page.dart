@@ -19,10 +19,11 @@ class SearchPage extends StatefulWidget {
   SearchPageState createState() => SearchPageState();
 }
 
+@visibleForTesting
 class SearchPageState extends State<SearchPage> {
   var topics = [];
-  var _paths = [];
-  var _users = [];
+  var paths = [];
+  var users = [];
   String _keyword = "";
   @override
   Widget build(BuildContext context) {
@@ -35,16 +36,16 @@ class SearchPageState extends State<SearchPage> {
     }
 
     void _searchP() async {
-      var paths = await HttpService.shared.searchPath(_keyword);
+      var tpaths = await HttpService.shared.searchPath(_keyword);
       setState(() {
-        _paths = paths;
+        paths = tpaths;
       });
     }
 
     void _searchU() async {
-      var users = await HttpService.shared.searchUser(_keyword);
+      var tusers = await HttpService.shared.searchUser(_keyword);
       setState(() {
-        _users = users;
+        users = tusers;
       });
     }
 
@@ -173,11 +174,11 @@ class SearchPageState extends State<SearchPage> {
               scrollDirection: Axis.horizontal,
               child: Row(
                 children: [
-                  if (_users.isNotEmpty)
-                    ...(_users as List<BasicUser>).map((user) {
+                  if (users.isNotEmpty)
+                    ...(users as List<BasicUser>).map((user) {
                       return UserContainer(user: user);
                     }).toList(),
-                  if (_users.isEmpty)
+                  if (users.isEmpty)
                     Text(
                       "No User to show !",
                       style:
@@ -196,11 +197,11 @@ class SearchPageState extends State<SearchPage> {
                     letterSpacing: 2.0)),
             color: Colors.grey.shade300,
           ),
-          if (_paths.isNotEmpty)
-            ...(_paths as List<BasicPath>).map((path) {
+          if (paths.isNotEmpty)
+            ...(paths as List<BasicPath>).map((path) {
               return CourseContainer(key: Key(path.id!), path: path);
             }).toList(),
-          if (_paths.isEmpty)
+          if (paths.isEmpty)
             Container(
               width: double.infinity,
               padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
