@@ -1,10 +1,14 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:portakal/http_services.dart';
 import 'package:portakal/models/basic_path.dart';
 import 'package:portakal/widget/activity_container.dart';
+import 'package:jwt_decode/jwt_decode.dart';
+import 'dart:io';
 
+import 'models/activity.dart';
 import 'my_colors.dart';
 
 class ActivityStreamPage extends StatefulWidget {
@@ -13,14 +17,20 @@ class ActivityStreamPage extends StatefulWidget {
   @override
   _ActivityStreamPageState createState() => _ActivityStreamPageState();
 }
-
+bool isLoading = true;
 class _ActivityStreamPageState extends State<ActivityStreamPage> {
-  Future<List<BasicPath>> get() async {
-    return await HttpService.shared.myPaths();
+  var _activites = [];
+
+  void get() async {
+    List<Activity> temp = await HttpService.shared.activityStream();
+    setState(() {
+      _activites = temp;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    get();
     return Scaffold(
         appBar: AppBar(
           backgroundColor: MyColors.blue,
@@ -28,24 +38,25 @@ class _ActivityStreamPageState extends State<ActivityStreamPage> {
           centerTitle: true,
         ),
         body: Center(
-          child: FutureBuilder<List<BasicPath>>(
-            future: get(),
-            builder: (context, snapshot) {
-              if (snapshot.hasData == false) {
-                return CircularProgressIndicator();
-              } else {
-                return ListView.builder(
-                  padding: EdgeInsets.symmetric(vertical: 10.0),
-                  physics: BouncingScrollPhysics(),
-                  itemCount: snapshot.data!.length,
-                  itemBuilder: (context, index) {
-                    BasicPath path = snapshot.data![index];
-                    return ActivityContainer(summary: summary);
-                  },
-                );
-              }
-            },
-          ),
-        ));
+                child: _activites.length==0?CircularProgressIndicator():
+                ListView(physics: BouncingScrollPhysics(), children: [
+                  ...(_activites)
+                      .map((item) {
+                    return ActivityContainer(item.summary!,item.time!);
+                  }).toList()
+                ]),
+
+        ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async{
+          setState(() {
+            _activites = [];
+          });
+          get();
+        },
+        backgroundColor: Colors.green,
+        child: const Icon(Icons.refresh),
+      ),
+    );
   }
 }
