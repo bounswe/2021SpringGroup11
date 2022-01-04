@@ -138,7 +138,7 @@ const PathItem = (props: pathProps) => {
             }}
           >
             <Typography style={{ color: '#fff500' }} variant="h6" align="center">
-              Effort
+              Difficulty
               <Typography style={{ color: '#ffffff' }} variant="h6" align="center">
                 {item.effort}
               </Typography>
@@ -177,7 +177,7 @@ const HomeTabPanel = (props: Props) => {
       <div className={classes.panel}>
         <div className={classes.tagHeader}>
           <Typography variant="h3" align="center">
-            Tags
+            Topics
           </Typography>
         </div>
         <Grid container className={classes.tags}>

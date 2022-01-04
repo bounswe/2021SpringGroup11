@@ -206,7 +206,7 @@ const Path = (props: Props) => {
                 </Button>
               </div>
               <Typography variant="h5">Rating: {path.rating || 'N/A'}</Typography>
-              <Typography variant="h5">Effort: {path.effort || 'N/A'}</Typography>
+              <Typography variant="h5">Difficulty: {path.effort || 'N/A'}</Typography>
             </div>
           </div>
           <div className={classes.body}>
@@ -240,7 +240,6 @@ const Path = (props: Props) => {
                   <div />
                 ),
               )}
-              )
             </div>
           </div>
         </div>
