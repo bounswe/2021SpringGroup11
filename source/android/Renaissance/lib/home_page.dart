@@ -15,11 +15,12 @@ class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
   @override
-  _HomePageState createState() => _HomePageState();
+  HomePageState createState() => HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
-  var _pageIndex = 0;
+@visibleForTesting
+class HomePageState extends State<HomePage> {
+  var pageIndex = 0;
   HomePageResponse _results = HomePageResponse(paths: [], tags: []);
   var _isLoading = false;
   void _fetchPopular() async {
@@ -30,7 +31,7 @@ class _HomePageState extends State<HomePage> {
         _results = data;
         _isLoading = false;
       });
-    } on Exception catch(error) {
+    } on Exception catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
           '${error.toString().substring(11)}',
@@ -51,7 +52,7 @@ class _HomePageState extends State<HomePage> {
         _results = data;
         _isLoading = false;
       });
-    } on Exception catch(error) {
+    } on Exception catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
           '${error.toString().substring(11)}',
@@ -72,7 +73,7 @@ class _HomePageState extends State<HomePage> {
         _results = data;
         _isLoading = false;
       });
-    } on Exception catch(error) {
+    } on Exception catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
           '${error.toString().substring(11)}',
@@ -123,11 +124,11 @@ class _HomePageState extends State<HomePage> {
                 _fetchNew();
               }
               setState(() {
-                _pageIndex = value as int;
+                pageIndex = value as int;
               });
             },
             padding: EdgeInsets.all(5),
-            groupValue: _pageIndex,
+            groupValue: pageIndex,
             selectedColor: Colors.red,
             borderColor: Colors.black,
           ),
@@ -149,8 +150,11 @@ class _HomePageState extends State<HomePage> {
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
-                children: _results.tags.map((tag) => TagContainer(tag: tag,)).toList()
-              ),
+                  children: _results.tags
+                      .map((tag) => TagContainer(
+                            tag: tag,
+                          ))
+                      .toList()),
             ),
           ),
           Container(
@@ -162,7 +166,8 @@ class _HomePageState extends State<HomePage> {
                     letterSpacing: 2.0)),
             color: Colors.grey.shade300,
           ),
-          ..._results.paths.map((path) => CourseContainer(key: Key(path.id), path: path))
+          ..._results.paths
+              .map((path) => CourseContainer(key: Key(path.id), path: path))
         ],
       ),
     );
