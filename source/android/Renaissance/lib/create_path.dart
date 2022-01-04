@@ -132,9 +132,11 @@ class CreatePathPageState extends State<CreatePathPage> {
   Widget _addTile() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      key: const Key("addTile"),
       children: [
         TextButton(
           child: Text('Add Task'),
+          key: const Key("addTask"),
           style: TextButton.styleFrom(
             primary: MyColors.coolGray,
             backgroundColor: Colors.orangeAccent,

@@ -144,4 +144,24 @@ void main() {
     expect(titleFinderTask, findsWidgets);
     expect(descriptionFinderTask, findsWidgets);
   });
+
+  // testWidgets('Checking custom add tile widget', (WidgetTester tester) async {
+  //   Widget testWidget = MaterialApp(
+  //       home: Material(
+  //           child: new MediaQuery(
+  //               data: new MediaQueryData(), child: CreatePathPage())));
+
+  //   await tester.pumpWidget(testWidget);
+  //   final CreatePathPageState state = tester.state(find.byType(CreatePathPage));
+
+  //   await tester.ensureVisible(find.byKey(Key("addTask")));
+  //   await tester.press(find.byKey(Key("addTask")));
+  //   await tester.pumpAndSettle();
+
+  //   expect(state.titleControllers.length, 1);
+  //   expect(state.descControllers.length, 1);
+  //   expect(state.titleFields.length, 1);
+  //   expect(state.descFields.length, 1);
+  //   expect(state.typeOfController.length, 1);
+  // });
 }

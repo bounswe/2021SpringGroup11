@@ -22,17 +22,4 @@ void main() {
     expect(state.paths, isEmpty);
     expect(state.users, isEmpty);
   });
-
-  test('topic list update check', () {
-    final widget = SearchPage();
-    final element = widget.createElement(); // this will set state.widget
-    final state = element.state as SearchPageState;
-    Tag dumb = Tag(name: "name", id: "2", description: "desc", isFav: true);
-
-    state.setState(() {
-      state.topics = [dumb];
-    });
-
-    expect(find.byType(TagSearchContainer), findsWidgets);
-  });
 }
