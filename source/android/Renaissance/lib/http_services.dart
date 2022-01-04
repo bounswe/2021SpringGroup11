@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:flutter/animation.dart';
 import 'package:http/http.dart';
+import 'package:portakal/models/Resource.dart';
 import 'package:portakal/models/basic_path.dart';
 import 'package:portakal/models/basic_user.dart';
 import 'package:portakal/models/get_follow_response.dart';
@@ -194,7 +195,14 @@ class HttpService {
         body: jsonEncode({'username': username, 'path_id': id}));
     return res.statusCode == 200;
   }
-
+  Future<bool> add_resource(String path_id, String link,String description) async {
+    print( jsonEncode({'path_id': path_id, 'order': 1, "link":link,"description":description}));
+    String url = baseUrl + '/path/add-resource/';
+    Response res = await post(Uri.parse(url),
+        headers: headers,
+        body: jsonEncode({'path_id': path_id, 'order': 1, "link":link,"description":description}));
+    return res.statusCode == 200;
+  }
   Future<bool> effort_path(String username, String id, double value) async {
     String url = baseUrl + '/path/effort-path/';
     Response res = await post(Uri.parse(url),
@@ -221,6 +229,7 @@ class HttpService {
   Path processPath(input) {
     List<Milestonee> milestoness = [];
     List<Topic> topicss = [];
+    List<Resource> resources = [];
 
     (input["milestones"]).map((tag) {
       milestoness.add(Milestonee.fromJson(tag));
@@ -228,6 +237,10 @@ class HttpService {
 
     (input["topics"]).map((tag) {
       topicss.add(Topic.fromJson(tag));
+    }).toList();
+
+    (input["resources"]).map((tag) {
+      resources.add(Resource.fromJSON(tag));
     }).toList();
     return Path(
         id: input['_id'],
@@ -241,8 +254,10 @@ class HttpService {
         milestones: milestoness,
         rating: input['rating'],
         effort: input['effort'],
+        resources: resources,
         isEnrolled: input['isEnrolled'],
         isFollowed: input['isFollowed']);
+
   }
 
   Future<Path> getPath(String path_id) async {
@@ -369,17 +384,14 @@ class HttpService {
       'topics': topics,
       'photo': photo,
     });
-    //log(body);
-    log(HttpHeaders.authorizationHeader);
-    print(body);
     Response res = await post(Uri.parse(url), headers: headers, body: body);
+    log("${res.statusCode}");
     if (res.statusCode == 200) {
       return User.fromJson(jsonDecode(res.body));
-    } else if (res.statusCode == 403) {
-      //await refreshToken();
-      throw Exception("Please try again later.");
+    } else if (res.statusCode == 413){
+      throw Exception("Payload too large!");
     } else {
-      throw Exception("An Error Occured. Please try again later.");
+      throw Exception("An error occurred.");
     }
   }
 /*

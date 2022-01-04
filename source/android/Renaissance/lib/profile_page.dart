@@ -1,9 +1,13 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:portakal/edit_profile.dart';
 import 'package:portakal/file_converter.dart';
 import 'package:portakal/follow_page.dart';
 import 'package:portakal/http_services.dart';
+import 'package:portakal/models/basic_path.dart';
+import 'package:portakal/models/path.dart';
 import 'dart:io';
 import 'package:portakal/my_colors.dart';
 import 'package:portakal/widget/profile_appbar_widget.dart';
@@ -26,6 +30,7 @@ bool isFollowed = true;
 class _ProfilePageState extends State<ProfilePage> with EditProfileDelegate, FollowerWidgetDelegate {
   late Future<List<BasicPath>> favPaths = HttpService.shared.getFavouritePaths(widget.user.username!);
   late Future<List<BasicPath>> enrolledPaths = HttpService.shared.getEnrolledPaths(widget.user.username!);
+
   bool loadingImage = false;
   File? profileImg;
 
@@ -74,35 +79,42 @@ class _ProfilePageState extends State<ProfilePage> with EditProfileDelegate, Fol
                         StatsWidget(widget.user.followed_paths ?? 0, widget.user.enrolls ?? 0, widget.user.finishedResourceCount!)
                       ]
                   ),
-                  Container(
-                    margin: EdgeInsets.only(top: 15),
-                    width: 315,
-                    padding: EdgeInsets.symmetric(horizontal: 5,vertical: 5),
-                    decoration: BoxDecoration(
-                        color: Color(0x99FFFFFF),
-                        borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                         'About',
-                          style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-                        ),
-                        Container(
-                          // adding margin
-                          height: 53,
-                          child: SingleChildScrollView(
-                            // for Vertical scrolling
-                            scrollDirection: Axis.vertical,
-                            child: Text(
-                              User.me!.bio ?? "No info yet.",
-                              style: TextStyle(fontSize: 14, height: 1.2,  fontStyle: FontStyle.italic),
+                  MaterialButton(onPressed: _pullRefresh, child: Text("Refresh", style: TextStyle(color: Colors.white60),), color: Colors.black54, ),
+
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(top: 15),
+                        width: 315,
+                        padding: EdgeInsets.symmetric(horizontal: 5,vertical: 5),
+                        decoration: BoxDecoration(
+                            color: Color(0x99FFFFFF),
+                            borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                             'About',
+                              style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                             ),
-                          ),
+                            Container(
+                              // adding margin
+                              height: 53,
+                              child: SingleChildScrollView(
+                                // for Vertical scrolling
+                                scrollDirection: Axis.vertical,
+                                child: Text(
+                                  User.me!.bio ?? "No info yet.",
+                                  style: TextStyle(fontSize: 14, height: 1.2,  fontStyle: FontStyle.italic),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                   Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -216,7 +228,7 @@ class _ProfilePageState extends State<ProfilePage> with EditProfileDelegate, Fol
                   );
                 }
               }
-          ),
+          )
         ],
       ),
     );

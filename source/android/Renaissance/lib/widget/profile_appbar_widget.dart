@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:portakal/edit_profile.dart';
+import 'package:portakal/models/user.dart';
 import 'package:portakal/settings_page.dart';
 
 import '../my_colors.dart';
@@ -8,26 +9,13 @@ import '../my_colors.dart';
 AppBar buildAppBar(BuildContext context, String username, EditProfileDelegate delegate){
   return AppBar(
     backgroundColor: MyColors.blue,
-    flexibleSpace: Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Container(
-            decoration: BoxDecoration(
-                color: Colors.transparent,
-                borderRadius: BorderRadius.all(Radius.circular(10.0))),
-            child: new Center(
-              child: new Text('BEGINNER',
-                style: TextStyle(fontSize: 20, color: Color(0xFFEB5757)),
-                textAlign: TextAlign.center,),
-            )
+    flexibleSpace:
+        Align(
+          alignment: Alignment.center,
+          child: Text("@${username}", style: TextStyle(fontWeight: FontWeight.w600, fontSize: 26, color: Colors.white)),
         ),
-        SizedBox(width: 15,),
-        Text(username, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20,color: Colors.white)),
-      ],
-    ),
     elevation: 0,
-    actions: [
+    actions: username == User.me!.username ? [
       IconButton(
         icon: FaIcon(FontAwesomeIcons.cog),
         onPressed: (){
@@ -40,6 +28,6 @@ AppBar buildAppBar(BuildContext context, String username, EditProfileDelegate de
           Navigator.push(context, MaterialPageRoute(builder: (context) => EditProfilePage(delegate: delegate,)));
         },
       ),
-    ],
+    ] : [],
   );
 }
