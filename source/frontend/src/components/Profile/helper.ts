@@ -12,11 +12,18 @@ import {
   UNFOLLOW_USER_URL,
   WORDCLOUD_PATHS_URL,
 } from '../../utils/endpoints';
+import auth from '../../utils/auth';
+
+export const getUsername = (username: string) =>
+  username || auth.getAuthInfoFromSession()?.username;
+
+export const getUserDataURLGenerate = (username: string) => `${GET_USER_URL + username}/`;
 
 export const getUserData = async (username: string) => {
-  const userData = (await get(`${GET_USER_URL + username}/`)).data;
+  const userData = (await get(getUserDataURLGenerate(username))).data;
   return userData;
 };
+
 export const getUserFollowData = async () => {
   const userData = (await get(`${GETFOLLOW_USER_URL}`)).data;
   return userData as { followed: string[]; followers: string[] };

@@ -30,11 +30,13 @@ import {
   getPathPhotoData,
   getProfileData,
   getUserData,
+  getUsername,
   unfollowUser,
   updateUserData,
 } from './helper';
 import auth from '../../utils/auth';
 import history from '../../utils/history';
+import { base64ImgDataGenerator } from '../NavBar/SearchBox';
 
 interface Props {
   history: any;
@@ -66,7 +68,7 @@ const Profile = (props: Props) => {
           favorites: _favorites,
           followers: _followers,
           followings: _followings,
-        } = await getProfileData(username || auth.getAuthInfoFromSession()?.username || 'e');
+        } = await getProfileData(getUsername(username));
         console.log(_resources);
 
         // @ts-ignore
@@ -705,14 +707,11 @@ export const ResourceCard = (props: ResourceCardProps) => {
   useEffect(() => {
     (async () => {
       if (props.resource.photo) {
-        setimg(
-          (props.resource.photo.startsWith('data') ? '' : 'data:image/png;base64,') +
-            props.resource.photo,
-        );
+        setimg(base64ImgDataGenerator(props.resource.photo));
       } else {
         try {
           const wc = await getPathPhotoData(props.resource._id);
-          setimg((wc.startsWith('data') ? '' : 'data:image/png;base64,') + wc);
+          setimg(base64ImgDataGenerator(wc));
         } catch (error) {
           setimg(faker.image.imageUrl(64, 64, undefined, true));
         }

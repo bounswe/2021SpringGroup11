@@ -214,18 +214,19 @@ interface Props {
   full?: boolean;
 }
 
+export const base64ImgDataGenerator = (photo: string) =>
+  (photo.startsWith('data') ? '' : 'data:image/png;base64,') + photo;
+
 export const WordCloudImg = ({ id, photo, className, full }: Props) => {
   const [img, setimg] = useState('https://c.tenor.com/I6kN-6X7nhAAAAAj/loading-buffering.gif');
   useEffect(() => {
     (async () => {
       if (photo) {
-        setimg((photo.startsWith('data') ? '' : 'data:image/png;base64,') + photo);
-
-        setimg(`data:image/png;base64,${photo}`);
+        setimg(base64ImgDataGenerator(photo));
       } else {
         try {
           const wc = await getPathPhotoData(id);
-          setimg((wc.startsWith('data') ? '' : 'data:image/png;base64,') + wc);
+          setimg(base64ImgDataGenerator(wc));
         } catch (error) {
           setimg(faker.image.imageUrl(64, 64, undefined, true));
         }
