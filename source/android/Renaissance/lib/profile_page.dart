@@ -71,7 +71,7 @@ class _ProfilePageState extends State<ProfilePage> with EditProfileDelegate, Fol
                           child: Image.file(profileImg!, width: 64, height: 64, fit: BoxFit.fitHeight,),
                           borderRadius: BorderRadius.circular(32.0),
                         ),
-                        StatsWidget(55, 20, widget.user.finishedResourceCount!)
+                        StatsWidget(widget.user.followed_paths ?? 0, widget.user.enrolls ?? 0, widget.user.finishedResourceCount!)
                       ]
                   ),
                   Container(
@@ -115,7 +115,7 @@ class _ProfilePageState extends State<ProfilePage> with EditProfileDelegate, Fol
                                 borderRadius: BorderRadius.all(Radius.circular(50.0))
                             ),
                             child: Center(
-                                child: FollowerWidget(52, 91, this)
+                                child: FollowerWidget(widget.user.follower!, widget.user.following!, this)
                             ),
                             margin: EdgeInsets.only(top: 10)
                         ),
@@ -169,15 +169,14 @@ class _ProfilePageState extends State<ProfilePage> with EditProfileDelegate, Fol
               } else {
                 return Container(
                   height: 80.0,
-                  child: ListView.builder(
+                  width: double.infinity,
+                  child: SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     physics: const BouncingScrollPhysics(),
-                    itemCount: snapshot.data!.length,
-                    itemBuilder: (context, index) {
-                      BasicPath path = snapshot.data![index];
-                      path.isFollowed = true;
-                      return CourseContainer(path: path);
-                    },
+                    child: Row(
+                      children: snapshot.data!.map((e) { e.isFollowed = true; return CourseContainer(key: Key(e.id), path: e,); }
+                      ).toList(),
+                    ),
                   ),
                 );
               }
@@ -204,14 +203,13 @@ class _ProfilePageState extends State<ProfilePage> with EditProfileDelegate, Fol
                 } else {
                   return Container(
                     height: 80.0,
-                    child: ListView.builder(
+                    width: double.infinity,
+                    child: SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
-                      physics: BouncingScrollPhysics(),
-                      itemCount: snapshot.data!.length,
-                      itemBuilder: (context, index) {
-                        BasicPath path = snapshot.data![index];
-                        return CourseContainer(path: path);
-                      },
+                      physics: const BouncingScrollPhysics(),
+                      child: Row(
+                        children: snapshot.data!.map((e) => CourseContainer(key: Key(e.id), path: e,)).toList(),
+                      ),
                     ),
                   );
                 }
