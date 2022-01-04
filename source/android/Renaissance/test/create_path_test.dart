@@ -107,4 +107,34 @@ void main() {
     expect(state.descFields, isEmpty);
     expect(state.typeOfController, isEmpty);
   });
+
+  testWidgets('Checking custom items widget', (WidgetTester tester) async {
+    Widget testWidget = MaterialApp(
+        home: Material(
+            child: new MediaQuery(
+                data: new MediaQueryData(), child: CreatePathPage())));
+
+    await tester.pumpWidget(testWidget);
+    final CreatePathPageState state = tester.state(find.byType(CreatePathPage));
+
+    state.titleControllers.add(TextEditingController());
+    state.descControllers.add(TextEditingController());
+    state.titleFields.add(TextField());
+    state.descFields.add(TextField());
+    state.typeOfController.add("test");
+    state.titleControllers.add(TextEditingController());
+    state.descControllers.add(TextEditingController());
+    state.titleFields.add(TextField());
+    state.descFields.add(TextField());
+    state.typeOfController.add("test");
+    state.setState(() {});
+
+    await tester.pump();
+
+    expect(
+        ((tester.firstWidget(find.byKey(const Key("items"))) as Column)
+                .children)
+            .length,
+        2);
+  });
 }

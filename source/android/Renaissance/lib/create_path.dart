@@ -227,7 +227,7 @@ class CreatePathPageState extends State<CreatePathPage> {
     );
   }
 
-  Widget _items() {
+  Widget items() {
     final children = [
       for (var i = 0; i < titleControllers.length; i++)
         Container(
@@ -284,6 +284,7 @@ class CreatePathPageState extends State<CreatePathPage> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: children,
+      key: Key("items"),
     );
   }
 
@@ -460,7 +461,7 @@ class CreatePathPageState extends State<CreatePathPage> {
                 'Tasks and Milestones',
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
               ),
-              _items(),
+              items(),
               _addTile(),
               MaterialButton(
                   onPressed: () async {
