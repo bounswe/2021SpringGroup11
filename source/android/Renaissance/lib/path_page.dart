@@ -3,8 +3,10 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:portakal/file_converter.dart';
 import 'package:portakal/http_services.dart';
+import 'package:portakal/models/basic_path.dart';
 import 'package:portakal/models/user.dart';
 import 'package:portakal/my_colors.dart';
+import 'package:portakal/topic_page.dart';
 import 'package:portakal/widget/comment_box.dart';
 import 'package:portakal/models/path.dart';
 import 'package:portakal/widget/profile_stats_widget.dart';
@@ -17,6 +19,8 @@ import 'package:portakal/models/topic_model.dart';
 import 'package:portakal/models/milestone_model.dart';
 import 'package:portakal/models/path.dart';
 
+import 'models/tag.dart';
+
 class PathPage extends StatefulWidget {
   final Path? p;
   const PathPage({Key? key, this.p}) : super(key: key);
@@ -27,7 +31,7 @@ class PathPage extends StatefulWidget {
 
 class _PathPageState extends State<PathPage> {
   bool isLoading = false;
-
+  bool tagsAreLoading = false;
   var _image;
 
   void loadPhoto() async {
@@ -208,10 +212,24 @@ class _PathPageState extends State<PathPage> {
                                                 buttonColor: Colors.orange,
                                                 child: RaisedButton(
                                                   shape: StadiumBorder(),
-                                                  onPressed: () {
-                                                    print(topic.ID);
+                                                  onPressed: () async{
+                                                    /*Tag temp_t= await HttpService.shared.getTopic(topic.ID!.toString());
+                                                    List<Tag> list_t= await HttpService.shared.getTopicList(topic.ID!.toString());
+                                                    List<BasicPath> list_p= await HttpService.shared.getPathList(topic.ID!.toString());*/
+                                                    setState(() {
+                                                      tagsAreLoading = true;
+                                                    });
+                                                    List responses = await Future.wait([HttpService.shared.getTopic(topic.ID!.toString()), HttpService.shared.getTopicList(topic.ID!.toString()),HttpService.shared.getPathList(topic.ID!.toString())]);
+                                                    setState(() {
+                                                      tagsAreLoading = false;
+                                                    });
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(builder: (context) => TopicPage(t:responses[0],tags:responses[1],paths: responses[2],)),
+                                                    );
                                                   },
-                                                  child: Text(topic.name!),
+                                                  child: tagsAreLoading?SizedBox(height: 10.0,
+                                                      width: 10.0,child:CircularProgressIndicator()):Text(topic.name!),
                                                 ),
                                               );
                                             }).toList()
@@ -512,7 +530,7 @@ class _PathPageState extends State<PathPage> {
                                                             .effort_path(
                                                             User.me!
                                                                 .username!,
-                                                            widget.p!.id!,
+                                                            widget.p!.id,
                                                             effort);
                                                         setState(() {
                                                           isButtonEffortLoading=false;
@@ -567,7 +585,7 @@ class _PathPageState extends State<PathPage> {
                                                             .finish_path(
                                                             User.me!
                                                                 .username!,
-                                                            widget.p!.id!
+                                                            widget.p!.id
                                                         );
                                                         if (!response) {
                                                           setState(() {

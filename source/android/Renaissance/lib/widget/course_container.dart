@@ -55,7 +55,7 @@ class _CourseContainerState extends State<CourseContainer> {
                 setState(() {
                   isButtonLoading = true;
                 });
-                Path p= await HttpService.shared.getPath(widget.path.id!);
+                Path p= await HttpService.shared.getPath(widget.path.id);
                 setState(() {
                   isButtonLoading = false;
                 });
