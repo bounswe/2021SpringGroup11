@@ -908,8 +908,8 @@ class GetNew(APIView):
         username = data['username']
 
         with MongoDBHelper(uri=settings.MONGO_URI, database=settings.DB_NAME) as db:
-            topics = list(db.find('topic', query={}).limit(5))
-            paths = list(db.find('path', query={}).limit(5))
+            topics = list(db.find('topic', query={}).sort([('_id', -1)]).limit(5))
+            paths = list(db.find('path', query={}).sort([('_id', -1)]).limit(5))
 
             fav_topics = list(db.find('favorite', {'username': username, 'ID': {'$in': [topic['ID'] for topic in topics]}}))
             
