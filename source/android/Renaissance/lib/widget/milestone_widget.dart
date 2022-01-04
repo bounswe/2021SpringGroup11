@@ -7,11 +7,12 @@ import 'package:portakal/my_colors.dart';
 import 'package:portakal/widget/cutsom_checkbox_widget.dart';
 
 class MilestoneContainer extends StatefulWidget {
-  MilestoneContainer(this.ID,this.milestone_title, this.milestone_description, this.is_completed);
+  MilestoneContainer(this.ID,this.milestone_title, this.milestone_description, this.is_completed, this.type);
   final String ID;
   final String milestone_title;
   final String milestone_description;
   final bool is_completed;
+  final int type;
 
   @override
   State<MilestoneContainer> createState() => _MilestoneContainerState();
