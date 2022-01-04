@@ -164,4 +164,20 @@ void main() {
   //   expect(state.descFields.length, 1);
   //   expect(state.typeOfController.length, 1);
   // });
+
+  testWidgets('Create path page creation check', (WidgetTester tester) async {
+    Widget testWidget = MaterialApp(
+        home: Material(
+            child: new MediaQuery(
+                data: new MediaQueryData(), child: CreatePathPage())));
+
+    await tester.pumpWidget(testWidget);
+
+    final finderPath = find.text('Change Path Image');
+    final finderUser = find.text("Create New Path");
+    final finderTag = find.text('Your Path...');
+    expect(finderPath, findsOneWidget);
+    expect(finderUser, findsWidgets);
+    expect(finderTag, findsWidgets);
+  });
 }
