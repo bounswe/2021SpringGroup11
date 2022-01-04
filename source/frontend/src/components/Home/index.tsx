@@ -23,6 +23,7 @@ const useStyles = makeStyles(() => ({
 
 const Home = (props: { dispatch: any; history: any }) => {
   const { dispatch, history } = props;
+
   const classes = useStyles();
   return (
     <div className={classes.root}>

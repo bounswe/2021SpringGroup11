@@ -33,6 +33,6 @@ export const SEARCHPATH_URL = `${baseUrl}path/search-path/`; ///
 export const GET_PATH_URL = `${baseUrl}path/get-path/`; /// path/ get-path/<slug:path_id>/ [name='get_path']
 export const WORDCLOUD_PATHS_URL = `${baseUrl}path/wordcloud/`; /// POST
 export const GET_PATH_DETAIL_URL = `${baseUrl}path/get-path-detail/`; ///
+export const GET_ACTIVITIES_URL = `${baseUrl}user/activity-streams/`; ///
 export const MY_PATH_URL = `${baseUrl}path/my-paths/`; ///
-
 export const HOME_DATA_URL = `${baseUrl}path/`; ///

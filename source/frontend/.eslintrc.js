@@ -92,6 +92,8 @@ module.exports = {
     'no-unused-expressions': 0,
     'jsx-a11y/alt-text': 0,
     'react/no-array-index-key': 0,
+    'jest/require-top-level-describe': 0,
+    'jest/no-hooks': 0,
     'jsx-a11y/click-events-have-key-events': 0,
     'jsx-a11y/no-static-element-interactions': 0,
   },

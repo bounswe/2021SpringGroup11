@@ -33,7 +33,14 @@ const routes: {
     exact: true,
     // @ts-ignore
     component: lazy(() => import('./components/Home')),
-    requestAuth: true, // TODO: remove after dev
+    requestAuth: true,
+  },
+  {
+    path: '/activity',
+    exact: true,
+    // @ts-ignore
+    component: lazy(() => import('./components/Activity')),
+    requestAuth: true,
   },
   {
     path: '/profile',

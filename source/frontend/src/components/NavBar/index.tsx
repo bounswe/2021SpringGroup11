@@ -70,7 +70,7 @@ const NavBar = (props: Props) => {
 
           {auth && (
             <div>
-              <IconButton size="large" color="inherit">
+              <IconButton onClick={() => history.push('activity/')} size="large" color="inherit">
                 <Badge badgeContent={1} color="error">
                   <ExploreIcon />
                 </Badge>
