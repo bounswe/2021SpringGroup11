@@ -59,7 +59,7 @@ class CreatePathPageState extends State<CreatePathPage> {
     return index;
   }
 
-  void _deleteItem(int i) {
+  void deleteItem(int i) {
     setState(() {
       titleControllers.removeAt(i);
       titleFields.removeAt(i);
@@ -253,7 +253,7 @@ class CreatePathPageState extends State<CreatePathPage> {
                           color: MyColors.darkGray),
                     ),
                     TextButton(
-                      onPressed: () => _deleteItem(i),
+                      onPressed: () => deleteItem(i),
                       style: TextButton.styleFrom(
                         backgroundColor: Colors.redAccent,
                         shape: CircleBorder(),

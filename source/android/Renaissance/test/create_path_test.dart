@@ -50,7 +50,7 @@ void main() {
     expect(state.typeOfController, isEmpty);
   });
 
-  test('Find index functionailty checks', () {
+  test('Find index functionailty check', () {
     final widget = CreatePathPage();
     final element = widget.createElement(); // this will set state.widget
     final state = element.state as CreatePathPageState;
@@ -67,5 +67,44 @@ void main() {
     expect(state.findIndex(5), 2);
     expect(state.findIndex(4), 4);
     expect(state.findIndex(1), 1);
+  });
+
+  test('Delete item functionailty check', () {
+    final widget = CreatePathPage();
+    final element = widget.createElement(); // this will set state.widget
+    final state = element.state as CreatePathPageState;
+
+    state.titleControllers.add(TextEditingController());
+    state.descControllers.add(TextEditingController());
+    state.titleFields.add(TextField());
+    state.descFields.add(TextField());
+    state.typeOfController.add("test");
+    state.titleControllers.add(TextEditingController());
+    state.descControllers.add(TextEditingController());
+    state.titleFields.add(TextField());
+    state.descFields.add(TextField());
+    state.typeOfController.add("test");
+
+    expect(state.titleControllers.length, 2);
+    expect(state.descControllers.length, 2);
+    expect(state.titleFields.length, 2);
+    expect(state.descFields.length, 2);
+    expect(state.typeOfController.length, 2);
+
+    state.deleteItem(1);
+
+    expect(state.titleControllers.length, 1);
+    expect(state.descControllers.length, 1);
+    expect(state.titleFields.length, 1);
+    expect(state.descFields.length, 1);
+    expect(state.typeOfController.length, 1);
+
+    state.deleteItem(0);
+
+    expect(state.titleControllers, isEmpty);
+    expect(state.descControllers, isEmpty);
+    expect(state.titleFields, isEmpty);
+    expect(state.descFields, isEmpty);
+    expect(state.typeOfController, isEmpty);
   });
 }
