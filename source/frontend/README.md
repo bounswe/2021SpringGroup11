@@ -42,8 +42,8 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## Production Instructions with Docker
 
-###Build production image
+### Build production image
 * `docker-compose -f docker-compose.prod.yml build`
 
-###To start our production container on port 80 with the name RenaissanceFE
+### To start our production container on port 80 with the name RenaissanceFE
 * `docker run -p 80:80 --name RenaissanceFE frontend-prod`
