@@ -46,6 +46,7 @@ class CreatePathPageState extends State<CreatePathPage> {
     descControllers = [];
     descFields = [];
     typeOfController = [];
+    topics = [];
 
     titleController.clear();
     descriptionController.clear();
@@ -491,7 +492,6 @@ class CreatePathPageState extends State<CreatePathPage> {
                               'Please fill all milestone descriptions!');
 
                       List<Map<String, Object>> items = [];
-                      List<Map<String, String>> topics = [];
 
                       for (var i = 0; i < titleControllers.length; i++) {
                         items.add({
@@ -511,8 +511,10 @@ class CreatePathPageState extends State<CreatePathPage> {
                               (topics[i] as Tag).description as String
                         });
                       }
+                      print(topics);
+                      print(sendTopic);
 
-                      User response = await HttpService.shared.createPath(
+                      await HttpService.shared.createPath(
                         titleController.text,
                         descriptionController.text,
                         items,

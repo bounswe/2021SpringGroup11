@@ -44,6 +44,13 @@ class HomePageState extends State<HomePage> {
     }
   }
 
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _fetchPopular();
+  }
+
   void _fetchNew() async {
     try {
       _isLoading = true;
@@ -88,7 +95,6 @@ class HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    _fetchPopular();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: MyColors.blue,
@@ -124,7 +130,7 @@ class HomePageState extends State<HomePage> {
                 _fetchNew();
               }
               setState(() {
-                pageIndex = value as int;
+                pageIndex = index;
               });
             },
             padding: EdgeInsets.all(5),

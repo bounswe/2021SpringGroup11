@@ -195,14 +195,27 @@ class HttpService {
         body: jsonEncode({'username': username, 'path_id': id}));
     return res.statusCode == 200;
   }
-  Future<bool> add_resource(String path_id, String link,String description) async {
-    print( jsonEncode({'path_id': path_id, 'order': 1, "link":link,"description":description}));
+
+  Future<bool> add_resource(
+      String path_id, String link, String description) async {
+    print(jsonEncode({
+      'path_id': path_id,
+      'order': 1,
+      "link": link,
+      "description": description
+    }));
     String url = baseUrl + '/path/add-resource/';
     Response res = await post(Uri.parse(url),
         headers: headers,
-        body: jsonEncode({'path_id': path_id, 'order': 1, "link":link,"description":description}));
+        body: jsonEncode({
+          'path_id': path_id,
+          'order': 1,
+          "link": link,
+          "description": description
+        }));
     return res.statusCode == 200;
   }
+
   Future<bool> effort_path(String username, String id, double value) async {
     String url = baseUrl + '/path/effort-path/';
     Response res = await post(Uri.parse(url),
@@ -257,7 +270,6 @@ class HttpService {
         resources: resources,
         isEnrolled: input['isEnrolled'],
         isFollowed: input['isFollowed']);
-
   }
 
   Future<Path> getPath(String path_id) async {
@@ -295,8 +307,7 @@ class HttpService {
     Response res = await get(Uri.parse(url), headers: headers);
     if (res.statusCode == 200) {
       Iterable l = json.decode(res.body);
-      List<Tag> topics =
-      l.map((json) => Tag.fromSpecialJSON(json)).toList();
+      List<Tag> topics = l.map((json) => Tag.fromSpecialJSON(json)).toList();
       return topics;
     } else {
       throw Exception(res.body);
@@ -309,7 +320,7 @@ class HttpService {
     if (res.statusCode == 200) {
       Iterable l = json.decode(res.body);
       List<BasicPath> basicPaths =
-      l.map((json) => BasicPath.fromJSON(json)).toList();
+          l.map((json) => BasicPath.fromJSON(json)).toList();
       return basicPaths;
     } else {
       throw Exception(res.body);
@@ -370,7 +381,7 @@ class HttpService {
     }
   }
 
-  Future<User> createPath(
+  Future<void> createPath(
       String title,
       String description,
       List<Map<String, Object>> milestones,
@@ -387,8 +398,8 @@ class HttpService {
     Response res = await post(Uri.parse(url), headers: headers, body: body);
     log("${res.statusCode}");
     if (res.statusCode == 200) {
-      return User.fromJson(jsonDecode(res.body));
-    } else if (res.statusCode == 413){
+      return;
+    } else if (res.statusCode == 413) {
       throw Exception("Payload too large!");
     } else {
       throw Exception("An error occurred.");
