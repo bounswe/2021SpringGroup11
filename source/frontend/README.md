@@ -8,8 +8,7 @@
 ## System requirements (for client app)
 * for best performance, Chromium 80+ based browsers
 
-## Installation instructions
-
+## Development Instructions
 
 ### Available Scripts
 
@@ -40,3 +39,11 @@ It correctly bundles React in production mode and optimizes the build for the be
 
 To learn React, check out the [React documentation](https://reactjs.org/).
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+
+## Production Instructions with Docker
+
+###Build production image
+* `docker-compose -f docker-compose.prod.yml build`
+
+###To start our production container on port 80 with the name RenaissanceFE
+* `docker run -p 80:80 --name RenaissanceFE frontend-prod`
